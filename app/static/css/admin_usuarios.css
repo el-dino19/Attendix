@@ -1,0 +1,920 @@
+/* =====================================================
+   ENCABEZADO USUARIOS
+===================================================== */
+
+.users-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 30px;
+
+    padding: 24px 26px;
+
+    background:
+        linear-gradient(145deg,
+            rgba(11, 39, 49, .98),
+            rgba(7, 29, 38, .98));
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+}
+
+.users-header h2 {
+    margin: 5px 0;
+
+    font-size: 24px;
+
+    font-weight: 800;
+}
+
+.users-header h2 i {
+    margin-right: 8px;
+
+    color: var(--primary);
+}
+
+.users-header p {
+    margin: 0;
+
+    color: var(--text-muted);
+
+    font-size: 13px;
+}
+
+.section-label {
+    color: var(--primary);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+}
+
+.new-user-button {
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   GRID
+===================================================== */
+
+.users-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 22px;
+}
+
+
+/* =====================================================
+   TARJETA
+===================================================== */
+
+.user-card {
+    position: relative;
+
+    overflow: hidden;
+
+    display: flex;
+
+    flex-direction: column;
+
+    min-height: 320px;
+
+    background:
+        linear-gradient(145deg,
+            rgba(11, 39, 49, .98),
+            rgba(7, 29, 38, .98));
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+}
+
+.user-card:hover {
+    transform: translateY(-5px);
+
+    border-color:
+        rgba(0, 212, 216, .40);
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, .35);
+}
+
+
+/* =====================================================
+   TARJETA INACTIVA
+===================================================== */
+
+.user-card-inactive {
+    border-color:
+        rgba(255, 92, 112, .25);
+}
+
+.user-card-inactive:hover {
+    border-color:
+        rgba(255, 92, 112, .45);
+}
+
+
+/* =====================================================
+   CABECERA TARJETA
+===================================================== */
+
+.user-card-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 24px 24px 10px;
+}
+
+
+/* =====================================================
+   AVATAR
+===================================================== */
+
+.user-avatar-large {
+    width: 58px;
+
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(135deg,
+            var(--primary),
+            var(--secondary));
+
+    color: #031217;
+
+    font-size: 23px;
+
+    font-weight: 800;
+
+    box-shadow:
+        0 8px 20px rgba(0, 212, 216, .15);
+}
+
+.user-card-inactive .user-avatar-large {
+    background:
+        linear-gradient(135deg,
+            #ff5c70,
+            #c83b51);
+
+    color: white;
+}
+
+
+/* =====================================================
+   ESTADO
+===================================================== */
+
+.user-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px 11px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+.user-status span {
+    width: 7px;
+
+    height: 7px;
+
+    border-radius: 50%;
+}
+
+.user-status.active {
+    color: var(--success);
+
+    background:
+        rgba(34, 211, 166, .10);
+
+    border:
+        1px solid rgba(34, 211, 166, .20);
+}
+
+.user-status.active span {
+    background: var(--success);
+
+    box-shadow:
+        0 0 8px var(--success);
+}
+
+.user-status.inactive {
+    color: var(--danger);
+
+    background:
+        rgba(255, 92, 112, .10);
+
+    border:
+        1px solid rgba(255, 92, 112, .25);
+}
+
+.user-status.inactive span {
+    background: var(--danger);
+
+    box-shadow:
+        0 0 8px var(--danger);
+}
+
+
+/* =====================================================
+   CUERPO
+===================================================== */
+
+.user-card-body {
+    padding: 12px 24px 20px;
+
+    flex: 1;
+}
+
+.user-card-body h3 {
+    margin: 0 0 8px;
+
+    color: white;
+
+    font-size: 19px;
+
+    font-weight: 800;
+}
+
+.user-email {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin: 0 0 15px;
+
+    color: var(--text-muted);
+
+    font-size: 13px;
+
+    word-break: break-word;
+}
+
+.user-email i {
+    color: var(--primary);
+}
+
+
+/* =====================================================
+   ROLES
+===================================================== */
+
+.user-role {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 7px 10px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+.admin-role {
+    color: var(--primary);
+
+    background:
+        rgba(0, 212, 216, .10);
+
+    border:
+        1px solid rgba(0, 212, 216, .20);
+}
+
+.employee-role {
+    color: #7dd3fc;
+
+    background:
+        rgba(25, 167, 206, .10);
+
+    border:
+        1px solid rgba(25, 167, 206, .20);
+}
+
+
+/* =====================================================
+   ACCIONES
+===================================================== */
+
+.user-card-actions {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    padding: 16px 20px 20px;
+
+    border-top:
+        1px solid rgba(255, 255, 255, .06);
+}
+
+.user-action-button {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 40px;
+
+    border-radius: 9px;
+
+    background: transparent;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all .2s ease;
+}
+
+
+/* EDITAR */
+
+.user-action-button.edit {
+    color: var(--primary);
+
+    border:
+        1px solid rgba(0, 212, 216, .25);
+}
+
+.user-action-button.edit:hover {
+    color: #031217;
+
+    background: var(--primary);
+}
+
+
+/* PASSWORD */
+
+.user-action-button.password {
+    color: var(--warning);
+
+    border:
+        1px solid rgba(255, 200, 87, .25);
+}
+
+.user-action-button.password:hover {
+    color: #17202a;
+
+    background: var(--warning);
+}
+
+
+/* DESACTIVAR */
+
+.user-action-button.deactivate {
+    color: var(--danger);
+
+    border:
+        1px solid rgba(255, 92, 112, .25);
+}
+
+.user-action-button.deactivate:hover {
+    color: white;
+
+    background: var(--danger);
+}
+
+
+/* ACTIVAR */
+
+.user-action-button.activate {
+    color: var(--success);
+
+    border:
+        1px solid rgba(34, 211, 166, .25);
+}
+
+.user-action-button.activate:hover {
+    color: #031217;
+
+    background: var(--success);
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.modal-content {
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 20px 22px;
+}
+
+.modal-body {
+    padding: 22px;
+}
+
+.modal-footer {
+    padding: 15px 22px;
+}
+
+.modal-title i {
+    margin-right: 7px;
+
+    color: var(--primary);
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1200px) {
+
+    .users-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .users-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .new-user-button {
+        width: 100%;
+    }
+
+    .users-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .admin-main {
+        padding: 15px;
+    }
+
+    .users-header {
+        padding: 20px;
+    }
+
+    .user-card-header {
+        padding: 20px 20px 10px;
+    }
+
+    .user-card-body {
+        padding: 12px 20px 20px;
+    }
+
+    .user-card-actions {
+        padding: 15px;
+    }
+
+}
+
+/* =====================================================
+   MENSAJES / TOASTS
+===================================================== */
+
+.toast-container {
+    top: 20px !important;
+    right: 20px !important;
+    width: 380px;
+    max-width: calc(100vw - 30px);
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+.toast {
+    width: 100% !important;
+
+    background:
+        linear-gradient(145deg,
+            rgba(11, 39, 49, 0.98),
+            rgba(7, 29, 38, 0.98));
+
+    color: var(--text-white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.35);
+
+    backdrop-filter: blur(15px);
+
+    opacity: 1 !important;
+
+    margin-bottom: 12px;
+
+    animation:
+        toastEntrada .35s ease;
+}
+
+
+/* =====================================================
+   CABECERA
+===================================================== */
+
+.toast-header {
+
+    background: transparent;
+
+    color: var(--text-white);
+
+    border-bottom:
+        1px solid var(--border);
+
+    padding: 13px 15px;
+
+}
+
+
+.toast-header strong {
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    letter-spacing: .2px;
+
+}
+
+
+/* =====================================================
+   ICONOS
+===================================================== */
+
+.toast-header i {
+
+    font-size: 18px;
+
+}
+
+
+/* ÉXITO */
+
+.toast-header .text-success {
+
+    color: var(--success) !important;
+
+}
+
+
+/* ERROR */
+
+.toast-header .text-danger {
+
+    color: var(--danger) !important;
+
+}
+
+
+/* INFO */
+
+.toast-header .text-primary {
+
+    color: var(--primary) !important;
+
+}
+
+
+/* =====================================================
+   CUERPO
+===================================================== */
+
+.toast-body {
+
+    padding: 15px;
+
+    color: var(--text-light);
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =====================================================
+   BOTÓN CERRAR
+===================================================== */
+
+.toast .btn-close {
+
+    filter: invert(1);
+
+    opacity: .65;
+
+    transition: opacity .2s ease;
+
+}
+
+
+.toast .btn-close:hover {
+
+    opacity: 1;
+
+}
+
+
+/* =====================================================
+   COLORES LATERALES
+===================================================== */
+
+/* SUCCESS */
+
+.toast:has(.text-success) {
+
+    border-left:
+        4px solid var(--success);
+
+}
+
+
+/* DANGER */
+
+.toast:has(.text-danger) {
+
+    border-left:
+        4px solid var(--danger);
+
+}
+
+
+/* INFO */
+
+.toast:has(.text-primary) {
+
+    border-left:
+        4px solid var(--primary);
+
+}
+
+
+/* =====================================================
+   ANIMACIÓN ENTRADA
+===================================================== */
+
+@keyframes toastEntrada {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateX(40px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateX(0);
+
+    }
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 576px) {
+
+    .toast-container {
+
+        top: 10px !important;
+
+        right: 10px !important;
+
+        left: 10px !important;
+
+        width: auto;
+
+        max-width: none;
+
+    }
+
+}
+
+/* =====================================================
+   FILTROS DE USUARIOS
+===================================================== */
+
+.usuarios-filtros {
+
+    display: grid;
+
+    grid-template-columns: 1fr 220px;
+
+    gap: 18px;
+
+    margin-bottom: 24px;
+
+    padding: 20px;
+
+    background:
+        linear-gradient(145deg,
+            rgba(11, 39, 49, .98),
+            rgba(7, 29, 38, .98));
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+
+}
+
+
+.usuarios-filtros label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--text-light);
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+}
+
+
+.usuarios-filtros label i {
+
+    color: var(--primary);
+
+    margin-right: 5px;
+
+}
+
+
+/* =====================================================
+   BUSCADOR
+===================================================== */
+
+.input-filtro {
+
+    position: relative;
+
+}
+
+
+.input-filtro>i {
+
+    position: absolute;
+
+    left: 14px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: var(--text-muted);
+
+    pointer-events: none;
+
+}
+
+
+.input-filtro input {
+
+    width: 100%;
+
+    height: 44px;
+
+    padding:
+        10px 14px 10px 40px;
+
+    background: #071f28;
+
+    border:
+        1px solid rgba(255, 255, 255, .10);
+
+    border-radius: 10px;
+
+    color: white;
+
+    outline: none;
+
+    transition: .2s ease;
+
+}
+
+
+.input-filtro input::placeholder {
+
+    color: #6e8991;
+
+}
+
+
+.input-filtro input:focus {
+
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px rgba(0, 212, 216, .12);
+
+}
+
+
+/* =====================================================
+   SELECT ESTADO
+===================================================== */
+
+.filtro-estado .form-select {
+
+    height: 44px;
+
+    cursor: pointer;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 768px) {
+
+    .usuarios-filtros {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}

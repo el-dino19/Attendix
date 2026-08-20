@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Iniciar sesión | Sistema de Asistencia</title>
+
+    <!-- =========================================
+         FAVICON
+    ========================================== -->
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="{{ url_for(
+            'static',
+            filename='img/Logo_Asistencia.png'
+        ) }}"
+    />
+
+    <!-- =========================================
+         BOOTSTRAP
+    ========================================== -->
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- =========================================
+         BOOTSTRAP ICONS
+    ========================================== -->
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- =========================================
+         CSS LOGIN
+    ========================================== -->
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for(
+            'static',
+            filename='css/login.css'
+        ) }}"
+    />
+  </head>
+
+  <body>
+    <!-- =========================================
+         PAGINA LOGIN
+    ========================================== -->
+
+    <div class="login-page">
+      <!-- FONDOS -->
+
+      <div class="background-effect background-effect-1"></div>
+
+      <div class="background-effect background-effect-2"></div>
+
+      <!-- =====================================
+             CONTENEDOR
+        ====================================== -->
+
+      <div class="login-container">
+        <!-- =================================
+                 LOGO
+            ================================== -->
+
+        <div class="login-logo">
+          <div class="logo-icon">
+            <i class="bi bi-clock-history"></i>
+          </div>
+        </div>
+
+        <!-- =================================
+                 TITULO
+            ================================== -->
+
+        <div class="login-header">
+          <h1>
+            Sistema de
+
+            <span> Asistencia </span>
+          </h1>
+
+          <p>Control de asistencia y descansos</p>
+        </div>
+
+        <!-- =========================================
+     MENSAJES LOGIN
+========================================== -->
+
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+
+    {% if mensajes %}
+
+        <div class="login-messages">
+
+            {% for categoria, mensaje in mensajes %}
+
+                <div
+                    class="login-alert
+                    {% if categoria == 'success' %}
+                        login-alert-success
+                    {% elif categoria == 'danger' %}
+                        login-alert-danger
+                    {% elif categoria == 'warning' %}
+                        login-alert-warning
+                    {% else %}
+                        login-alert-info
+                    {% endif %}"
+                >
+
+                    <div class="login-alert-icon">
+
+                        {% if categoria == "success" %}
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                        {% elif categoria == "danger" %}
+
+                            <i class="bi bi-x-circle-fill"></i>
+
+                        {% elif categoria == "warning" %}
+
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+
+                        {% else %}
+
+                            <i class="bi bi-info-circle-fill"></i>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="login-alert-content">
+
+                        <strong>
+
+                            {% if categoria == "success" %}
+
+                                Correcto
+
+                            {% elif categoria == "danger" %}
+
+                                Error de acceso
+
+                            {% elif categoria == "warning" %}
+
+                                Cuenta desactivada
+
+                            {% else %}
+
+                                Información
+
+                            {% endif %}
+
+                        </strong>
+
+
+                        <span>
+                            {{ mensaje }}
+                        </span>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="login-alert-close"
+                        onclick="this.parentElement.remove()"
+                        aria-label="Cerrar"
+                    >
+
+                        <i class="bi bi-x"></i>
+
+                    </button>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+{% endwith %}
+
+        <!-- =================================
+                 FORMULARIO
+            ================================== -->
+
+        <form
+          method="POST"
+          action="{{ url_for('auth.login') }}"
+          class="login-form"
+        >
+          <!-- CORREO -->
+
+          <div class="form-group">
+            <label for="correo">
+              <i class="bi bi-envelope"></i>
+
+              Correo electrónico
+            </label>
+
+            <div class="input-container">
+              <i class="bi bi-envelope input-icon"></i>
+
+              <input
+                type="email"
+                id="correo"
+                name="correo"
+                class="form-control login-input"
+                placeholder="correo@empresa.com"
+                autocomplete="email"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- CONTRASEÑA -->
+
+          <div class="form-group">
+            <label for="password">
+              <i class="bi bi-lock"></i>
+
+              Contraseña
+            </label>
+
+            <div class="input-container">
+              <i class="bi bi-lock input-icon"></i>
+
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-control login-input"
+                placeholder="Ingresa tu contraseña"
+                autocomplete="current-password"
+                required
+              />
+
+              <!-- MOSTRAR CONTRASEÑA -->
+
+              <button
+                type="button"
+                class="password-toggle"
+                id="togglePassword"
+                aria-label="Mostrar contraseña"
+              >
+                
+              </button>
+            </div>
+          </div>
+
+          <!-- =================================
+                     BOTON
+                ================================== -->
+
+          <button type="submit" class="btn login-button">
+            <span> Iniciar sesión </span>
+
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </form>
+
+        <!-- =================================
+                 PIE
+            ================================== -->
+
+        <div class="login-footer">
+          <div class="status-dot"></div>
+
+          Sistema disponible
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================
+         BOOTSTRAP JS
+    ========================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- =========================================
+         MOSTRAR / OCULTAR CONTRASEÑA
+    ========================================== -->
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const passwordInput = document.getElementById("password");
+
+        const togglePassword = document.getElementById("togglePassword");
+
+        const passwordIcon = document.getElementById("passwordIcon");
+
+        if (passwordInput && togglePassword && passwordIcon) {
+          togglePassword.addEventListener("click", function () {
+            if (passwordInput.type === "password") {
+              passwordInput.type = "text";
+
+              passwordIcon.classList.remove("bi-eye");
+
+              passwordIcon.classList.add("bi-eye-slash");
+            } else {
+              passwordInput.type = "password";
+
+              passwordIcon.classList.remove("bi-eye-slash");
+
+              passwordIcon.classList.add("bi-eye");
+            }
+          });
+        }
+      });
+    </script>
+
+    <!-- =========================================
+         OCULTAR MENSAJES AUTOMATICAMENTE
+    ========================================== -->
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const alerts = document.querySelectorAll(".login-alert");
+
+        alerts.forEach(function (alert) {
+          setTimeout(function () {
+            alert.classList.add("login-alert-hide");
+
+            setTimeout(function () {
+              alert.remove();
+            }, 350);
+          }, 4000);
+        });
+      });
+    </script>
+  </body>
+</html>

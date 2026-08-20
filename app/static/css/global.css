@@ -1,0 +1,319 @@
+/* =====================================================
+   VARIABLES DEL SISTEMA
+===================================================== */
+
+:root {
+    --bg-dark: #061820;
+    --bg-dark-2: #091f29;
+    --bg-card: #0b2731;
+    --bg-card-hover: #103541;
+
+    --primary: #00d4d8;
+    --primary-dark: #00aeb3;
+    --secondary: #19a7ce;
+
+    --text-white: #ffffff;
+    --text-light: #c9d7db;
+    --text-muted: #8ba3aa;
+
+    --danger: #ff5c70;
+    --success: #22d3a6;
+    --warning: #ffc857;
+
+    --border: rgba(0, 212, 216, 0.18);
+
+    --shadow:
+        0 10px 35px rgba(0, 0, 0, 0.25);
+
+    --radius: 18px;
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(0, 212, 216, 0.10),
+            transparent 30%
+        ),
+        var(--bg-dark);
+
+    color: var(--text-white);
+
+    font-family:
+        Inter,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+}
+
+
+/* =====================================================
+   TEXTOS
+===================================================== */
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.text-primary {
+    color: var(--primary) !important;
+}
+
+.text-success {
+    color: var(--success) !important;
+}
+
+.text-danger {
+    color: var(--danger) !important;
+}
+
+
+/* =====================================================
+   ENLACES
+===================================================== */
+
+a {
+    text-decoration: none;
+}
+
+
+/* =====================================================
+   BOTONES
+===================================================== */
+
+.btn-primary {
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--secondary)
+        ) !important;
+
+    border: none !important;
+
+    color: #031217 !important;
+
+    font-weight: 700;
+
+    border-radius: 10px;
+
+    padding: 10px 18px;
+
+    transition: all .25s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 25px rgba(0, 212, 216, 0.25);
+}
+
+
+.btn-success {
+    background: var(--success) !important;
+
+    border: none !important;
+
+    color: #031217 !important;
+}
+
+
+.btn-danger {
+    background: var(--danger) !important;
+
+    border: none !important;
+}
+
+
+.btn-warning {
+    background: var(--warning) !important;
+
+    border: none !important;
+
+    color: #17202a !important;
+}
+
+
+/* =====================================================
+   INPUTS
+===================================================== */
+
+.form-control,
+.form-select {
+    background: #071f28 !important;
+
+    border:
+        1px solid rgba(255, 255, 255, .10) !important;
+
+    color: white !important;
+
+    border-radius: 10px;
+
+    padding: 11px 14px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color:
+        var(--primary) !important;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 212, 216, .12) !important;
+}
+
+.form-control::placeholder {
+    color: #6e8991;
+}
+
+.form-label {
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   SELECT
+===================================================== */
+
+.form-select option {
+    background: #071f28;
+    color: white;
+}
+
+
+/* =====================================================
+   MODALES
+===================================================== */
+
+.modal-content {
+    background: var(--bg-card);
+
+    color: white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, .40);
+}
+
+.modal-header,
+.modal-footer {
+    border-color: var(--border);
+}
+
+.modal-title {
+    font-weight: 700;
+}
+
+.btn-close {
+    filter: invert(1);
+}
+
+
+/* =====================================================
+   BADGES
+===================================================== */
+
+.badge {
+    border-radius: 8px;
+
+    padding: 7px 10px;
+}
+
+
+/* =====================================================
+   TARJETA GENERAL
+===================================================== */
+
+.app-card {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(11, 39, 49, .98),
+            rgba(7, 29, 38, .98)
+        );
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+}
+
+
+/* =====================================================
+   SCROLLBAR
+===================================================== */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #174550;
+
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+
+/* =====================================================
+   ANIMACIONES
+===================================================== */
+
+.fade-in {
+    animation: fadeIn .5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 768px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+}

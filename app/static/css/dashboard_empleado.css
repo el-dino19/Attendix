@@ -1,0 +1,1914 @@
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+:root {
+
+    --bg-dark: #061820;
+    --bg-dark-2: #091f29;
+
+    --bg-card: #0b2731;
+
+    --primary: #00d4d8;
+    --secondary: #19a7ce;
+
+    --text-white: #ffffff;
+    --text-light: #c9d7db;
+    --text-muted: #8ba3aa;
+
+    --success: #22d3a6;
+    --danger: #ff5c70;
+    --warning: #ffc857;
+    --purple: #9b7cff;
+
+    --border:
+        rgba(0, 212, 216, 0.18);
+
+    --shadow:
+        0 10px 35px rgba(0, 0, 0, 0.25);
+
+    --radius: 18px;
+}
+
+
+/* =====================================================
+   GENERAL
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+
+    margin: 0;
+
+    min-height: 100vh;
+
+    background:
+        radial-gradient(circle at top right,
+            rgba(0, 212, 216, 0.10),
+            transparent 30%),
+        radial-gradient(circle at bottom left,
+            rgba(25, 167, 206, 0.08),
+            transparent 30%),
+        var(--bg-dark);
+
+    color: var(--text-white);
+
+    font-family:
+        Inter,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.main-header {
+
+    min-height: 82px;
+
+    padding:
+        0 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    background:
+        rgba(6, 24, 32, 0.92);
+
+    backdrop-filter: blur(15px);
+
+    border-bottom:
+        1px solid var(--border);
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+}
+
+
+/* BRAND */
+
+.header-brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+
+.brand-icon {
+
+    width: 44px;
+
+    height: 44px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(135deg,
+            var(--primary),
+            var(--secondary));
+
+    color: #031217;
+
+    font-size: 22px;
+}
+
+
+.header-brand strong {
+
+    display: block;
+
+    font-size: 17px;
+}
+
+
+.header-brand small {
+
+    display: block;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+
+    margin-top: 2px;
+}
+
+
+/* USER */
+
+.header-user {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+}
+
+
+.user-avatar {
+
+    width: 40px;
+
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(135deg,
+            var(--primary),
+            var(--secondary));
+
+    color: #031217;
+
+    font-weight: 800;
+}
+
+
+.user-info {
+
+    margin-right: 10px;
+}
+
+
+.user-info strong {
+
+    display: block;
+
+    font-size: 13px;
+}
+
+
+.user-info small {
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+}
+
+
+/* HEADER BUTTONS */
+
+.btn-header,
+.btn-logout {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 9px 13px;
+
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    transition: all .2s ease;
+}
+
+
+.btn-header {
+
+    color: var(--primary);
+
+    border:
+        1px solid rgba(0, 212, 216, .25);
+
+    background:
+        rgba(0, 212, 216, .06);
+}
+
+
+.btn-header:hover {
+
+    background:
+        var(--primary);
+
+    color: #031217;
+}
+
+
+.btn-logout {
+
+    color: var(--danger);
+
+    border:
+        1px solid rgba(255, 92, 112, .20);
+
+    background:
+        rgba(255, 92, 112, .06);
+}
+
+
+.btn-logout:hover {
+
+    color: white;
+
+    background:
+        var(--danger);
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.employee-main {
+
+    max-width: 1400px;
+
+    margin: 0 auto;
+
+    padding:
+        40px;
+}
+
+
+/* =====================================================
+   PAGE HEADER
+===================================================== */
+
+.page-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 30px;
+}
+
+
+.breadcrumb {
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+
+    margin-bottom: 7px;
+}
+
+
+.breadcrumb span {
+
+    color: var(--primary);
+
+    margin: 0 7px;
+}
+
+
+.page-header h1 {
+
+    margin: 0;
+
+    font-size: 30px;
+
+    font-weight: 800;
+}
+
+
+.page-header p {
+
+    margin: 7px 0 0;
+
+    color: var(--text-muted);
+
+    font-size: 14px;
+}
+
+
+.status-online {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 9px 13px;
+
+    border-radius: 10px;
+
+    color: var(--success);
+
+    background:
+        rgba(34, 211, 166, .07);
+
+    border:
+        1px solid rgba(34, 211, 166, .18);
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.status-online span {
+
+    width: 8px;
+
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: var(--success);
+
+    box-shadow:
+        0 0 10px var(--success);
+}
+
+
+/* =====================================================
+   TOASTS
+===================================================== */
+
+.toast-container {
+
+    position: fixed;
+
+    top: 100px;
+
+    right: 25px;
+
+    width: 360px;
+
+    z-index: 2000;
+}
+
+
+.custom-toast {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 15px 17px;
+
+    margin-bottom: 10px;
+
+    background:
+        var(--bg-card);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 13px;
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, .35);
+
+    transition:
+        opacity .3s ease,
+        transform .3s ease;
+}
+
+
+.toast-icon {
+
+    font-size: 20px;
+}
+
+
+.toast-message {
+
+    flex: 1;
+
+    color: var(--text-light);
+
+    font-size: 13px;
+}
+
+
+.toast-close {
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--text-muted);
+
+    cursor: pointer;
+
+    font-size: 18px;
+}
+
+
+.toast-success {
+    border-left: 4px solid var(--success);
+}
+
+.toast-success .toast-icon {
+    color: var(--success);
+}
+
+
+.toast-warning {
+    border-left: 4px solid var(--warning);
+}
+
+.toast-warning .toast-icon {
+    color: var(--warning);
+}
+
+
+.toast-danger {
+    border-left: 4px solid var(--danger);
+}
+
+.toast-danger .toast-icon {
+    color: var(--danger);
+}
+
+
+/* =====================================================
+   GRID
+===================================================== */
+
+.dashboard-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 25px;
+}
+
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.app-card {
+
+    background:
+        linear-gradient(145deg,
+            rgba(11, 39, 49, .98),
+            rgba(7, 29, 38, .98));
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+
+    padding: 27px;
+
+    min-height: 500px;
+}
+
+
+.card-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+}
+
+
+.card-label {
+
+    display: block;
+
+    color: var(--text-muted);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+
+    margin-bottom: 5px;
+}
+
+
+.card-header h2 {
+
+    margin: 0;
+
+    font-size: 22px;
+
+    font-weight: 800;
+}
+
+
+.card-header h2 i {
+
+    color: var(--primary);
+
+    margin-right: 7px;
+}
+
+
+.card-header-icon {
+
+    width: 47px;
+
+    height: 47px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 13px;
+
+    font-size: 21px;
+}
+
+
+.card-header-icon.blue {
+
+    color: var(--primary);
+
+    background:
+        rgba(0, 212, 216, .10);
+}
+
+
+.card-header-icon.purple {
+
+    color: var(--purple);
+
+    background:
+        rgba(155, 124, 255, .10);
+}
+
+
+/* =====================================================
+   INFO ROW
+===================================================== */
+
+.info-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 15px 0;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, .06);
+}
+
+
+.info-icon {
+
+    width: 40px;
+
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+}
+
+
+.info-icon.blue {
+
+    color: var(--primary);
+
+    background:
+        rgba(0, 212, 216, .09);
+}
+
+
+.info-icon.green {
+
+    color: var(--success);
+
+    background:
+        rgba(34, 211, 166, .09);
+}
+
+
+.info-icon.red {
+
+    color: var(--danger);
+
+    background:
+        rgba(255, 92, 112, .09);
+}
+
+
+.info-icon.purple {
+
+    color: var(--purple);
+
+    background:
+        rgba(155, 124, 255, .09);
+}
+
+
+.info-content {
+
+    flex: 1;
+}
+
+
+.info-content span {
+
+    display: block;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+
+    margin-bottom: 3px;
+}
+
+
+.info-content strong {
+
+    font-size: 15px;
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.status-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 6px 9px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.status-badge.active {
+
+    color: var(--success);
+
+    background:
+        rgba(34, 211, 166, .10);
+}
+
+
+.status-badge.active i {
+
+    font-size: 6px;
+}
+
+
+.status-badge.finished {
+
+    color: var(--primary);
+
+    background:
+        rgba(0, 212, 216, .10);
+}
+
+
+/* =====================================================
+   ACTION
+===================================================== */
+
+.form-action {
+
+    margin-top: 24px;
+}
+
+
+.btn-danger-action {
+
+    width: 100%;
+
+    border: 0;
+
+    padding: 13px;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(135deg,
+            #ff5c70,
+            #e6455c);
+
+    color: white;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all .2s ease;
+}
+
+
+.btn-danger-action:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 25px rgba(255, 92, 112, .20);
+}
+
+
+.warning-box {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 24px;
+
+    padding: 13px;
+
+    border-radius: 10px;
+
+    color: var(--warning);
+
+    background:
+        rgba(255, 200, 87, .07);
+
+    border:
+        1px solid rgba(255, 200, 87, .16);
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   BREAK SELECTION
+===================================================== */
+
+.selection-text {
+
+    color: var(--text-muted);
+
+    font-size: 13px;
+
+    margin-bottom: 18px;
+}
+
+
+.break-selection form {
+
+    margin-bottom: 10px;
+}
+
+
+.break-option {
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    border:
+        1px solid rgba(255, 255, 255, .07);
+
+    background:
+        rgba(255, 255, 255, .025);
+
+    color: white;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    transition: all .2s ease;
+}
+
+
+.break-option:hover {
+
+    transform: translateX(4px);
+
+    border-color:
+        rgba(0, 212, 216, .30);
+
+    background:
+        rgba(0, 212, 216, .06);
+}
+
+
+.break-option-icon {
+
+    width: 43px;
+
+    height: 43px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 11px;
+
+    font-size: 19px;
+}
+
+
+.break-blue .break-option-icon {
+
+    color: var(--primary);
+
+    background:
+        rgba(0, 212, 216, .10);
+}
+
+
+.break-yellow .break-option-icon {
+
+    color: var(--warning);
+
+    background:
+        rgba(255, 200, 87, .10);
+}
+
+
+.break-purple .break-option-icon {
+
+    color: var(--purple);
+
+    background:
+        rgba(155, 124, 255, .10);
+}
+
+
+.break-option-info {
+
+    flex: 1;
+}
+
+
+.break-option-info strong {
+
+    display: block;
+
+    font-size: 14px;
+}
+
+
+.break-option-info small {
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+}
+
+
+.break-option>i {
+
+    color: var(--text-muted);
+}
+
+
+/* =====================================================
+   ACTIVE BREAK
+===================================================== */
+
+.active-break {
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    background:
+        rgba(0, 212, 216, .045);
+
+    border:
+        1px solid rgba(0, 212, 216, .15);
+}
+
+
+.break-status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+
+.break-pulse {
+
+    width: 45px;
+
+    height: 45px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background:
+        rgba(0, 212, 216, .10);
+}
+
+
+.break-pulse span {
+
+    width: 12px;
+
+    height: 12px;
+
+    border-radius: 50%;
+
+    background: var(--primary);
+
+    box-shadow:
+        0 0 0 7px rgba(0, 212, 216, .10);
+
+    animation:
+        pulse 1.5s infinite;
+}
+
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.25);
+    }
+}
+
+
+.break-status h3 {
+
+    margin: 3px 0 0;
+
+    font-size: 17px;
+}
+
+
+.break-status h3 i {
+
+    color: var(--primary);
+
+    margin-right: 5px;
+}
+
+
+.break-start {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-top: 20px;
+
+    padding: 12px;
+
+    background:
+        rgba(255, 255, 255, .025);
+
+    border-radius: 9px;
+}
+
+
+.break-start span {
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+}
+
+
+.break-start strong {
+
+    font-size: 13px;
+}
+
+
+/* =====================================================
+   CONTADOR
+===================================================== */
+
+.contador-container {
+
+    text-align: center;
+
+    padding: 25px 10px;
+}
+
+
+.contador-label {
+
+    display: block;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+
+.contador {
+
+    margin-top: 7px;
+
+    color: var(--primary);
+
+    font-size: 52px;
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 0 25px rgba(0, 212, 216, .25);
+}
+
+
+#mensaje-contador {
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+
+    margin: 8px 0 0;
+}
+
+
+.btn-finalizar {
+
+    width: 100%;
+
+    border: 0;
+
+    padding: 13px;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(135deg,
+            var(--primary),
+            var(--secondary));
+
+    color: #031217;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: all .2s ease;
+}
+
+
+.btn-finalizar:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 25px rgba(0, 212, 216, .20);
+}
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.empty-state {
+
+    min-height: 330px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+.empty-icon {
+
+    width: 65px;
+
+    height: 65px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 18px;
+
+    color: var(--text-muted);
+
+    background:
+        rgba(255, 255, 255, .04);
+
+    font-size: 27px;
+
+    margin-bottom: 15px;
+}
+
+
+.empty-state h3 {
+
+    margin: 0 0 6px;
+
+    font-size: 17px;
+}
+
+
+.empty-state p {
+
+    max-width: 300px;
+
+    margin: 0;
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+
+/* =====================================================
+   SYSTEM INFO
+===================================================== */
+
+.system-info {
+
+    margin-top: 25px;
+
+    padding: 18px 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    background:
+        linear-gradient(145deg,
+            rgba(11, 39, 49, .98),
+            rgba(7, 29, 38, .98));
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 14px;
+}
+
+
+.system-info-icon {
+
+    width: 42px;
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 11px;
+
+    color: var(--success);
+
+    background:
+        rgba(34, 211, 166, .09);
+
+    font-size: 20px;
+}
+
+
+.system-info strong {
+
+    display: block;
+
+    font-size: 13px;
+}
+
+
+.system-info p {
+
+    margin: 3px 0 0;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+}
+
+
+.system-online {
+
+    margin-left: auto;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: var(--success);
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.system-online span {
+
+    width: 7px;
+
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--success);
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1000px) {
+
+    .dashboard-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .main-header {
+
+        padding: 0 18px;
+
+    }
+
+
+    .user-info {
+
+        display: none;
+
+    }
+
+
+    .btn-header {
+
+        display: none;
+
+    }
+
+
+    .employee-main {
+
+        padding: 25px 18px;
+
+    }
+
+
+    .page-header {
+
+        align-items: flex-start;
+
+    }
+
+
+    .status-online {
+
+        display: none;
+
+    }
+
+
+    .page-header h1 {
+
+        font-size: 25px;
+
+    }
+
+
+    .app-card {
+
+        padding: 20px;
+
+    }
+
+
+    .toast-container {
+
+        width: calc(100% - 30px);
+
+        right: 15px;
+
+        top: 90px;
+
+    }
+
+
+    .contador {
+
+        font-size: 43px;
+
+    }
+
+}
+
+
+@media (max-width: 450px) {
+
+    .header-brand small {
+
+        display: none;
+
+    }
+
+
+    .header-brand strong {
+
+        font-size: 14px;
+
+    }
+
+
+    .btn-logout {
+
+        padding: 8px;
+
+    }
+
+
+    .btn-logout {
+
+        font-size: 0;
+
+    }
+
+
+    .btn-logout i {
+
+        font-size: 18px;
+
+    }
+
+}
+
+/* =====================================================
+   RELOJ DIGITAL
+===================================================== */
+
+.reloj-card {
+    width: 100%;
+
+    margin: 25px 0;
+
+    padding: 22px 28px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 20px;
+
+    background:
+        linear-gradient(145deg,
+            rgba(11, 39, 49, 0.98),
+            rgba(7, 29, 38, 0.98));
+
+    border: 1px solid rgba(0, 212, 216, 0.18);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.25);
+
+    /* misma estructura que el contenido */
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   ICONO DEL RELOJ
+===================================================== */
+
+.reloj-icon {
+    width: 58px;
+    height: 58px;
+
+    min-width: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(135deg,
+            #00d4d8,
+            #19a7ce);
+
+    color: #031217;
+
+    font-size: 25px;
+}
+
+
+/* =====================================================
+   INFORMACIÓN
+===================================================== */
+
+.reloj-info {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.reloj-label {
+    color: #8ba3aa;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+}
+
+
+.reloj {
+    color: #ffffff;
+
+    font-size: 32px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    letter-spacing: 2px;
+
+    font-variant-numeric: tabular-nums;
+}
+
+
+.fecha-actual {
+    color: #8ba3aa;
+
+    font-size: 13px;
+
+    margin-top: 3px;
+}
+
+
+/* =====================================================
+   ALINEACIÓN CON EL CONTENIDO
+===================================================== */
+
+/*
+   Si tu dashboard tiene un <main>, hacemos que
+   el reloj respete exactamente sus límites.
+*/
+
+.admin-main .reloj-card,
+main .reloj-card {
+    width: 100%;
+    max-width: 100%;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 576px) {
+
+    .reloj-card {
+        padding: 18px;
+        margin: 20px 0;
+    }
+
+    .reloj-icon {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+
+        font-size: 21px;
+    }
+
+    .reloj {
+        font-size: 25px;
+        letter-spacing: 1px;
+    }
+
+}
+
+/* =====================================================
+   MODALES DE CONFIRMACIÓN
+===================================================== */
+
+.confirm-modal {
+
+    background:
+        linear-gradient(145deg,
+            #0b2731,
+            #071d26) !important;
+
+    border:
+        1px solid rgba(0, 212, 216, .20) !important;
+
+    border-radius: 22px !important;
+
+    color: white;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, .55);
+
+}
+
+
+/* =====================================================
+   ICONO
+===================================================== */
+
+.confirm-icon {
+
+    width: 75px;
+
+    height: 75px;
+
+    margin:
+        0 auto 20px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 32px;
+
+}
+
+
+/* FINALIZAR */
+
+.confirm-icon.danger {
+
+    background:
+        rgba(255, 92, 112, .12);
+
+    color:
+        #ff5c70;
+
+    border:
+        1px solid rgba(255, 92, 112, .25);
+
+}
+
+
+/* LOGOUT */
+
+.confirm-icon.logout-icon {
+
+    background:
+        rgba(0, 212, 216, .10);
+
+    color:
+        #00d4d8;
+
+    border:
+        1px solid rgba(0, 212, 216, .25);
+
+}
+
+
+/* =====================================================
+   TITULO
+===================================================== */
+
+.confirm-title {
+
+    margin-bottom: 10px;
+
+    font-size: 23px;
+
+    font-weight: 700;
+
+    color: #ffffff;
+
+}
+
+
+/* =====================================================
+   TEXTO
+===================================================== */
+
+.confirm-text {
+
+    color: #c9d7db;
+
+    font-size: 15px;
+
+    margin-bottom: 12px;
+
+}
+
+
+/* =====================================================
+   ADVERTENCIA
+===================================================== */
+
+.confirm-warning {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    color: #8ba3aa;
+
+    font-size: 13px;
+
+    margin-bottom: 25px;
+
+}
+
+
+/* =====================================================
+   BOTONES
+===================================================== */
+
+.confirm-buttons {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 12px;
+
+}
+
+
+.confirm-buttons .btn {
+
+    min-width: 130px;
+
+    padding: 10px 18px;
+
+    border-radius: 10px;
+
+    font-weight: 600;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.confirm-buttons .btn:hover {
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+/* =====================================================
+   CANCELAR
+===================================================== */
+
+.confirm-cancel {
+
+    background:
+        rgba(255, 255, 255, .06);
+
+    color:
+        #c9d7db;
+
+    border:
+        1px solid rgba(255, 255, 255, .12);
+
+}
+
+
+.confirm-cancel:hover {
+
+    background:
+        rgba(255, 255, 255, .10);
+
+    color: white;
+
+}
+
+
+/* =====================================================
+   FINALIZAR
+===================================================== */
+
+.confirm-danger {
+
+    background:
+        linear-gradient(135deg,
+            #ff5c70,
+            #e9445a);
+
+    border: none;
+
+    color: white;
+
+}
+
+
+.confirm-danger:hover {
+
+    color: white;
+
+    box-shadow:
+        0 8px 25px rgba(255, 92, 112, .25);
+
+}
+
+
+/* =====================================================
+   CERRAR SESIÓN
+===================================================== */
+
+.confirm-logout {
+
+    background:
+        linear-gradient(135deg,
+            #00d4d8,
+            #19a7ce);
+
+    border: none;
+
+    color: #031217;
+
+}
+
+
+.confirm-logout:hover {
+
+    color: #031217;
+
+    box-shadow:
+        0 8px 25px rgba(0, 212, 216, .25);
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 576px) {
+
+    .confirm-buttons {
+
+        flex-direction: column-reverse;
+
+    }
+
+    .confirm-buttons .btn {
+
+        width: 100%;
+
+    }
+
+}

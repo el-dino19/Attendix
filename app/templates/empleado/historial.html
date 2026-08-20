@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Mi historial | Sistema de Asistencia</title>
+    <link
+    rel="icon"
+    type="image/png"
+    sizes="512x512"
+    href="{{ url_for(
+        'static',
+        filename='img/Logo_Asistencia.png'
+    ) }}"
+>
+    <link
+      rel="stylesheet"
+      href="{{ url_for(
+            'static',
+            filename='css/historial.css'
+        ) }}"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="bi bi-clock-history"></i>
+        </div>
+
+        <div>
+          <strong>Sistema de Asistencia</strong>
+
+          <span>Control de jornadas</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="user-info">
+          <div class="user-avatar">{{ session["nombre"][0] | upper }}</div>
+
+          <div>
+            <strong>{{ session["nombre"] }}</strong>
+
+            <small>Empleado</small>
+          </div>
+        </div>
+
+        <a href="{{ url_for('empleado.dashboard') }}" class="btn-dashboard">
+          <i class="bi bi-grid-fill"></i>
+
+          Dashboard
+        </a>
+
+        <a href="{{ url_for('auth.logout') }}" class="btn-logout">
+          <i class="bi bi-box-arrow-right"> </i>
+          
+        </a>
+        
+      </div>
+    </header>
+
+    <!-- =====================================================
+         CONTENIDO
+    ====================================================== -->
+
+    <main class="page-container">
+      <!-- =================================================
+             CABECERA DE PÁGINA
+        ================================================== -->
+
+      <section class="page-header">
+        <div>
+          <span class="section-tag">
+            <i class="bi bi-calendar3"></i>
+
+            REGISTROS
+          </span>
+
+          <h1>Mi historial</h1>
+
+          <p>Consulta tus jornadas de trabajo y descansos registrados.</p>
+        </div>
+      </section>
+
+      <!-- =================================================
+             RESUMEN
+        ================================================== -->
+
+      <section class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-icon blue">
+            <i class="bi bi-calendar-check-fill"></i>
+          </div>
+
+          <div>
+            <span>Jornadas registradas</span>
+
+            <strong>{{ historial|length }}</strong>
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-icon green">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+
+          <div>
+            <span>Jornadas finalizadas</span>
+
+            <strong>
+              {{ historial | selectattr("jornada.salida") | list | length }}
+            </strong>
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-icon cyan">
+            <i class="bi bi-clock-fill"></i>
+          </div>
+
+          <div>
+            <span>Control horario</span>
+
+            <strong>Activo</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================
+             HISTORIAL
+        ================================================== -->
+
+      <section class="history-section">
+        <div class="section-title">
+          <div>
+            <h2>
+              <i class="bi bi-clock-history"></i>
+
+              Jornadas
+            </h2>
+
+            <p>Tus registros más recientes.</p>
+          </div>
+        </div>
+
+        {% if historial %}
+
+        <div class="timeline">
+          {% for registro in historial %}
+
+          <article class="history-card">
+            <!-- =====================================
+                         FECHA
+                    ====================================== -->
+
+            <div class="date-column">
+              <span class="date-day">
+                {{ registro.jornada.fecha.strftime("%d") }}
+              </span>
+
+              <span class="date-month">
+                {{ registro.jornada.fecha.strftime("%b") | upper }}
+              </span>
+
+              <span class="date-year">
+                {{ registro.jornada.fecha.strftime("%Y") }}
+              </span>
+            </div>
+
+            <!-- =====================================
+                         CONTENIDO
+                    ====================================== -->
+
+            <div class="history-content">
+              <!-- CABECERA -->
+
+              <div class="history-header">
+                <div>
+                  <h3>Jornada laboral</h3>
+
+                  <span class="history-date">
+                    <i class="bi bi-calendar3"></i>
+
+                    {{ registro.jornada.fecha.strftime( "%A, %d de %B de %Y" )
+                    }}
+                  </span>
+                </div>
+
+                {% if registro.jornada.salida %}
+
+                <span class="status finished">
+                  <i class="bi bi-check-circle-fill"></i>
+
+                  Finalizada
+                </span>
+
+                {% else %}
+
+                <span class="status active">
+                  <i class="bi bi-circle-fill"></i>
+
+                  Activa
+                </span>
+
+                {% endif %}
+              </div>
+
+              <!-- =================================
+                             HORARIOS
+                        ================================== -->
+
+              <div class="time-row">
+                <div class="time-box">
+                  <div class="time-icon entry">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                  </div>
+
+                  <div>
+                    <span>Entrada</span>
+
+                    <strong>
+                      {% if registro.jornada.entrada %} {{
+                      registro.jornada.entrada.strftime( "%I:%M:%S %p" ) }} {%
+                      else %} -- {% endif %}
+                    </strong>
+                  </div>
+                </div>
+
+                <div class="time-line">
+                  <span></span>
+                </div>
+
+                <div class="time-box">
+                  <div class="time-icon exit">
+                    <i class="bi bi-box-arrow-right"></i>
+                  </div>
+
+                  <div>
+                    <span>Salida</span>
+
+                    <strong>
+                      {% if registro.jornada.salida %} {{
+                      registro.jornada.salida.strftime( "%I:%M:%S %p" ) }} {%
+                      else %} -- {% endif %}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- =================================
+                             DESCANSOS
+                        ================================== -->
+
+              <div class="break-section">
+                <div class="break-header">
+                  <div>
+                    <i class="bi bi-cup-hot-fill"></i>
+
+                    <strong>Descansos</strong>
+                  </div>
+
+                  <span> {{ registro.descansos|length }} </span>
+                </div>
+
+                {% if registro.descansos %}
+
+                <div class="break-list">
+                  {% for descanso in registro.descansos %}
+
+                  <div class="break-item">
+                    <div class="break-type">
+                      <div class="break-icon">
+                        {% if descanso.tipo == "lunch" %}
+
+                        <i class="bi bi-egg-fried"></i>
+
+                        {% else %}
+
+                        <i class="bi bi-cup-hot-fill"></i>
+
+                        {% endif %}
+                      </div>
+
+                      <div>
+                        <strong>
+                          {% if descanso.tipo == "break_manana" %} Break mañana
+                          {% elif descanso.tipo == "lunch" %} Lunch {% elif
+                          descanso.tipo == "break_tarde" %} Break tarde {% else
+                          %} {{ descanso.tipo }} {% endif %}
+                        </strong>
+
+                        <small> Descanso registrado </small>
+                      </div>
+                    </div>
+
+                    <div class="break-time">
+                      <div>
+                        <span>Inicio</span>
+
+                        <strong>
+                          {% if descanso.inicio %} {{ descanso.inicio.strftime(
+                          "%I:%M:%S %p" ) }} {% else %} -- {% endif %}
+                        </strong>
+                      </div>
+
+                      <i class="bi bi-arrow-right"></i>
+
+                      <div>
+                        <span>Fin</span>
+
+                        <strong>
+                          {% if descanso.fin %} {{ descanso.fin.strftime(
+                          "%I:%M:%S %p" ) }} {% else %}
+
+                          <em>En curso</em>
+
+                          {% endif %}
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  {% endfor %}
+                </div>
+
+                {% else %}
+
+                <div class="no-breaks">
+                  <i class="bi bi-cup-hot"></i>
+
+                  <span> No hay descansos registrados. </span>
+                </div>
+
+                {% endif %}
+              </div>
+            </div>
+          </article>
+
+          {% endfor %}
+        </div>
+
+        {% else %}
+
+        <!-- =================================================
+                 SIN HISTORIAL
+            ================================================== -->
+
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="bi bi-calendar-x"></i>
+          </div>
+
+          <h3>No hay registros todavía</h3>
+
+          <p>Cuando registres una jornada, aparecerá aquí.</p>
+
+          <a href="{{ url_for('empleado.dashboard') }}" class="empty-button">
+            <i class="bi bi-arrow-left"></i>
+
+            Volver al dashboard
+          </a>
+        </div>
+
+        {% endif %}
+      </section>
+    </main>
+  </body>
+</html>

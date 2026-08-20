@@ -1,0 +1,1307 @@
+{% extends "base.html" %}
+
+{% block title %}
+Usuarios | Sistema de Asistencia
+{% endblock %}
+<link
+    rel="icon"
+    type="image/png"
+    sizes="512x512"
+    href="{{ url_for(
+        'static',
+        filename='img/Logo_Asistencia.png'
+    ) }}"
+>
+
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/admin.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/admin_usuarios.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="admin-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="admin-sidebar">
+
+
+        <!-- BRAND -->
+
+        <div class="sidebar-brand">
+
+            <div class="sidebar-logo">
+
+                <i class="bi bi-clock-history"></i>
+
+            </div>
+
+
+            <div>
+
+                <strong>
+                    Asistencia
+                </strong>
+
+                <small>
+                    Panel administrativo
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- TITULO -->
+
+        <div class="sidebar-section-title">
+            ADMINISTRACIÓN
+        </div>
+
+
+        <!-- MENU -->
+
+        <nav class="sidebar-menu">
+
+
+            <!-- DASHBOARD -->
+
+            <a
+                href="{{ url_for('admin.dashboard') }}"
+                class="sidebar-link"
+            >
+
+                <i class="bi bi-grid-1x2-fill"></i>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <!-- USUARIOS -->
+
+            <a
+                href="{{ url_for('admin.usuarios') }}"
+                class="sidebar-link active"
+            >
+
+                <i class="bi bi-people-fill"></i>
+
+                <span>
+                    Usuarios
+                </span>
+
+            </a>
+
+
+            <!-- ASISTENCIA -->
+
+            <a
+                href="{{ url_for('admin.asistencia') }}"
+                class="sidebar-link"
+            >
+                <i class="bi bi-calendar-check-fill"></i>
+                <span>Asistencia</span>
+            </a>
+
+
+            
+
+        </nav>
+
+
+        <!-- =================================================
+             PARTE INFERIOR
+        ================================================== -->
+
+        <div class="sidebar-bottom">
+
+
+            <div class="sidebar-user">
+
+                <div class="user-avatar">
+
+                    {{ session.get("nombre", "A")[0]|upper }}
+
+                </div>
+
+
+                <div class="sidebar-user-info">
+
+                    <strong>
+                        {{ session.get("nombre", "Administrador") }}
+                    </strong>
+
+                    <small>
+                        Administrador
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <a
+        href="{{ url_for('auth.logout') }}"
+        class="logout-link"
+        data-bs-toggle="modal"
+        data-bs-target="#confirmarLogoutModal"
+      >
+        <i class="bi bi-box-arrow-left"></i>
+
+        Cerrar sesión
+      </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         CONTENIDO
+    ====================================================== -->
+
+    <main class="admin-main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="admin-topbar">
+
+            <div>
+
+                <div class="page-breadcrumb">
+
+                    Administración
+
+                    <span>/</span>
+
+                    Usuarios
+
+                </div>
+
+
+                <h1>
+                    Gestión de usuarios
+                </h1>
+
+
+                <p>
+                    Administra las cuentas de los Colaboradores.
+                </p>
+
+            </div>
+
+
+            <div class="topbar-user">
+
+                <div class="topbar-avatar">
+
+                    {{ session.get("nombre", "A")[0]|upper }}
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        {{ session.get("nombre", "Administrador") }}
+                    </strong>
+
+                    <small>
+                        {{ session.get("correo", "") }}
+                    </small>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             ENCABEZADO USUARIOS
+        ====================================================== -->
+
+        <section class="users-header">
+
+            <div>
+
+                <span class="section-label">
+                    CONTROL
+                </span>
+
+
+                <h2>
+
+                    <i class="bi bi-people-fill"></i>
+
+                    Usuarios
+
+                </h2>
+
+
+                <p>
+                    Registra, edita y controla los usuarios del sistema.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="btn btn-primary new-user-button"
+                data-bs-toggle="modal"
+                data-bs-target="#crearUsuarioModal"
+            >
+
+                <i class="bi bi-person-plus-fill"></i>
+
+                Nuevo usuario
+
+            </button>
+
+        </section>
+
+
+        <!-- =====================================================
+             MENSAJES
+        ====================================================== -->
+
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+
+            {% if mensajes %}
+
+                <div
+                    class="toast-container position-fixed top-0 end-0 p-3"
+                    style="z-index: 9999;"
+                >
+
+                    {% for categoria, mensaje in mensajes %}
+
+                        <div
+                            class="toast show"
+                            role="alert"
+                            data-bs-autohide="true"
+                            data-bs-delay="4000"
+                        >
+
+                            <div class="toast-header">
+
+                                {% if categoria == "success" %}
+
+                                    <i
+                                        class="bi bi-check-circle-fill text-success me-2"
+                                    ></i>
+
+                                {% elif categoria == "danger" %}
+
+                                    <i
+                                        class="bi bi-exclamation-circle-fill text-danger me-2"
+                                    ></i>
+
+                                {% else %}
+
+                                    <i
+                                        class="bi bi-info-circle-fill text-primary me-2"
+                                    ></i>
+
+                                {% endif %}
+
+
+                                <strong class="me-auto">
+                                    Sistema
+                                </strong>
+
+
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="toast"
+                                ></button>
+
+                            </div>
+
+
+                            <div class="toast-body">
+
+                                {{ mensaje }}
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+<!-- ==========================================
+     FILTROS DE USUARIOS
+========================================== -->
+
+<div class="usuarios-filtros">
+
+    <!-- BUSCAR POR NOMBRE -->
+
+    <div class="filtro-busqueda">
+
+        <label for="buscarUsuario">
+            <i class="bi bi-search"></i>
+            Buscar usuario
+        </label>
+
+        <div class="input-filtro">
+
+            <i class="bi bi-search"></i>
+
+            <input
+                type="text"
+                id="buscarUsuario"
+                placeholder="Buscar por nombre..."
+                autocomplete="off"
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- FILTRAR POR ESTADO -->
+
+    <div class="filtro-estado">
+
+        <label for="filtroEstado">
+            <i class="bi bi-funnel"></i>
+            Estado
+        </label>
+
+        <select
+            id="filtroEstado"
+            class="form-select"
+        >
+
+            <option value="todos">
+                Todos
+            </option>
+
+            <option value="activo">
+                Activos
+            </option>
+
+            <option value="inactivo">
+                Inactivos
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+
+        <!-- =====================================================
+             TARJETAS
+        ====================================================== -->
+
+        <section class="users-grid">
+
+
+            {% for usuario in usuarios %}
+
+
+                <article
+    class="user-card usuario-item
+        {% if not usuario.activo %}
+            user-card-inactive
+        {% endif %}"
+    
+    data-nombre="{{ usuario.nombre|lower }}"
+    
+    data-estado="{% if usuario.activo %}activo{% else %}inactivo{% endif %}"
+>
+
+
+                    <!-- CABECERA -->
+
+                    <div class="user-card-header">
+
+
+                        <div class="user-avatar-large">
+
+                            {{ usuario.nombre[0]|upper }}
+
+                        </div>
+
+
+                        {% if usuario.activo %}
+
+                            <span class="user-status active">
+
+                                <span></span>
+
+                                Activo
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="user-status inactive">
+
+                                <span></span>
+
+                                Inactivo
+
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- INFORMACION -->
+
+                    <div class="user-card-body">
+
+
+                        <h3>
+                            {{ usuario.nombre }}
+                        </h3>
+
+
+                        <p class="user-email">
+
+                            <i class="bi bi-envelope"></i>
+
+                            {{ usuario.correo }}
+
+                        </p>
+
+
+                        {% if usuario.rol == "admin" %}
+
+                            <span class="user-role admin-role">
+
+                                <i class="bi bi-shield-fill"></i>
+
+                                Administrador
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="user-role employee-role">
+
+                                <i class="bi bi-person-fill"></i>
+
+                                Colaborador 
+
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- BOTONES -->
+
+                    <div class="user-card-actions">
+
+
+                        <!-- EDITAR -->
+
+                        <button
+                            type="button"
+                            class="user-action-button edit"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editarModal{{ usuario.id }}"
+                        >
+
+                            <i class="bi bi-pencil"></i>
+
+                            Editar
+
+                        </button>
+
+
+                        <!-- PASSWORD -->
+
+                        <button
+                            type="button"
+                            class="user-action-button password"
+                            data-bs-toggle="modal"
+                            data-bs-target="#passwordModal{{ usuario.id }}"
+                        >
+
+                            <i class="bi bi-key-fill"></i>
+
+                            Cambiar contraseña
+
+                        </button>
+
+
+                        {% if usuario.id != session.get("usuario_id") %}
+
+
+                            {% if usuario.activo %}
+
+                                <button
+                                    type="button"
+                                    class="user-action-button deactivate"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#estadoModal{{ usuario.id }}"
+                                >
+
+                                    <i class="bi bi-person-x-fill"></i>
+
+                                    Desactivar
+
+                                </button>
+
+                            {% else %}
+
+                                <button
+                                    type="button"
+                                    class="user-action-button activate"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#estadoModal{{ usuario.id }}"
+                                >
+
+                                    <i class="bi bi-person-check-fill"></i>
+
+                                    Activar
+
+                                </button>
+
+                            {% endif %}
+
+                        {% endif %}
+
+                    </div>
+
+                </article>
+
+
+                <!-- =================================================
+                     MODAL EDITAR
+                ================================================== -->
+
+                <div
+                    class="modal fade"
+                    id="editarModal{{ usuario.id }}"
+                    tabindex="-1"
+                    aria-hidden="true"
+                >
+
+                    <div class="modal-dialog modal-dialog-centered">
+
+                        <div class="modal-content">
+
+
+                            <div class="modal-header">
+
+                                <h5 class="modal-title">
+
+                                    <i class="bi bi-pencil-square"></i>
+
+                                    Editar usuario
+
+                                </h5>
+
+
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                ></button>
+
+                            </div>
+
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('admin.editar', usuario_id=usuario.id) }}"
+                            >
+
+                                <div class="modal-body">
+
+
+                                    <div class="mb-3">
+
+                                        <label class="form-label">
+                                            Nombre
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="nombre"
+                                            class="form-control"
+                                            value="{{ usuario.nombre }}"
+                                            required
+                                        >
+
+                                    </div>
+
+
+                                    <div class="mb-3">
+
+                                        <label class="form-label">
+                                            Correo
+                                        </label>
+
+                                        <input
+                                            type="email"
+                                            name="correo"
+                                            class="form-control"
+                                            value="{{ usuario.correo }}"
+                                            required
+                                        >
+
+                                    </div>
+
+
+                                    <div class="mb-3">
+
+                                        <label class="form-label">
+                                            Rol
+                                        </label>
+
+                                        <select
+                                            name="rol"
+                                            class="form-select"
+                                        >
+
+                                            <option
+                                                value="empleado"
+                                                {% if usuario.rol == "empleado" %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                Colaborador
+                                            </option>
+
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="modal-footer">
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                    >
+                                        Cancelar
+                                    </button>
+
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                    >
+
+                                        <i class="bi bi-save"></i>
+
+                                        Guardar
+
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     MODAL PASSWORD
+                ================================================== -->
+
+                <div
+                    class="modal fade"
+                    id="passwordModal{{ usuario.id }}"
+                    tabindex="-1"
+                    aria-hidden="true"
+                >
+
+                    <div class="modal-dialog modal-dialog-centered">
+
+                        <div class="modal-content">
+
+
+                            <div class="modal-header">
+
+                                <h5 class="modal-title">
+
+                                    <i class="bi bi-key-fill"></i>
+
+                                    Cambiar contraseña
+
+                                </h5>
+
+
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                ></button>
+
+                            </div>
+
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('admin.cambiar_password_ruta', usuario_id=usuario.id) }}"
+                            >
+
+                                <div class="modal-body">
+
+                                    <p>
+
+                                        Usuario:
+
+                                        <strong>
+                                            {{ usuario.nombre }}
+                                        </strong>
+
+                                    </p>
+
+
+                                    <label class="form-label">
+                                        Nueva contraseña
+                                    </label>
+
+
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        class="form-control"
+                                        minlength="6"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <div class="modal-footer">
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                    >
+                                        Cancelar
+                                    </button>
+
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-warning"
+                                    >
+                                        Cambiar contraseña
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     MODAL ESTADO
+                ================================================== -->
+
+                <div
+                    class="modal fade"
+                    id="estadoModal{{ usuario.id }}"
+                    tabindex="-1"
+                    aria-hidden="true"
+                >
+
+                    <div class="modal-dialog modal-dialog-centered">
+
+                        <div class="modal-content">
+
+
+                            <div class="modal-header">
+
+                                {% if usuario.activo %}
+
+                                    <h5 class="modal-title text-danger">
+                                        Desactivar usuario
+                                    </h5>
+
+                                {% else %}
+
+                                    <h5 class="modal-title text-success">
+                                        Activar usuario
+                                    </h5>
+
+                                {% endif %}
+
+
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                ></button>
+
+                            </div>
+
+
+                            <div class="modal-body text-center">
+
+
+                                {% if usuario.activo %}
+
+                                    <i
+                                        class="bi bi-person-x-fill text-danger"
+                                        style="font-size: 55px;"
+                                    ></i>
+
+                                    <p class="mt-3">
+                                        ¿Deseas desactivar a?
+                                    </p>
+
+                                {% else %}
+
+                                    <i
+                                        class="bi bi-person-check-fill text-success"
+                                        style="font-size: 55px;"
+                                    ></i>
+
+                                    <p class="mt-3">
+                                        ¿Deseas activar a?
+                                    </p>
+
+                                {% endif %}
+
+
+                                <h4>
+                                    {{ usuario.nombre }}
+                                </h4>
+
+                            </div>
+
+
+                            <div class="modal-footer">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                                >
+                                    Cancelar
+                                </button>
+
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('admin.cambiar_estado', usuario_id=usuario.id) }}"
+                                >
+
+                                    {% if usuario.activo %}
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-danger"
+                                        >
+                                            Desactivar
+                                        </button>
+
+                                    {% else %}
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-success"
+                                        >
+                                            Activar
+                                        </button>
+
+                                    {% endif %}
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            {% endfor %}
+
+        </section>
+
+
+        <!-- =====================================================
+             MODAL CREAR USUARIO
+        ====================================================== -->
+
+        <div
+            class="modal fade"
+            id="crearUsuarioModal"
+            tabindex="-1"
+            aria-hidden="true"
+        >
+
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content">
+
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title">
+
+                            <i class="bi bi-person-plus-fill"></i>
+
+                            Registrar usuario
+
+                        </h5>
+
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                        ></button>
+
+                    </div>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('admin.crear') }}"
+                    >
+
+                        <div class="modal-body">
+
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Nombre completo
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="nombre"
+                                    class="form-control"
+                                    placeholder="Nombre del empleado"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Correo
+                                </label>
+
+                                <input
+                                    type="email"
+                                    name="correo"
+                                    class="form-control"
+                                    placeholder="correo@empresa.com"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Contraseña
+                                </label>
+
+                                <input
+                                    type="password"
+                                    name="password"
+                                    class="form-control"
+                                    minlength="6"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Rol
+                                </label>
+
+                                <select
+                                    name="rol"
+                                    class="form-select"
+                                >
+
+                                    <option value="empleado">
+                                        Colaborador 
+                                    </option>
+
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="modal-footer">
+
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                            >
+                                Cancelar
+                            </button>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+
+                                <i class="bi bi-person-plus-fill"></i>
+
+                                Crear usuario
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- ==========================================
+    MODAL CONFIRMAR CERRAR SESIÓN
+========================================== -->
+
+  <div
+    class="modal fade"
+    id="confirmarLogoutModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content confirm-modal">
+        <div class="modal-body text-center p-4">
+          <!-- ICONO -->
+
+          
+
+          <!-- TITULO -->
+
+          <h3 class="confirm-title">Cerrar sesión</h3>
+
+          <!-- MENSAJE -->
+
+          <p class="confirm-text">¿Deseas cerrar tu sesión?</p>
+
+          <p class="confirm-warning">
+            <i class="bi bi-shield-check"></i>
+
+            Tu sesión se cerrará de forma segura.
+          </p>
+
+          <!-- BOTONES -->
+
+          <div class="confirm-buttons">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">
+              
+
+              Si, Cerrar Sesión 
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+
+{% block js %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const toasts =
+        document.querySelectorAll(".toast");
+
+    toasts.forEach(function (toastElement) {
+
+        const toast =
+            bootstrap.Toast.getOrCreateInstance(
+                toastElement,
+                {
+                    delay: 3000
+                }
+            );
+
+        toast.show();
+
+    });
+    
+
+});
+
+setTimeout(function () {
+        const mensajes = document.querySelectorAll(".custom-toast");
+
+        mensajes.forEach(function (mensaje) {
+          mensaje.style.opacity = "0";
+
+          mensaje.style.transform = "translateX(30px)";
+
+          setTimeout(function () {
+            mensaje.remove();
+          }, 300);
+        });
+      }, 4000);
+
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const buscador =
+        document.getElementById("buscarUsuario");
+
+    const filtroEstado =
+        document.getElementById("filtroEstado");
+
+    const usuarios =
+        document.querySelectorAll(".usuario-item");
+
+
+    function filtrarUsuarios() {
+
+        const texto =
+            buscador.value
+                .trim()
+                .toLowerCase();
+
+        const estado =
+            filtroEstado.value;
+
+
+        usuarios.forEach(function (usuario) {
+
+            const nombre =
+                usuario.dataset.nombre
+                || "";
+
+            const estadoUsuario =
+                usuario.dataset.estado
+                || "";
+
+
+            // Buscar por nombre
+
+            const coincideNombre =
+                nombre.includes(texto);
+
+
+            // Filtrar por estado
+
+            const coincideEstado =
+                estado === "todos"
+                ||
+                estadoUsuario === estado;
+
+
+            // Mostrar / ocultar
+
+            if (
+                coincideNombre &&
+                coincideEstado
+            ) {
+
+                usuario.style.display = "";
+
+            } else {
+
+                usuario.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    buscador.addEventListener(
+        "input",
+        filtrarUsuarios
+    );
+
+
+    filtroEstado.addEventListener(
+        "change",
+        filtrarUsuarios
+    );
+
+});
+
+</script>
+{% endblock %}

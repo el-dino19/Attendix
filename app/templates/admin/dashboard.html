@@ -1,0 +1,379 @@
+{% extends "base.html" %} {% block title %} Panel  | Sistema de
+Asistencia {% endblock %} {% block css %}
+
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/admin.css') }}"
+/>
+
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/dashboard_admin.css') }}"
+/>
+
+{% endblock %} {% block content %}
+
+<div class="admin-layout">
+  <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+  <aside class="admin-sidebar">
+    <!-- LOGO -->
+
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">
+        <i class="bi bi-clock-history"></i>
+      </div>
+
+      <div>
+        <strong>Asistencia</strong>
+
+        <small> Panel administrativo </small>
+      </div>
+    </div>
+
+    <!-- TITULO -->
+
+    <div class="sidebar-section-title">ADMINISTRACIÓN</div>
+
+    <!-- MENU -->
+
+    <nav class="sidebar-menu">
+      <a href="{{ url_for('admin.dashboard') }}" class="sidebar-link active">
+        <i class="bi bi-grid-1x2-fill"></i>
+
+        <span> Dashboard </span>
+      </a>
+
+      <a href="{{ url_for('admin.usuarios') }}" class="sidebar-link">
+        <i class="bi bi-people-fill"></i>
+
+        <span> Usuarios </span>
+      </a>
+
+      <a href="{{ url_for('admin.asistencia') }}" class="sidebar-link">
+        <i class="bi bi-calendar-check-fill"></i>
+
+        <span> Asistencia </span>
+      </a>
+
+      
+    </nav>
+
+    <!-- PARTE INFERIOR -->
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="user-avatar">{{ session.get("nombre", "A")[0]|upper }}</div>
+
+        <div class="sidebar-user-info">
+          <strong> {{ session.get("nombre", "Administrador") }} </strong>
+
+          <small> Administrador </small>
+        </div>
+      </div>
+
+      <a
+        href="{{ url_for('auth.logout') }}"
+        class="logout-link"
+        data-bs-toggle="modal"
+        data-bs-target="#confirmarLogoutModal"
+      >
+        <i class="bi bi-box-arrow-left"></i>
+
+        Cerrar sesión
+      </a>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+    MODAL CONFIRMAR CERRAR SESIÓN
+========================================== -->
+
+  <div
+    class="modal fade"
+    id="confirmarLogoutModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content confirm-modal">
+        <div class="modal-body text-center p-4">
+          <!-- ICONO -->
+
+          
+
+          <!-- TITULO -->
+
+          <h3 class="confirm-title">Cerrar sesión</h3>
+
+          <!-- MENSAJE -->
+
+          <p class="confirm-text">¿Deseas cerrar tu sesión?</p>
+
+          <p class="confirm-warning">
+            <i class="bi bi-shield-check"></i>
+
+            Tu sesión se cerrará de forma segura.
+          </p>
+
+          <!-- BOTONES -->
+
+          <div class="confirm-buttons">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">
+              
+
+              Si, Cerrar Sesión 
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+         CONTENIDO PRINCIPAL
+    ====================================================== -->
+
+  <main class="admin-main">
+    <!-- TOPBAR -->
+
+    <header class="admin-topbar">
+      <div>
+        <div class="page-breadcrumb">
+          Administración
+
+          <span>/</span>
+
+          Dashboard
+        </div>
+
+        <h1>Panel administrativo</h1>
+
+        <p>Gestiona el sistema de asistencia de tus empleados.</p>
+      </div>
+
+      <div class="topbar-user">
+        <div class="topbar-avatar">
+          {{ session.get("nombre", "A")[0]|upper }}
+        </div>
+
+        <div>
+          <strong> {{ session.get("nombre", "Administrador") }} </strong>
+
+          <small> {{ session.get("correo", "") }} </small>
+        </div>
+      </div>
+    </header>
+
+    <!-- =====================================================
+             ESTADISTICAS
+        ====================================================== -->
+
+    <section class="stats-grid">
+      <!-- USUARIOS -->
+
+      <div class="stat-card">
+        <div class="stat-content">
+          <span class="stat-title"> Usuarios </span>
+
+          <strong class="stat-number"> {{ cantidad_usuarios }} </strong>
+
+          <span class="stat-description"> Registrados en el sistema </span>
+        </div>
+
+        <div class="stat-icon blue">
+          <i class="bi bi-people-fill"></i>
+        </div>
+      </div>
+
+      <!-- ACTIVOS -->
+
+      <div class="stat-card">
+        <div class="stat-content">
+          <span class="stat-title"> Usuarios activos </span>
+
+          <strong class="stat-number success"> {{ usuarios_activos }} </strong>
+
+          <span class="stat-description"> Pueden iniciar sesión </span>
+        </div>
+
+        <div class="stat-icon green">
+          <i class="bi bi-person-check-fill"></i>
+        </div>
+      </div>
+
+      <!-- INACTIVOS -->
+
+      <div class="stat-card">
+        <div class="stat-content">
+          <span class="stat-title"> Usuarios inactivos </span>
+
+          <strong class="stat-number danger"> {{ usuarios_inactivos }} </strong>
+
+          <span class="stat-description"> Acceso desactivado </span>
+        </div>
+
+        <div class="stat-icon red">
+          <i class="bi bi-person-x-fill"></i>
+        </div>
+      </div>
+
+      <!-- REPORTES -->
+
+      <div class="stat-card">
+        <div class="stat-content">
+          <span class="stat-title"> Reportes </span>
+
+          <strong class="stat-number"> Excel </strong>
+
+          <span class="stat-description"> Exportación disponible </span>
+        </div>
+
+        <div class="stat-icon yellow">
+          <i class="bi bi-file-earmark-excel-fill"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+             CONTENIDO
+        ====================================================== -->
+
+    <section class="content-grid">
+      <!-- ADMINISTRACION -->
+
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <span class="panel-label"> CONTROL </span>
+
+            <h2>Administración</h2>
+          </div>
+
+          <div class="panel-header-icon">
+            <i class="bi bi-gear-fill"></i>
+          </div>
+        </div>
+
+        <div class="action-list">
+          <!-- USUARIOS -->
+
+          <a href="{{ url_for('admin.usuarios') }}" class="admin-action">
+            <div class="action-icon blue">
+              <i class="bi bi-people-fill"></i>
+            </div>
+
+            <div class="action-info">
+              <strong> Administrar usuarios </strong>
+
+              <span> Registrar, editar y desactivar empleados. </span>
+            </div>
+
+            <i class="bi bi-chevron-right action-arrow"></i>
+          </a>
+
+          <!-- ASISTENCIA -->
+
+              <a
+                href="{{ url_for('admin.asistencia') }}"
+                class="sidebar-link"
+            >
+            
+                <div class="action-icon blue">
+              <i class="bi bi-calendar-check-fill"></i>
+            </div>
+
+            <div class="action-info">
+              <strong> Asistencias </strong>
+
+              <span> Visualiza las asistencias de los colaboradores. </span>
+            </div>
+
+            <i class="bi bi-chevron-right action-arrow"></i>
+            </a>
+
+          
+        </div>
+      </div>
+
+      <!-- =================================================
+                 REPORTES
+            ================================================== -->
+
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <span class="panel-label"> INFORMACIÓN </span>
+
+            <h2>Reportes</h2>
+          </div>
+
+          <div class="panel-header-icon green">
+            <i class="bi bi-bar-chart-fill"></i>
+          </div>
+        </div>
+
+        <div class="report-box">
+          <div class="report-icon">
+            <i class="bi bi-file-earmark-excel-fill"></i>
+          </div>
+
+          <div>
+            <h3>Exportar asistencia</h3>
+
+            <p>
+              Descarga todos los registros de asistencia y descansos en formato
+              Excel.
+            </p>
+          </div>
+        </div>
+
+        <a href="{{ url_for('admin.exportar') }}" class="btn export-button">
+          <i class="bi bi-download"></i>
+
+          Exportar Excel
+        </a>
+
+        <div class="report-info">
+          <i class="bi bi-info-circle"></i>
+
+          Solo los administradores pueden realizar exportaciones.
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+             ESTADO DEL SISTEMA
+        ====================================================== -->
+
+    <section class="system-card">
+      <div class="system-icon">
+        <i class="bi bi-shield-check"></i>
+      </div>
+
+      <div>
+        <strong> Sistema de asistencia activo </strong>
+
+        <p>El sistema está funcionando correctamente.</p>
+      </div>
+
+      <div class="system-status">
+        <span></span>
+
+        En línea
+      </div>
+    </section>
+  </main>
+</div>
+
+{% endblock %}

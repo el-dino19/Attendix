@@ -1,0 +1,625 @@
+/* =====================================================
+   ASISTENCIA - PANEL ADMINISTRATIVO
+===================================================== */
+
+
+/* =====================================================
+   FILTROS
+===================================================== */
+
+.attendance-filter-card {
+
+    background:
+        linear-gradient(145deg,
+            rgba(11, 39, 49, .98),
+            rgba(7, 29, 38, .98));
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 28px;
+
+    margin-bottom: 25px;
+
+    box-shadow: var(--shadow);
+
+}
+
+
+.filter-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+
+}
+
+
+.filter-header h2 {
+
+    margin: 5px 0 0;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    color: var(--text-white);
+
+}
+
+
+.filter-icon {
+
+    width: 48px;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background:
+        rgba(0, 212, 216, .12);
+
+    border:
+        1px solid rgba(0, 212, 216, .20);
+
+    color: var(--primary);
+
+    font-size: 21px;
+
+}
+
+
+/* =====================================================
+   LABELS
+===================================================== */
+
+.attendance-filter-card .form-label {
+
+    color: var(--text-light);
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    margin-bottom: 8px;
+
+}
+
+
+/* =====================================================
+   INPUTS
+===================================================== */
+
+.attendance-filter-card .form-control,
+.attendance-filter-card .form-select {
+
+    min-height: 46px;
+
+}
+
+
+/* =====================================================
+   TABLA
+===================================================== */
+
+.attendance-table-card {
+
+    background:
+        linear-gradient(145deg,
+            rgba(11, 39, 49, .98),
+            rgba(7, 29, 38, .98));
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+
+    overflow: hidden;
+
+}
+
+
+.table-header {
+
+    padding: 25px 28px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border-bottom:
+        1px solid var(--border);
+
+}
+
+
+.table-header h2 {
+
+    margin: 5px 0 0;
+
+    color: var(--text-white);
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+}
+
+
+.record-count {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 8px 13px;
+
+    border-radius: 9px;
+
+    background:
+        rgba(0, 212, 216, .10);
+
+    border:
+        1px solid rgba(0, 212, 216, .18);
+
+    color: var(--primary);
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+}
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+.attendance-table {
+
+    margin: 0;
+
+    color: var(--text-light);
+
+}
+
+
+.attendance-table thead th {
+
+    background:
+        rgba(3, 18, 23, .45);
+
+    color: var(--text-muted);
+
+    border-bottom:
+        1px solid var(--border);
+
+    padding: 16px 18px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: .5px;
+
+    white-space: nowrap;
+
+}
+
+
+.attendance-table tbody td {
+
+    padding: 17px 18px;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, .05);
+
+    vertical-align: middle;
+
+    background: transparent;
+
+}
+
+
+.attendance-table tbody tr {
+
+    transition:
+        background .2s ease;
+
+}
+
+
+.attendance-table tbody tr:hover td {
+
+    background:
+        rgba(0, 212, 216, .035);
+
+}
+
+
+.attendance-table tbody tr:last-child td {
+
+    border-bottom: none;
+
+}
+
+
+/* =====================================================
+   EMPLEADO
+===================================================== */
+
+.employee-cell {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 190px;
+
+}
+
+
+.employee-avatar {
+
+    width: 40px;
+
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(135deg,
+            var(--primary),
+            var(--secondary));
+
+    color: #031217;
+
+    font-weight: 800;
+
+    font-size: 15px;
+
+}
+
+
+.employee-cell strong {
+
+    color: var(--text-white);
+
+    font-size: 14px;
+
+}
+
+
+/* =====================================================
+   CORREO
+===================================================== */
+
+.email-text {
+
+    color: var(--text-muted);
+
+    font-size: 13px;
+
+}
+
+
+/* =====================================================
+   HORAS
+===================================================== */
+
+.time-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px 11px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+}
+
+
+.time-badge.entry {
+
+    color: var(--success);
+
+    background:
+        rgba(34, 211, 166, .10);
+
+    border:
+        1px solid rgba(34, 211, 166, .18);
+
+}
+
+
+.time-badge.exit {
+
+    color: var(--secondary);
+
+    background:
+        rgba(25, 167, 206, .10);
+
+    border:
+        1px solid rgba(25, 167, 206, .18);
+
+}
+
+
+/* =====================================================
+   ESTADOS
+===================================================== */
+
+.status-complete,
+.status-working {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+}
+
+
+.status-complete {
+
+    color: var(--success);
+
+}
+
+
+.status-working {
+
+    color: var(--warning);
+
+}
+
+
+.status-complete i,
+.status-working i {
+
+    font-size: 8px;
+
+}
+
+
+/* =====================================================
+   FECHA
+===================================================== */
+
+.attendance-table td strong {
+
+    color: var(--text-white);
+
+}
+
+
+/* =====================================================
+   ESTADO VACÍO
+===================================================== */
+
+.empty-state {
+
+    height: 280px;
+
+    text-align: center;
+
+    color: var(--text-muted);
+
+}
+
+
+.empty-state>div {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    height: 100%;
+
+}
+
+
+.empty-state i {
+
+    font-size: 45px;
+
+    color: var(--text-muted);
+
+    opacity: .6;
+
+    margin-bottom: 12px;
+
+}
+
+
+.empty-state h3 {
+
+    color: var(--text-light);
+
+    font-size: 18px;
+
+    margin-bottom: 5px;
+
+}
+
+
+.empty-state p {
+
+    margin: 0;
+
+    color: var(--text-muted);
+
+    font-size: 14px;
+
+}
+
+
+/* =====================================================
+   SCROLL HORIZONTAL
+===================================================== */
+
+.table-responsive {
+
+    scrollbar-color:
+        #174550 var(--bg-dark);
+
+}
+
+
+/* =====================================================
+   BOTÓN LIMPIAR
+===================================================== */
+
+.attendance-filter-card .btn-outline-secondary {
+
+    min-height: 46px;
+
+    border-color:
+        rgba(255, 255, 255, .12);
+
+    color: var(--text-muted);
+
+    border-radius: 10px;
+
+}
+
+
+.attendance-filter-card .btn-outline-secondary:hover {
+
+    background:
+        rgba(255, 255, 255, .06);
+
+    border-color:
+        rgba(255, 255, 255, .20);
+
+    color: white;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 992px) {
+
+    .attendance-table {
+
+        min-width: 900px;
+
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .attendance-filter-card {
+
+        padding: 20px;
+
+    }
+
+
+    .table-header {
+
+        padding: 20px;
+
+        align-items: flex-start;
+
+        gap: 15px;
+
+    }
+
+
+    .table-header h2 {
+
+        font-size: 19px;
+
+    }
+
+
+    .record-count {
+
+        font-size: 12px;
+
+    }
+
+}
+
+
+@media (max-width: 576px) {
+
+    .filter-header {
+
+        margin-bottom: 20px;
+
+    }
+
+
+    .filter-header h2 {
+
+        font-size: 19px;
+
+    }
+
+
+    .filter-icon {
+
+        width: 42px;
+
+        height: 42px;
+
+    }
+
+}

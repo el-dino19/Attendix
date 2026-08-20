@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Asistencia | Sistema de Asistencia</title>
+
+    <link
+    rel="icon"
+    type="image/png"
+    sizes="512x512"
+    href="{{ url_for(
+        'static',
+        filename='img/Logo_Asistencia.png'
+    ) }}"
+>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet"
+    >
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/global.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/dashboard_admin.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/admin_asistencias.css'
+    ) }}"
+>
+
+</head>
+
+
+<body>
+
+<div class="admin-layout">
+
+    <!-- ==========================================
+         SIDEBAR
+    =========================================== -->
+
+    <aside class="admin-sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="sidebar-logo">
+                <i class="bi bi-clock-history"></i>
+            </div>
+
+            <div>
+                <strong>Asistencia</strong>
+                <small>Panel administrativo</small>
+            </div>
+
+        </div>
+
+
+        <div class="sidebar-section-title">
+            ADMINISTRACIÓN
+        </div>
+
+
+        <nav class="sidebar-menu">
+
+            <a
+                href="{{ url_for('admin.dashboard') }}"
+                class="sidebar-link"
+            >
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('admin.usuarios') }}"
+                class="sidebar-link"
+            >
+                <i class="bi bi-people-fill"></i>
+                <span>Usuarios</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('admin.asistencia') }}"
+                class="sidebar-link active"
+            >
+                <i class="bi bi-calendar-check-fill"></i>
+                <span>Asistencia</span>
+            </a>
+
+
+            
+
+        </nav>
+
+
+        <!-- USUARIO -->
+
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-user">
+
+                <div class="user-avatar">
+
+                    {{ session["nombre"][0]|upper }}
+
+                </div>
+
+
+                <div class="sidebar-user-info">
+
+                    <strong>
+                        {{ session["nombre"] }}
+                    </strong>
+
+                    <small>
+                        Administrador
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <a
+        href="{{ url_for('auth.logout') }}"
+        class="logout-link"
+        data-bs-toggle="modal"
+        data-bs-target="#confirmarLogoutModal"
+      >
+        <i class="bi bi-box-arrow-left"></i>
+
+        Cerrar sesión
+      </a>
+
+        </div>
+
+    </aside>
+
+<!-- ==========================================
+    MODAL CONFIRMAR CERRAR SESIÓN
+========================================== -->
+
+  <div
+    class="modal fade"
+    id="confirmarLogoutModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content confirm-modal">
+        <div class="modal-body text-center p-4">
+          <!-- ICONO -->
+
+          
+
+          <!-- TITULO -->
+
+          <h3 class="confirm-title">Cerrar sesión</h3>
+
+          <!-- MENSAJE -->
+
+          <p class="confirm-text">¿Deseas cerrar tu sesión?</p>
+
+          <p class="confirm-warning">
+            <i class="bi bi-shield-check"></i>
+
+            Tu sesión se cerrará de forma segura.
+          </p>
+
+          <!-- BOTONES -->
+
+          <div class="confirm-buttons">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">
+              
+
+              Si, Cerrar Sesión 
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+    <!-- ==========================================
+         CONTENIDO
+    =========================================== -->
+
+    <main class="admin-main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="admin-topbar">
+
+            <div>
+
+                <div class="page-breadcrumb">
+
+                    Administración
+
+                    <span>/</span>
+
+                    Asistencia
+
+                </div>
+
+
+                <h1>
+                    Control de asistencia
+                </h1>
+
+
+                <p>
+                    Consulta las entradas y salidas de los empleados.
+                </p>
+
+            </div>
+
+
+            <div class="topbar-user">
+
+                <div class="topbar-avatar">
+
+                    {{ session["nombre"][0]|upper }}
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        {{ session["nombre"] }}
+                    </strong>
+
+                    <small>
+                        {{ session["correo"] }}
+                    </small>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ==========================================
+             FILTROS
+        =========================================== -->
+
+        <section class="attendance-filter-card">
+
+            <div class="filter-header">
+
+                <div>
+
+                    <span class="panel-label">
+                        CONSULTA
+                    </span>
+
+                    <h2>
+                        Filtrar asistencia
+                    </h2>
+
+                </div>
+
+                <div class="filter-icon">
+
+                    <i class="bi bi-funnel-fill"></i>
+
+                </div>
+
+            </div>
+
+
+            <form
+                method="GET"
+                action="{{ url_for('admin.asistencia') }}"
+                class="row g-3"
+            >
+
+                <!-- EMPLEADO -->
+
+                <div class="col-12 col-md-4">
+
+                    <label class="form-label">
+                        Empleado
+                    </label>
+
+                    <select
+                        name="usuario_id"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            Todos los empleados
+                        </option>
+
+                        {% for usuario in usuarios %}
+
+                        <option
+                            value="{{ usuario.id }}"
+                            {% if request.args.get('usuario_id') == usuario.id|string %}
+                            selected
+                            {% endif %}
+                        >
+
+                            {{ usuario.nombre }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- FECHA INICIAL -->
+
+                <div class="col-12 col-md-3">
+
+                    <label class="form-label">
+                        Desde
+                    </label>
+
+                    <input
+                        type="date"
+                        name="fecha_desde"
+                        class="form-control"
+                        value="{{ request.args.get('fecha_desde', '') }}"
+                    >
+
+                </div>
+
+
+                <!-- FECHA FINAL -->
+
+                <div class="col-12 col-md-3">
+
+                    <label class="form-label">
+                        Hasta
+                    </label>
+
+                    <input
+                        type="date"
+                        name="fecha_hasta"
+                        class="form-control"
+                        value="{{ request.args.get('fecha_hasta', '') }}"
+                    >
+
+                </div>
+
+
+                <!-- BOTONES -->
+
+                <div class="col-12 col-md-2 d-flex align-items-end gap-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary flex-grow-1"
+                    >
+
+                        <i class="bi bi-search"></i>
+
+                        Filtrar
+
+                    </button>
+
+
+                    <a
+                        href="{{ url_for('admin.asistencia') }}"
+                        class="btn btn-outline-secondary"
+                        title="Limpiar filtros"
+                    >
+
+                        <i class="bi bi-x-lg"></i>
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- ==========================================
+             TABLA
+        =========================================== -->
+
+        <section class="attendance-table-card">
+
+
+            <div class="table-header">
+
+                <div>
+
+                    <span class="panel-label">
+                        REGISTROS
+                    </span>
+
+                    <h2>
+                        Asistencia registrada
+                    </h2>
+
+                </div>
+
+
+                <div class="record-count">
+
+                    <i class="bi bi-calendar-check"></i>
+
+                    {{ jornadas|length }} registros
+
+                </div>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="table attendance-table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Fecha
+                            </th>
+
+                            <th>
+                                Empleado
+                            </th>
+
+                            <th>
+                                Correo
+                            </th>
+
+                            <th>
+                                Entrada
+                            </th>
+
+                            <th>
+                                Salida
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                    {% for jornada in jornadas %}
+
+                        <tr>
+
+                            <!-- FECHA -->
+
+                            <td>
+
+                                <strong>
+
+                                    {{ jornada.fecha.strftime('%d/%m/%Y') }}
+
+                                </strong>
+
+                            </td>
+
+
+                            <!-- EMPLEADO -->
+
+                            <td>
+
+                                <div class="employee-cell">
+
+                                    <div class="employee-avatar">
+
+                                        {{ jornada.usuario.nombre[0]|upper }}
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <strong>
+                                            {{ jornada.usuario.nombre }}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- CORREO -->
+
+                            <td>
+
+                                <span class="email-text">
+
+                                    {{ jornada.usuario.correo }}
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- ENTRADA -->
+
+                            <td>
+
+                                {% if jornada.entrada %}
+
+                                <span class="time-badge entry">
+
+                                    <i class="bi bi-box-arrow-in-right"></i>
+
+                                    {{ jornada.entrada.strftime('%I:%M %p') }}
+
+                                </span>
+
+                                {% else %}
+
+                                <span class="text-muted">
+                                    —
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- SALIDA -->
+
+                            <td>
+
+                                {% if jornada.salida %}
+
+                                <span class="time-badge exit">
+
+                                    <i class="bi bi-box-arrow-right"></i>
+
+                                    {{ jornada.salida.strftime('%I:%M %p') }}
+
+                                </span>
+
+                                {% else %}
+
+                                <span class="status-working">
+
+                                    <i class="bi bi-circle-fill"></i>
+
+                                    Trabajando
+
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ESTADO -->
+
+                            <td>
+
+                                {% if jornada.salida %}
+
+                                <span class="status-complete">
+
+                                    <i class="bi bi-check-circle-fill"></i>
+
+                                    Completa
+
+                                </span>
+
+                                {% else %}
+
+                                <span class="status-working">
+
+                                    <i class="bi bi-clock-fill"></i>
+
+                                    En jornada
+
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                    {% else %}
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="empty-state"
+                            >
+
+                                <div>
+
+                                    <i class="bi bi-calendar-x"></i>
+
+                                    <h3>
+                                        No hay registros
+                                    </h3>
+
+                                    <p>
+                                        No se encontraron registros de asistencia
+                                        con los filtros seleccionados.
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
+
+</body>
+
+</html>

@@ -1,0 +1,156 @@
+{% extends "base.html" %} {% block css %}
+
+<!-- CSS GENERAL DEL ADMIN -->
+
+<link
+  rel="stylesheet"
+  href="{{ url_for(
+        'static',
+        filename='css/admin.css'
+    ) }}"
+/>
+
+<!-- CSS ESPECÍFICO DE LA VISTA -->
+
+{% block admin_css %} {% endblock %} {% endblock %} {% block body %}
+
+<div class="admin-layout">
+  <!-- ==========================================
+         SIDEBAR
+    =========================================== -->
+
+  <aside class="admin-sidebar">
+    <!-- LOGO -->
+
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">
+        <i class="bi bi-clock-history"></i>
+      </div>
+
+      <div>
+        <strong> Asistencia </strong>
+
+        <small> Panel administrativo </small>
+      </div>
+    </div>
+
+    <!-- TITULO -->
+
+    <div class="sidebar-section-title">ADMINISTRACIÓN</div>
+
+    <!-- MENU -->
+
+    <nav class="sidebar-menu">
+      <!-- DASHBOARD -->
+
+      <a href="{{ url_for('admin.dashboard') }}" class="sidebar-link">
+        <i class="bi bi-grid-1x2-fill"></i>
+
+        <span> Dashboard </span>
+      </a>
+
+      <!-- USUARIOS -->
+
+      <a href="{{ url_for('admin.usuarios') }}" class="sidebar-link active">
+        <i class="bi bi-people-fill"></i>
+
+        <span> Usuarios </span>
+      </a>
+
+      <!-- ASISTENCIA -->
+
+      <a href="{{ url_for('admin.asistencia') }}" class="sidebar-link">
+        <i class="bi bi-calendar-check-fill"></i>
+        <span>Asistencia</span>
+      </a>
+    </nav>
+
+    <!-- ==========================================
+             USUARIO
+        =========================================== -->
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="user-avatar">{{ session["nombre"][0] | upper }}</div>
+
+        <div class="sidebar-user-info">
+          <strong> {{ session["nombre"] }} </strong>
+
+          <small> Administrador </small>
+        </div>
+      </div>
+
+      <a
+        href="{{ url_for('auth.logout') }}"
+        class="btn-logout"
+        data-bs-toggle="modal"
+        data-bs-target="#confirmarLogoutModal"
+      >
+        <i class="bi bi-box-arrow-left"></i>
+
+        Cerrar sesión
+      </a>
+    </div>
+  </aside>
+  <!-- ==========================================
+    MODAL CONFIRMAR CERRAR SESIÓN
+========================================== -->
+
+  <div
+    class="modal fade"
+    id="confirmarLogoutModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content confirm-modal">
+        <div class="modal-body text-center p-4">
+          <!-- ICONO -->
+
+          <div class="confirm-icon logout-icon">
+            <i class="bi bi-box-arrow-left"></i>
+          </div>
+
+          <!-- TITULO -->
+
+          <h3 class="confirm-title">Cerrar sesión</h3>
+
+          <!-- MENSAJE -->
+
+          <p class="confirm-text">¿Deseas cerrar tu sesión?</p>
+
+          <p class="confirm-warning">
+            <i class="bi bi-shield-check"></i>
+
+            Tu sesión se cerrará de forma segura.
+          </p>
+
+          <!-- BOTONES -->
+
+          <div class="confirm-buttons">
+            <button
+              type="button"
+              class="btn confirm-cancel"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+
+            <a href="{{ url_for('auth.logout') }}" class="btn confirm-logout">
+              <i class="bi bi-box-arrow-left"></i>
+
+              Cerrar sesión
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ==========================================
+         CONTENIDO
+    =========================================== -->
+
+  <main class="admin-main">{% block content %} {% endblock %}</main>
+</div>
+
+{% endblock %}
