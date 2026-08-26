@@ -7,14 +7,14 @@
 
     <title>Mi historial | Sistema de Asistencia</title>
     <link
-    rel="icon"
-    type="image/png"
-    sizes="512x512"
-    href="{{ url_for(
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="{{ url_for(
         'static',
         filename='img/Logo_Asistencia.png'
     ) }}"
->
+    />
     <link
       rel="stylesheet"
       href="{{ url_for(
@@ -54,7 +54,7 @@
           <div>
             <strong>{{ session["nombre"] }}</strong>
 
-            <small>Empleado</small>
+            <small>Colaborador</small>
           </div>
         </div>
 
@@ -66,9 +66,7 @@
 
         <a href="{{ url_for('auth.logout') }}" class="btn-logout">
           <i class="bi bi-box-arrow-right"> </i>
-          
         </a>
-        
       </div>
     </header>
 
@@ -172,7 +170,10 @@
               </span>
 
               <span class="date-month">
-                {{ registro.jornada.fecha.strftime("%b") | upper }}
+                {% set meses = { 'Jan': 'ENE', 'Feb': 'FEB', 'Mar': 'MAR',
+                'Apr': 'ABR', 'May': 'MAY', 'Jun': 'JUN', 'Jul': 'JUL', 'Aug':
+                'AGO', 'Sep': 'SEP', 'Oct': 'OCT', 'Nov': 'NOV', 'Dec': 'DIC' }
+                %} {{ meses[registro.jornada.fecha.strftime("%b")] }}
               </span>
 
               <span class="date-year">
@@ -194,8 +195,18 @@
                   <span class="history-date">
                     <i class="bi bi-calendar3"></i>
 
-                    {{ registro.jornada.fecha.strftime( "%A, %d de %B de %Y" )
-                    }}
+                    {% set dias = { 'Monday': 'lunes', 'Tuesday': 'martes',
+                    'Wednesday': 'miércoles', 'Thursday': 'jueves', 'Friday':
+                    'viernes', 'Saturday': 'sábado', 'Sunday': 'domingo' } %} {%
+                    set meses = { 'January': 'enero', 'February': 'febrero',
+                    'March': 'marzo', 'April': 'abril', 'May': 'mayo', 'June':
+                    'junio', 'July': 'julio', 'August': 'agosto', 'September':
+                    'septiembre', 'October': 'octubre', 'November': 'noviembre',
+                    'December': 'diciembre' } %} {{
+                    dias[registro.jornada.fecha.strftime('%A')] }}, {{
+                    registro.jornada.fecha.strftime('%d') }} de {{
+                    meses[registro.jornada.fecha.strftime('%B')] }} de {{
+                    registro.jornada.fecha.strftime('%Y') }}
                   </span>
                 </div>
 

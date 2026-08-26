@@ -1,4 +1,4 @@
-from app import bcrypt
+from app.extensions import bcrypt
 from app.models.usuario import Usuario
 
 

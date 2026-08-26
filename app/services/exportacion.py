@@ -13,10 +13,6 @@ from openpyxl.utils import get_column_letter
 
 def generar_excel_asistencia(registros):
 
-    # ==========================================
-    # CREAR LIBRO
-    # ==========================================
-
     libro = Workbook()
 
     hoja = libro.active
@@ -40,7 +36,6 @@ def generar_excel_asistencia(registros):
         "Salida"
     ]
 
-
     hoja.append(encabezados)
 
 
@@ -55,14 +50,12 @@ def generar_excel_asistencia(registros):
         fgColor=color_azul
     )
 
-
     borde = Border(
         bottom=Side(
             style="thin",
             color="FFFFFF"
         )
     )
-
 
     for celda in hoja[1]:
 
@@ -82,7 +75,7 @@ def generar_excel_asistencia(registros):
 
 
     # ==========================================
-    # FUNCION PARA FORMATEAR HORAS
+    # FORMATO HORA
     # ==========================================
 
     def formato_hora(hora):
@@ -94,7 +87,7 @@ def generar_excel_asistencia(registros):
 
 
     # ==========================================
-    # FUNCION PARA FORMATEAR DESCANSO
+    # FORMATO DESCANSO
     # ==========================================
 
     def formato_descanso(descanso):
@@ -106,7 +99,6 @@ def generar_excel_asistencia(registros):
             descanso.inicio
         )
 
-
         if descanso.fin:
 
             fin = formato_hora(
@@ -116,7 +108,6 @@ def generar_excel_asistencia(registros):
         else:
 
             fin = "En curso"
-
 
         return f"{inicio} - {fin}"
 
@@ -129,16 +120,25 @@ def generar_excel_asistencia(registros):
 
         usuario = jornada.usuario
 
+        if usuario is None:
+            continue
+
+
+        # ======================================
+        # NO EXPORTAR ADMIN
+        # ======================================
+
+        if str(usuario.rol).strip().lower() == "admin":
+            continue
+
 
         break_manana = None
-
         lunch = None
-
         break_tarde = None
 
 
         # ======================================
-        # BUSCAR LOS DESCANSOS
+        # BUSCAR DESCANSOS
         # ======================================
 
         for descanso in jornada.descansos:
@@ -147,11 +147,9 @@ def generar_excel_asistencia(registros):
 
                 break_manana = descanso
 
-
             elif descanso.tipo == "lunch":
 
                 lunch = descanso
-
 
             elif descanso.tipo == "break_tarde":
 
@@ -166,13 +164,9 @@ def generar_excel_asistencia(registros):
 
             jornada.id,
 
-            usuario.nombre
-            if usuario
-            else "",
+            usuario.nombre,
 
-            usuario.correo
-            if usuario
-            else "",
+            usuario.correo,
 
             jornada.fecha.strftime(
                 "%Y-%m-%d"
@@ -208,27 +202,16 @@ def generar_excel_asistencia(registros):
     # ==========================================
 
     anchos = {
-
         1: 14,
-
         2: 25,
-
         3: 35,
-
         4: 15,
-
         5: 15,
-
         6: 22,
-
         7: 22,
-
         8: 22,
-
         9: 15
-
     }
-
 
     for numero_columna, ancho in anchos.items():
 
@@ -242,40 +225,20 @@ def generar_excel_asistencia(registros):
 
 
     # ==========================================
-    # CENTRAR ALGUNAS COLUMNAS
+    # CENTRAR COLUMNAS
     # ==========================================
 
     for fila in hoja.iter_rows(
         min_row=2
     ):
 
-        fila[0].alignment = Alignment(
-            horizontal="center"
-        )
+        for indice in [
+            0, 3, 4, 5, 6, 7, 8
+        ]:
 
-        fila[3].alignment = Alignment(
-            horizontal="center"
-        )
-
-        fila[4].alignment = Alignment(
-            horizontal="center"
-        )
-
-        fila[5].alignment = Alignment(
-            horizontal="center"
-        )
-
-        fila[6].alignment = Alignment(
-            horizontal="center"
-        )
-
-        fila[7].alignment = Alignment(
-            horizontal="center"
-        )
-
-        fila[8].alignment = Alignment(
-            horizontal="center"
-        )
+            fila[indice].alignment = Alignment(
+                horizontal="center"
+            )
 
 
     # ==========================================
@@ -286,21 +249,21 @@ def generar_excel_asistencia(registros):
 
 
     # ==========================================
-    # FILTRO AUTOMÁTICO
+    # FILTRO
     # ==========================================
 
     hoja.auto_filter.ref = hoja.dimensions
 
 
     # ==========================================
-    # ALTURA DEL ENCABEZADO
+    # ALTURA ENCABEZADO
     # ==========================================
 
     hoja.row_dimensions[1].height = 25
 
 
     # ==========================================
-    # CREAR ARCHIVO EN MEMORIA
+    # CREAR ARCHIVO
     # ==========================================
 
     archivo = BytesIO()
@@ -308,6 +271,5 @@ def generar_excel_asistencia(registros):
     libro.save(archivo)
 
     archivo.seek(0)
-
 
     return archivo

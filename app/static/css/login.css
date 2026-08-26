@@ -1,3 +1,24 @@
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+:root {
+    --primary: #00d4d8;
+    --secondary: #19a7ce;
+
+    --success: #22d3a6;
+    --danger: #ff5c70;
+    --warning: #ffc857;
+
+    --text-light: #d8e5e8;
+    --text-muted: #6f8a92;
+}
+
+
+/* =====================================================
+   BODY
+===================================================== */
+
 body {
     margin: 0;
     min-height: 100vh;
@@ -16,13 +37,14 @@ body {
 
     color: #ffffff;
 
-    font-family: Arial, Helvetica, sans-serif;
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
     position: relative;
     overflow-x: hidden;
 }
-
-
 
 
 /* =====================================================
@@ -30,21 +52,16 @@ body {
 ===================================================== */
 
 .login-page {
-
     min-height: 100vh;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
     position: relative;
-
     overflow: hidden;
 
-    padding: 30px;
-
+    padding: 20px;
 }
 
 
@@ -53,7 +70,6 @@ body {
 ===================================================== */
 
 .background-effect {
-
     position: absolute;
 
     border-radius: 50%;
@@ -61,39 +77,26 @@ body {
     filter: blur(80px);
 
     pointer-events: none;
-
 }
-
 
 .background-effect-1 {
-
     width: 400px;
-
     height: 400px;
 
-    background:
-        rgba(0, 212, 216, 0.10);
+    background: rgba(0, 212, 216, 0.10);
 
     top: -150px;
-
     right: -100px;
-
 }
 
-
 .background-effect-2 {
-
     width: 350px;
-
     height: 350px;
 
-    background:
-        rgba(25, 167, 206, 0.08);
+    background: rgba(25, 167, 206, 0.08);
 
     bottom: -150px;
-
     left: -100px;
-
 }
 
 
@@ -102,30 +105,25 @@ body {
 ===================================================== */
 
 .login-container {
-
     width: 100%;
-
-    max-width: 450px;
+    max-width: 400px;
 
     position: relative;
-
     z-index: 2;
 
-    padding: 45px 40px;
+    padding: 30px;
 
     background:
         linear-gradient(145deg,
-            rgba(11, 39, 49, .98),
-            rgba(5, 25, 33, .98));
+            rgba(11, 39, 49, 0.98),
+            rgba(5, 25, 33, 0.98));
 
-    border:
-        1px solid rgba(0, 212, 216, .18);
+    border: 1px solid rgba(0, 212, 216, 0.18);
 
     border-radius: 24px;
 
     box-shadow:
-        0 25px 70px rgba(0, 0, 0, .45);
-
+        0 25px 70px rgba(0, 0, 0, 0.45);
 }
 
 
@@ -134,86 +132,66 @@ body {
 ===================================================== */
 
 .login-logo {
-
     display: flex;
-
     justify-content: center;
-
-    margin-bottom: 25px;
-
-}
-
-
-.logo-icon {
-
-    width: 72px;
-
-    height: 72px;
-
-    display: flex;
-
     align-items: center;
 
-    justify-content: center;
-
-    border-radius: 20px;
-
-    background:
-        linear-gradient(135deg,
-            #00d4d8,
-            #19a7ce);
-
-    color: #031217;
-
-    font-size: 34px;
-
-    box-shadow:
-        0 10px 30px rgba(0, 212, 216, .20);
-
+    margin-bottom: 18px;
 }
 
 
-/* =====================================================
+/*
+   IMPORTANTE:
+   El tamaño del logo se controla aquí.
+*/
+
+.logo-img {
+    width: 80px !important;
+    height: 80px !important;
+
+    max-width: 80px !important;
+    max-height: 80px !important;
+
+    object-fit: contain;
+
+    display: block;
+
+    margin: 0 auto;
+}
+
+
+
+
+/* ====================================================
    TITULO
 ===================================================== */
 
 .login-header {
-
     text-align: center;
 
-    margin-bottom: 32px;
-
+    margin-bottom: 28px;
 }
 
-
 .login-header h1 {
-
     font-size: 30px;
 
     font-weight: 700;
 
-    margin-bottom: 8px;
+    margin: 0 0 8px;
 
     color: #ffffff;
-
 }
-
 
 .login-header h1 span {
-
-    color: #00d4d8;
-
+    color: var(--primary);
 }
 
-
 .login-header p {
-
     color: #8ba3aa;
 
     margin: 0;
 
     font-size: 14px;
-
 }
 
 
@@ -222,44 +200,33 @@ body {
 ===================================================== */
 
 .login-form {
-
     display: flex;
 
     flex-direction: column;
 
-    gap: 22px;
-
+    gap: 20px;
 }
-
 
 .form-group {
-
     width: 100%;
-
 }
 
-
 .form-group label {
-
     display: block;
 
-    color: #d8e5e8;
+    color: var(--text-light);
 
     font-size: 14px;
 
     font-weight: 500;
 
     margin-bottom: 9px;
-
 }
 
-
 .form-group label i {
-
-    color: #00d4d8;
+    color: var(--primary);
 
     margin-right: 5px;
-
 }
 
 
@@ -268,76 +235,64 @@ body {
 ===================================================== */
 
 .input-container {
-
     position: relative;
-
 }
 
-
 .login-input {
+    width: 100%;
 
     height: 52px !important;
 
     padding-left: 46px !important;
-
     padding-right: 46px !important;
 
-    background:
-        #071f28 !important;
+    background: #071f28 !important;
 
-    border:
-        1px solid rgba(255, 255, 255, .10) !important;
+    border: 1px solid rgba(255, 255, 255, 0.10) !important;
 
     color: white !important;
 
     border-radius: 12px !important;
 
-    transition: all .25s ease;
+    transition: all 0.25s ease;
 
+    box-sizing: border-box;
 }
-
 
 .login-input:hover {
-
     border-color:
-        rgba(0, 212, 216, .25) !important;
-
+        rgba(0, 212, 216, 0.25) !important;
 }
-
 
 .login-input:focus {
-
     border-color:
-        #00d4d8 !important;
+        var(--primary) !important;
 
     box-shadow:
-        0 0 0 3px rgba(0, 212, 216, .10) !important;
-
+        0 0 0 3px rgba(0, 212, 216, 0.10) !important;
 }
-
 
 .login-input::placeholder {
-
     color: #607d85;
-
 }
 
 
-.input-icon {
+/* =====================================================
+   ICONOS INPUT
+===================================================== */
 
+.input-icon {
     position: absolute;
 
     left: 16px;
 
     top: 50%;
 
-    transform:
-        translateY(-50%);
+    transform: translateY(-50%);
 
     color: #66858d;
 
     z-index: 5;
-
 }
 
 
@@ -346,15 +301,13 @@ body {
 ===================================================== */
 
 .password-toggle {
-
     position: absolute;
 
     right: 14px;
 
     top: 50%;
 
-    transform:
-        translateY(-50%);
+    transform: translateY(-50%);
 
     border: none;
 
@@ -367,14 +320,10 @@ body {
     font-size: 18px;
 
     padding: 5px;
-
 }
 
-
 .password-toggle:hover {
-
-    color: #00d4d8;
-
+    color: var(--primary);
 }
 
 
@@ -383,7 +332,6 @@ body {
 ===================================================== */
 
 .login-button {
-
     width: 100%;
 
     height: 52px;
@@ -391,7 +339,6 @@ body {
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     gap: 10px;
@@ -404,8 +351,8 @@ body {
 
     background:
         linear-gradient(135deg,
-            #00d4d8,
-            #19a7ce);
+            var(--primary),
+            var(--secondary));
 
     color: #031217;
 
@@ -415,56 +362,42 @@ body {
 
     cursor: pointer;
 
-    transition: all .25s ease;
-
+    transition: all 0.25s ease;
 }
-
 
 .login-button i {
-
-    transition:
-        transform .25s ease;
-
+    transition: transform 0.25s ease;
 }
-
 
 .login-button:hover {
-
-    transform:
-        translateY(-2px);
+    transform: translateY(-2px);
 
     box-shadow:
-        0 10px 30px rgba(0, 212, 216, .22);
-
+        0 10px 30px rgba(0, 212, 216, 0.22);
 }
-
 
 .login-button:hover i {
-
-    transform:
-        translateX(4px);
-
+    transform: translateX(4px);
 }
 
-
 .login-button:active {
-
-    transform:
-        translateY(0);
-
+    transform: translateY(0);
 }
 
 
 /* =====================================================
-   MENSAJES DEL LOGIN
+   MENSAJES
 ===================================================== */
 
 .login-messages {
     width: 100%;
-    margin-bottom: 22px;
+
+    margin-bottom: 20px;
 
     display: flex;
+
     flex-direction: column;
+
     gap: 10px;
 }
 
@@ -474,10 +407,10 @@ body {
 ===================================================== */
 
 .login-alert {
-
     width: 100%;
 
     display: flex;
+
     align-items: center;
 
     gap: 12px;
@@ -493,20 +426,21 @@ body {
     overflow: hidden;
 
     animation:
-        loginAlertIn .35s ease;
+        loginAlertIn 0.35s ease;
 
     transition:
-        opacity .35s ease,
-        transform .35s ease;
+        opacity 0.35s ease,
+        transform 0.35s ease;
+
+    box-sizing: border-box;
 }
 
 
 /* =====================================================
-   ICONO
+   ICONO ALERTA
 ===================================================== */
 
 .login-alert-icon {
-
     width: 36px;
     height: 36px;
 
@@ -515,6 +449,7 @@ body {
     border-radius: 10px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -523,14 +458,14 @@ body {
 
 
 /* =====================================================
-   CONTENIDO
+   CONTENIDO ALERTA
 ===================================================== */
 
 .login-alert-content {
-
     flex: 1;
 
     display: flex;
+
     flex-direction: column;
 
     gap: 2px;
@@ -538,17 +473,13 @@ body {
     line-height: 1.3;
 }
 
-
 .login-alert-content strong {
-
     font-size: 13px;
 
     font-weight: 700;
 }
 
-
 .login-alert-content span {
-
     font-size: 13px;
 
     color: var(--text-light);
@@ -558,11 +489,10 @@ body {
 
 
 /* =====================================================
-   BOTON CERRAR
+   BOTON CERRAR ALERTA
 ===================================================== */
 
 .login-alert-close {
-
     border: none;
 
     background: transparent;
@@ -575,22 +505,20 @@ body {
     border-radius: 7px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
     cursor: pointer;
 
-    transition: all .2s ease;
+    transition: all 0.2s ease;
 }
 
-
 .login-alert-close:hover {
-
     color: white;
 
     background:
-        rgba(255, 255, 255, .08);
-
+        rgba(255, 255, 255, 0.08);
 }
 
 
@@ -599,29 +527,22 @@ body {
 ===================================================== */
 
 .login-alert-success {
-
     background:
-        rgba(34, 211, 166, .10);
+        rgba(34, 211, 166, 0.10);
 
     border-color:
-        rgba(34, 211, 166, .30);
-
+        rgba(34, 211, 166, 0.30);
 }
 
-
 .login-alert-success .login-alert-icon {
-
     color: var(--success);
 
     background:
-        rgba(34, 211, 166, .13);
+        rgba(34, 211, 166, 0.13);
 }
 
-
 .login-alert-success .login-alert-content strong {
-
     color: var(--success);
-
 }
 
 
@@ -630,29 +551,22 @@ body {
 ===================================================== */
 
 .login-alert-danger {
-
     background:
-        rgba(255, 92, 112, .10);
+        rgba(255, 92, 112, 0.10);
 
     border-color:
-        rgba(255, 92, 112, .30);
-
+        rgba(255, 92, 112, 0.30);
 }
 
-
 .login-alert-danger .login-alert-icon {
-
     color: var(--danger);
 
     background:
-        rgba(255, 92, 112, .13);
+        rgba(255, 92, 112, 0.13);
 }
 
-
 .login-alert-danger .login-alert-content strong {
-
     color: var(--danger);
-
 }
 
 
@@ -661,29 +575,22 @@ body {
 ===================================================== */
 
 .login-alert-warning {
-
     background:
-        rgba(255, 200, 87, .10);
+        rgba(255, 200, 87, 0.10);
 
     border-color:
-        rgba(255, 200, 87, .30);
-
+        rgba(255, 200, 87, 0.30);
 }
 
-
 .login-alert-warning .login-alert-icon {
-
     color: var(--warning);
 
     background:
-        rgba(255, 200, 87, .13);
+        rgba(255, 200, 87, 0.13);
 }
 
-
 .login-alert-warning .login-alert-content strong {
-
     color: var(--warning);
-
 }
 
 
@@ -692,29 +599,22 @@ body {
 ===================================================== */
 
 .login-alert-info {
-
     background:
-        rgba(25, 167, 206, .10);
+        rgba(25, 167, 206, 0.10);
 
     border-color:
-        rgba(25, 167, 206, .30);
-
+        rgba(25, 167, 206, 0.30);
 }
 
-
 .login-alert-info .login-alert-icon {
-
     color: var(--secondary);
 
     background:
-        rgba(25, 167, 206, .13);
+        rgba(25, 167, 206, 0.13);
 }
 
-
 .login-alert-info .login-alert-content strong {
-
     color: var(--secondary);
-
 }
 
 
@@ -725,28 +625,21 @@ body {
 @keyframes loginAlertIn {
 
     from {
-
         opacity: 0;
 
         transform:
             translateY(-10px);
-
     }
 
     to {
-
         opacity: 1;
 
         transform:
             translateY(0);
-
     }
-
 }
 
-
 .login-alert-hide {
-
     opacity: 0;
 
     transform:
@@ -759,37 +652,30 @@ body {
 ===================================================== */
 
 .login-footer {
-
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     gap: 7px;
 
-    color: #6f8a92;
+    color: var(--text-muted);
 
     font-size: 12px;
 
-    margin-top: 28px;
-
+    margin-top: 25px;
 }
 
-
 .status-dot {
-
     width: 7px;
-
     height: 7px;
 
     border-radius: 50%;
 
-    background: #22d3a6;
+    background: var(--success);
 
     box-shadow:
-        0 0 8px rgba(34, 211, 166, .7);
-
+        0 0 8px rgba(34, 211, 166, 0.7);
 }
 
 
@@ -800,36 +686,46 @@ body {
 @media (max-width: 576px) {
 
     .login-page {
-
-        padding: 20px;
-
+        padding: 15px;
     }
-
 
     .login-container {
+        max-width: 100%;
 
-        padding: 35px 25px;
+        padding: 28px 22px;
 
         border-radius: 20px;
-
     }
 
+    .logo-img {
+        width: 75px !important;
+        height: 75px !important;
+
+        max-width: 75px !important;
+        max-height: 75px !important;
+    }
+
+    .login-header {
+        margin-bottom: 25px;
+    }
 
     .login-header h1 {
-
         font-size: 26px;
-
     }
 
-
-    .logo-icon {
-
-        width: 65px;
-
-        height: 65px;
-
-        font-size: 30px;
-
+    .login-header p {
+        font-size: 13px;
     }
+}
 
+.logo-img {
+    width: 170px !important;
+    height: 170px !important;
+
+    max-width: 170px !important;
+    max-height: 170px !important;
+
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
 }

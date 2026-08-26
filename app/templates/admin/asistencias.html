@@ -104,7 +104,7 @@
                 class="sidebar-link"
             >
                 <i class="bi bi-people-fill"></i>
-                <span>Usuarios</span>
+                <span>Colaboradores</span>
             </a>
 
 
@@ -320,7 +320,7 @@
                 <div class="col-12 col-md-4">
 
                     <label class="form-label">
-                        Empleado
+                        Colaboradores
                     </label>
 
                     <select
@@ -329,7 +329,7 @@
                     >
 
                         <option value="">
-                            Todos los empleados
+                            Todos los Colaboradores 
                         </option>
 
                         {% for usuario in usuarios %}
@@ -437,7 +437,7 @@
                     </span>
 
                     <h2>
-                        Asistencia registrada
+                        Asistencia Registradas
                     </h2>
 
                 </div>
@@ -447,7 +447,7 @@
 
                     <i class="bi bi-calendar-check"></i>
 
-                    {{ jornadas|length }} registros
+                    
 
                 </div>
 
@@ -467,7 +467,7 @@
                             </th>
 
                             <th>
-                                Empleado
+                                Colaborador
                             </th>
 
                             <th>
@@ -495,7 +495,10 @@
 
                     {% for jornada in jornadas %}
 
+                        {% if jornada.usuario.rol != "admin" %}
+
                         <tr>
+
 
                             <!-- FECHA -->
 
@@ -632,7 +635,7 @@
                             </td>
 
                         </tr>
-
+                         {% endif %}
 
                     {% else %}
 

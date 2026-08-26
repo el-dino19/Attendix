@@ -73,7 +73,7 @@
         <div class="user-info">
           <strong> {{ session["nombre"] }} </strong>
 
-          <small> Empleado </small>
+          <small> Colaborador</small>
         </div>
 
         <!-- HISTORIAL -->
@@ -166,7 +166,7 @@
       <section class="page-header">
         <div>
           <div class="breadcrumb">
-            Empleado
+            Colaborador
 
             <span>/</span>
 
@@ -674,7 +674,7 @@
 
               <!-- TITULO -->
 
-              <h3 class="confirm-title">Finalizar descanso</h3>
+              <h3 class="confirm-title">Finalizar Descanso</h3>
 
               <!-- MENSAJE -->
 
@@ -703,7 +703,7 @@
                   method="POST"
                   action="{{ url_for('empleado.finalizar_descanso_ruta') }}"
                 >
-                  <button type="submit" class="btn confirm-warning-button">
+                  <button type="submit" class="btn-salida">
                     <i class="bi bi-check-lg"></i>
 
                     Sí, Finalizar

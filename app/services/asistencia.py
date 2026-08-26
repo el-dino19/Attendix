@@ -40,25 +40,38 @@ def obtener_jornada_abierta(usuario_id):
 
 def registrar_entrada(usuario_id):
 
-    jornada_abierta = obtener_jornada_abierta(
-        usuario_id
-    )
+    ahora = datetime.now(ZONA_HORARIA)
 
-    if jornada_abierta:
+    fecha_hoy = ahora.date()
+    hora_actual = ahora.time()
 
-        return jornada_abierta, False
+    # ==========================================
+    # VERIFICAR SI YA EXISTE JORNADA HOY
+    # ==========================================
+
+    jornada_existente = Jornada.query.filter(
+        Jornada.usuario_id == usuario_id,
+        Jornada.fecha == fecha_hoy
+    ).first()
+
+    if jornada_existente:
+
+        return jornada_existente
+
+    # ==========================================
+    # CREAR NUEVA JORNADA
+    # ==========================================
 
     jornada = Jornada(
         usuario_id=usuario_id,
-        fecha=obtener_fecha_actual(),
-        entrada=obtener_hora_actual()
+        fecha=fecha_hoy,
+        entrada=hora_actual
     )
 
     db.session.add(jornada)
-
     db.session.commit()
 
-    return jornada, True
+    return jornada
 
 
 def registrar_salida(usuario_id):

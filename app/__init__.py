@@ -1,16 +1,9 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
-
 from config import Config
-
-
-db = SQLAlchemy()
-bcrypt = Bcrypt()
+from app.extensions import db, bcrypt
 
 
 def create_app():
-
     app = Flask(__name__)
 
     app.config.from_object(Config)
@@ -20,11 +13,6 @@ def create_app():
 
     from app.models import Usuario, Jornada, Descanso
 
-    # ========================
-    # REGISTRO DE RUTAS
-    # ========================
-    
-    
     from app.routes.auth import auth_bp
     from app.routes.empleado import empleado_bp
     from app.routes.admin import admin_bp

@@ -4,7 +4,8 @@ from flask import (
     session,
     redirect,
     url_for,
-    flash
+    flash,
+    abort
 )
 
 from app.services.historial import (
@@ -30,8 +31,16 @@ empleado_bp = Blueprint(
 )
 
 
-@empleado_bp.route("/dashboard")
-def dashboard():
+# =========================================================
+# PROTECCION DE TODAS LAS RUTAS DE EMPLEADO
+# =========================================================
+
+@empleado_bp.before_request
+def proteger_empleado():
+
+    # ==========================================
+    # VERIFICAR QUE HAYA INICIADO SESION
+    # ==========================================
 
     if "usuario_id" not in session:
 
@@ -39,6 +48,22 @@ def dashboard():
             url_for("auth.login")
         )
 
+
+    # ==========================================
+    # VERIFICAR QUE SEA EMPLEADO
+    # ==========================================
+
+    if session.get("rol") != "empleado":
+
+        abort(403)
+
+
+# =========================================================
+# DASHBOARD
+# =========================================================
+
+@empleado_bp.route("/dashboard")
+def dashboard():
 
     jornada = obtener_jornada_abierta(
         session["usuario_id"]
@@ -61,15 +86,12 @@ def dashboard():
     )
 
 
+# =========================================================
+# SALIDA
+# =========================================================
+
 @empleado_bp.route("/salida", methods=["POST"])
 def salida():
-
-    if "usuario_id" not in session:
-
-        return redirect(
-            url_for("auth.login")
-        )
-
 
     jornada = registrar_salida(
         session["usuario_id"]
@@ -99,18 +121,15 @@ def salida():
     )
 
 
+# =========================================================
+# INICIAR DESCANSO
+# =========================================================
+
 @empleado_bp.route(
     "/descanso/<tipo>/iniciar",
     methods=["POST"]
 )
 def iniciar_descanso_ruta(tipo):
-
-    if "usuario_id" not in session:
-
-        return redirect(
-            url_for("auth.login")
-        )
-
 
     exitoso, mensaje, descanso = iniciar_descanso(
         session["usuario_id"],
@@ -138,18 +157,15 @@ def iniciar_descanso_ruta(tipo):
     )
 
 
+# =========================================================
+# FINALIZAR DESCANSO
+# =========================================================
+
 @empleado_bp.route(
     "/descanso/finalizar",
     methods=["POST"]
 )
 def finalizar_descanso_ruta():
-
-    if "usuario_id" not in session:
-
-        return redirect(
-            url_for("auth.login")
-        )
-
 
     exitoso, mensaje, descanso = finalizar_descanso(
         session["usuario_id"]
@@ -174,17 +190,14 @@ def finalizar_descanso_ruta():
     return redirect(
         url_for("empleado.dashboard")
     )
-    
-    
+
+
+# =========================================================
+# HISTORIAL
+# =========================================================
+
 @empleado_bp.route("/historial")
 def historial():
-
-    if "usuario_id" not in session:
-
-        return redirect(
-            url_for("auth.login")
-        )
-
 
     historial = obtener_historial_usuario(
         session["usuario_id"]

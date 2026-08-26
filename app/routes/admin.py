@@ -7,21 +7,15 @@ from flask import (
     abort,
     request,
     flash,
-    send_file
+    send_file,
 )
 
 from zoneinfo import ZoneInfo
-
 from datetime import datetime
 
-from flask import send_file
-
 from app.services.exportacion import generar_excel_asistencia
-
 from app.models.usuario import Usuario
-
 from app.models.jornada import Jornada
-from app.models.usuario import Usuario
 
 from app.services.usuarios_admin import (
     obtener_usuarios,
@@ -40,15 +34,29 @@ admin_bp = Blueprint(
 
 
 # =========================================================
-# VERIFICAR QUE SEA ADMIN
+# PROTECCION DE TODAS LAS RUTAS ADMIN
 # =========================================================
 
-def requerir_admin():
+@admin_bp.before_request
+def proteger_admin():
+
+    # ==========================================
+    # VERIFICAR QUE HAYA INICIADO SESION
+    # ==========================================
 
     if "usuario_id" not in session:
-        abort(403)
+
+        return redirect(
+            url_for("auth.login")
+        )
+
+
+    # ==========================================
+    # VERIFICAR QUE SEA ADMIN
+    # ==========================================
 
     if session.get("rol") != "admin":
+
         abort(403)
 
 
@@ -58,8 +66,6 @@ def requerir_admin():
 
 @admin_bp.route("/")
 def dashboard():
-
-    requerir_admin()
 
     cantidad_usuarios = Usuario.query.count()
 
@@ -86,8 +92,6 @@ def dashboard():
 @admin_bp.route("/usuarios")
 def usuarios():
 
-    requerir_admin()
-
     usuarios = obtener_usuarios()
 
     return render_template(
@@ -105,8 +109,6 @@ def usuarios():
     methods=["POST"]
 )
 def crear():
-
-    requerir_admin()
 
     nombre = request.form.get(
         "nombre",
@@ -127,7 +129,8 @@ def crear():
         "rol",
         "empleado"
     )
-    
+
+
     # ==========================================
     # VALIDAR CORREO DUPLICADO
     # ==========================================
@@ -222,8 +225,6 @@ def crear():
 )
 def editar(usuario_id):
 
-    requerir_admin()
-
     nombre = request.form.get(
         "nombre",
         ""
@@ -290,8 +291,6 @@ def editar(usuario_id):
 )
 def cambiar_password_ruta(usuario_id):
 
-    requerir_admin()
-
     password = request.form.get(
         "password",
         ""
@@ -346,9 +345,6 @@ def cambiar_password_ruta(usuario_id):
 )
 def cambiar_estado(usuario_id):
 
-    requerir_admin()
-
-
     # El admin no puede desactivarse a sí mismo
 
     if usuario_id == session.get("usuario_id"):
@@ -386,35 +382,39 @@ def cambiar_estado(usuario_id):
     return redirect(
         url_for("admin.usuarios")
     )
-    
-    
-# =========================================================
-# EXPORTAR ASISTENCIA A EXCEL
-# =========================================================
+
+
+
 
 # =========================================================
-# EXPORTAR ASISTENCIA
+# EXPORTAR ASISTENCIA A EXCEL
 # =========================================================
 
 @admin_bp.route("/exportar")
 def exportar():
 
-    requerir_admin()
 
-    from app.models.jornada import Jornada
 
-    registros = Jornada.query.order_by(
-        Jornada.fecha.desc(),
-        Jornada.entrada.desc()
-    ).all()
+    registros = (
+        Jornada.query
+        .join(Usuario)
+        .filter(
+            Usuario.rol != "admin"
+        )
+        .order_by(
+            Jornada.fecha.desc(),
+            Jornada.entrada.desc()
+        )
+        .all()
+    )
 
     archivo = generar_excel_asistencia(
         registros
     )
 
-    # Hora local de Dallas/Texas
+    # Hora local de Bogotá, Colombia
     ahora = datetime.now(
-        ZoneInfo("America/Chicago")
+        ZoneInfo("America/Bogota")
     )
 
     nombre_archivo = (
@@ -432,13 +432,11 @@ def exportar():
             "spreadsheetml.sheet"
         )
     )
-    
-    
-
 
 # =========================================================
 # VISTA DE ASISTENCIA
 # =========================================================
+
 @admin_bp.route("/asistencia")
 def asistencia():
 
@@ -449,16 +447,19 @@ def asistencia():
     query = Jornada.query.join(Usuario)
 
     if usuario_id:
+
         query = query.filter(
             Jornada.usuario_id == int(usuario_id)
         )
 
     if fecha_desde:
+
         query = query.filter(
             Jornada.fecha >= fecha_desde
         )
 
     if fecha_hasta:
+
         query = query.filter(
             Jornada.fecha <= fecha_hasta
         )
