@@ -6,7 +6,6 @@
 
     <title>Iniciar sesión | Attendix</title>
 
-    <!-- FAVICON -->
     <link
       rel="icon"
       type="image/png"
@@ -34,165 +33,240 @@
   </head>
 
   <body>
+    <!-- =================================================
+         PAGINA LOGIN
+    ================================================== -->
+
     <div class="login-page">
       <!-- FONDOS -->
       <div class="background-effect background-effect-1"></div>
       <div class="background-effect background-effect-2"></div>
 
-      <!-- CONTENEDOR -->
+      <!-- =================================================
+           TARJETA PRINCIPAL
+      ================================================== -->
+
       <div class="login-container">
-        <!-- LOGO -->
-        <div class="login-logo">
-          <img
-            src="{{ url_for('static', filename='img/Logo_Asistencia.png') }}"
-            alt="Logo AsiAttendix"
-            class="logo-img"
-          />
+        <!-- =================================================
+             PANEL IZQUIERDO
+        ================================================== -->
+
+        <div class="login-left">
+          <!-- LOGO -->
+
+          <div class="left-logo">
+            <img
+              src="{{ url_for('static', filename='img/Logo_Asistencia.png') }}"
+              alt="Logo Attendix"
+            />
+          </div>
+
+          <!-- CONTENIDO -->
+
+          <div class="left-content">
+            <h2>
+              Bienvenido a<br />
+              <span>Attendix</span>
+            </h2>
+
+            <p>
+              Tu asistencia, bajo control. Gestiona tus registros de asistencia
+              de forma rápida, sencilla y segura.
+            </p>
+          </div>
+
+          <!-- FOOTER IZQUIERDO -->
+
+          <div class="left-footer">
+            <i class="bi bi-check-circle-fill"></i>
+
+            Sistema de asistencia
+          </div>
         </div>
 
-        <!-- TITULO -->
-        <div class="login-header">
-          <h1>
-            <span>Attendix</span>
-          </h1>
+        <!-- =================================================
+             PANEL DERECHO
+        ================================================== -->
 
-          <p>Tu asistencia, bajo control <i class="bi bi-check-circle-fill"></i></p>
-        </div>
+        <div class="login-right">
+          <!-- HEADER -->
 
-        <!-- MENSAJES LOGIN -->
-        {% with mensajes = get_flashed_messages(with_categories=true) %} {% if
-        mensajes %}
+          <div class="login-header">
+            <h1>Iniciar sesión</h1>
 
-        <div class="login-messages">
-          {% for categoria, mensaje in mensajes %}
+            <p>Ingresa tus datos para continuar</p>
+          </div>
 
-          <div
-            class="login-alert {% if categoria == 'success' %} login-alert-success {% elif categoria == 'danger' %} login-alert-danger {% elif categoria == 'warning' %} login-alert-warning {% else %} login-alert-info {% endif %}"
-          >
-            <div class="login-alert-icon">
-              {% if categoria == "success" %}
-              <i class="bi bi-check-circle-fill"></i>
+          <!-- =================================================
+               MENSAJES FLASK
+          ================================================== -->
 
-              {% elif categoria == "danger" %}
-              <i class="bi bi-x-circle-fill"></i>
+          {% with mensajes = get_flashed_messages(with_categories=true) %} {% if
+          mensajes %}
 
-              {% elif categoria == "warning" %}
-              <i class="bi bi-exclamation-triangle-fill"></i>
+          <div class="login-messages">
+            {% for categoria, mensaje in mensajes %}
 
-              {% else %}
-              <i class="bi bi-info-circle-fill"></i>
-              {% endif %}
-            </div>
-
-            <div class="login-alert-content">
-              <strong>
-                {% if categoria == "success" %} Correcto {% elif categoria ==
-                "danger" %} Error de acceso {% elif categoria == "warning" %}
-                Cuenta desactivada {% else %} Información {% endif %}
-              </strong>
-
-              <span> {{ mensaje }} </span>
-            </div>
-
-            <button
-              type="button"
-              class="login-alert-close"
-              onclick="this.parentElement.remove()"
-              aria-label="Cerrar"
+            <div
+              class="login-alert {% if categoria == 'success' %} login-alert-success {% elif categoria == 'danger' %} login-alert-danger {% elif categoria == 'warning' %} login-alert-warning {% else %} login-alert-info {% endif %}"
             >
-              <i class="bi bi-x"></i>
-            </button>
-          </div>
+              <!-- ICONO -->
 
-          {% endfor %}
-        </div>
+              <div class="login-alert-icon">
+                {% if categoria == "success" %}
 
-        {% endif %} {% endwith %}
+                <i class="bi bi-check-circle-fill"></i>
 
-        <!-- FORMULARIO -->
-        <form
-          method="POST"
-          action="{{ url_for('auth.login') }}"
-          class="login-form"
-        >
-          <!-- CORREO -->
-          <div class="form-group">
-            <label for="correo">
-              <i class="bi bi-envelope"></i>
-              Correo electrónico
-            </label>
+                {% elif categoria == "danger" %}
 
-            <div class="input-container">
-              <i class="bi bi-envelope input-icon"></i>
+                <i class="bi bi-x-circle-fill"></i>
 
-              <input
-                type="email"
-                id="correo"
-                name="correo"
-                class="form-control login-input"
-                placeholder="correo@empresa.com"
-                autocomplete="email"
-                required
-              />
-            </div>
-          </div>
+                {% elif categoria == "warning" %}
 
-          <!-- CONTRASEÑA -->
-          <div class="form-group">
-            <label for="password">
-              <i class="bi bi-lock"></i>
-              Contraseña
-            </label>
+                <i class="bi bi-exclamation-triangle-fill"></i>
 
-            <div class="input-container">
-              <i class="bi bi-lock input-icon"></i>
+                {% else %}
 
-              <input
-                type="password"
-                id="password"
-                name="password"
-                class="form-control login-input"
-                placeholder="Ingresa tu contraseña"
-                autocomplete="current-password"
-                required
-              />
+                <i class="bi bi-info-circle-fill"></i>
 
-              <!-- MOSTRAR CONTRASEÑA -->
+                {% endif %}
+              </div>
+
+              <!-- MENSAJE -->
+
+              <div class="login-alert-content">
+                <strong>
+                  {% if categoria == "success" %} Correcto {% elif categoria ==
+                  "danger" %} Error de acceso {% elif categoria == "warning" %}
+                  Cuenta desactivada {% else %} Información {% endif %}
+                </strong>
+
+                <span> {{ mensaje }} </span>
+              </div>
+
+              <!-- CERRAR -->
+
               <button
                 type="button"
-                class="password-toggle"
-                id="togglePassword"
-                aria-label="Mostrar contraseña"
+                class="login-alert-close"
+                onclick="this.parentElement.remove()"
+                aria-label="Cerrar"
               >
-                <i class="bi bi-eye" id="passwordIcon"></i>
+                <i class="bi bi-x"></i>
               </button>
             </div>
+
+            {% endfor %}
           </div>
 
-          <!-- BOTON -->
-          <button type="submit" class="btn login-button">
-            <span>Iniciar sesión</span>
-            <i class="bi bi-arrow-right"></i>
-          </button>
-        </form>
+          {% endif %} {% endwith %}
 
-        <!-- PIE -->
-        <div class="login-footer">
-          <div class="status-dot"></div>
+          <!-- =================================================
+               FORMULARIO
+          ================================================== -->
 
-          Sistema disponible
+          <form
+            method="POST"
+            action="{{ url_for('auth.login') }}"
+            class="login-form"
+          >
+            <!-- CORREO -->
+
+            <div class="form-group">
+              <label for="correo">
+                <i class="bi bi-envelope"></i>
+
+                Correo electrónico
+              </label>
+
+              <div class="input-container">
+                <i class="bi bi-envelope input-icon"></i>
+
+                <input
+                  type="email"
+                  id="correo"
+                  name="correo"
+                  class="form-control login-input"
+                  placeholder="correo@empresa.com"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- CONTRASEÑA -->
+
+            <div class="form-group">
+              <label for="password">
+                <i class="bi bi-lock"></i>
+
+                Contraseña
+              </label>
+
+              <div class="input-container">
+                <i class="bi bi-lock input-icon"></i>
+
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  class="form-control login-input"
+                  placeholder="Ingresa tu contraseña"
+                  autocomplete="current-password"
+                  required
+                />
+
+                <!-- MOSTRAR CONTRASEÑA -->
+
+                <button
+                  type="button"
+                  class="password-toggle"
+                  id="togglePassword"
+                  aria-label="Mostrar contraseña"
+                >
+                  <i class="bi bi-eye" id="passwordIcon"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- BOTÓN -->
+
+            <button type="submit" class="btn login-button">
+              <span> Iniciar sesión </span>
+
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </form>
+
+          <!-- =================================================
+               ESTADO
+          ================================================== -->
+
+          <div class="login-footer">
+            <div class="status-dot"></div>
+
+            Sistema disponible
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- BOOTSTRAP JS -->
+    <!-- =================================================
+         BOOTSTRAP JS
+    ================================================== -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- MOSTRAR / OCULTAR CONTRASEÑA -->
+    <!-- =================================================
+         MOSTRAR / OCULTAR CONTRASEÑA
+    ================================================== -->
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const passwordInput = document.getElementById("password");
+
         const togglePassword = document.getElementById("togglePassword");
+
         const passwordIcon = document.getElementById("passwordIcon");
 
         if (passwordInput && togglePassword && passwordIcon) {
@@ -201,11 +275,13 @@
               passwordInput.type = "text";
 
               passwordIcon.classList.remove("bi-eye");
+
               passwordIcon.classList.add("bi-eye-slash");
             } else {
               passwordInput.type = "password";
 
               passwordIcon.classList.remove("bi-eye-slash");
+
               passwordIcon.classList.add("bi-eye");
             }
           });
@@ -213,7 +289,10 @@
       });
     </script>
 
-    <!-- OCULTAR MENSAJES AUTOMATICAMENTE -->
+    <!-- =================================================
+         OCULTAR ALERTAS
+    ================================================== -->
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const alerts = document.querySelectorAll(".login-alert");
