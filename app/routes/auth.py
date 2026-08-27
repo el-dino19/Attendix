@@ -19,7 +19,9 @@ auth_bp = Blueprint(
 
 @auth_bp.route("/")
 def inicio():
-    return redirect(url_for("auth.login"))
+    return render_template(
+                    "login.html"
+                )
 
 
 
