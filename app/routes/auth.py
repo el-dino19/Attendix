@@ -17,6 +17,11 @@ auth_bp = Blueprint(
     __name__
 )
 
+@auth_bp.route("/")
+def inicio():
+    return redirect(url_for("auth.login"))
+
+
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
