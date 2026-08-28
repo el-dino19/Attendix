@@ -63,21 +63,36 @@ def login():
         # AUTENTICAR USUARIO
         # ========================================
 
+        # usuario = autenticar_usuario(
+        #     correo,
+        #     password
+        # )
+
+        # if usuario is None:
+
+        #     flash(
+        #         "Correo o contraseña incorrectos.",
+        #         "error"
+        #     )
+
+        #     return render_template(
+        #         "login.html"
+        #     )
         usuario = autenticar_usuario(
-            correo,
-            password
-        )
+                correo,
+                password
+            )
+
+        print("DEBUG - usuario:", usuario)
 
         if usuario is None:
-
             flash(
                 "Correo o contraseña incorrectos.",
                 "error"
             )
 
-            return render_template(
-                "login.html"
-            )
+            return render_template("login.html")
+
 
         # ========================================
         # CREAR SESIÓN
@@ -94,9 +109,13 @@ def login():
         # REGISTRAR ENTRADA
         # ========================================
 
-        registrar_entrada(
-            usuario.id
-        )
+        print("DEBUG - usuario_id:", usuario.id)
+
+        # registrar_entrada(
+        #         usuario.id
+        #     )
+
+        print("DEBUG - entrada registrada")
 
         # ========================================
         # REDIRECCIÓN SEGÚN ROL
