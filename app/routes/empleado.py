@@ -27,7 +27,7 @@ from app.services.descansos import (
 empleado_bp = Blueprint(
     "empleado",
     __name__,
-    url_prefix="/empleado"
+    url_prefix="/Attendix"
 )
 
 

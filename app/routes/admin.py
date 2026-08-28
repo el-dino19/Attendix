@@ -29,7 +29,7 @@ from app.services.usuarios_admin import (
 admin_bp = Blueprint(
     "admin",
     __name__,
-    url_prefix="/admin"
+    url_prefix="/Attendix"
 )
 
 
