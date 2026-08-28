@@ -25,7 +25,9 @@ def inicio():
                     "login.html"
                 )
 
-
+@auth_bp.route("/health")
+def health():
+    return "OK", 200
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():

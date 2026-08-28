@@ -14,6 +14,4 @@ if __name__ == "__main__":
         debug=True
     )
     
-    @app.route("/health")
-    def health():
-        return "OK", 200
+    
