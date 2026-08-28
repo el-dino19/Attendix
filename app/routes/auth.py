@@ -34,90 +34,91 @@ def login():
 
     if request.method == "POST":
 
-        try:
+        correo = request.form.get(
+            "correo",
+            ""
+        ).strip()
 
-            correo = request.form.get(
-                "correo",
-                ""
-            ).strip()
+        password = request.form.get(
+            "password",
+            ""
+        )
 
-            password = request.form.get(
-                "password",
-                ""
+        # ========================================
+        # VALIDAR CAMPOS
+        # ========================================
+
+        if not correo or not password:
+
+            flash(
+                "Debes ingresar correo y contraseña.",
+                "error"
             )
 
-            print("DEBUG 1 - Login recibido")
-            print("DEBUG 2 - Correo:", correo)
-
-            if not correo or not password:
-
-                flash(
-                    "Debes ingresar correo y contraseña.",
-                    "error"
-                )
-
-                return render_template("login.html")
-
-            print("DEBUG 3 - Intentando autenticar")
-
-            usuario = autenticar_usuario(
-                correo,
-                password
+            return render_template(
+                "login.html"
             )
 
-            print("DEBUG 4 - Usuario:", usuario)
+        # ========================================
+        # AUTENTICAR USUARIO
+        # ========================================
 
-            if usuario is None:
+        usuario = autenticar_usuario(
+            correo,
+            password
+        )
 
-                flash(
-                    "Correo o contraseña incorrectos.",
-                    "error"
-                )
+        if usuario is None:
 
-                return render_template("login.html")
+            flash(
+                "Correo o contraseña incorrectos.",
+                "error"
+            )
 
-            print("DEBUG 5 - Usuario encontrado")
-            print("DEBUG 6 - ID:", usuario.id)
-            print("DEBUG 7 - Rol:", usuario.rol)
+            return render_template(
+                "login.html"
+            )
 
-            session.clear()
+        # ========================================
+        # CREAR SESIÓN
+        # ========================================
 
-            session["usuario_id"] = usuario.id
-            session["nombre"] = usuario.nombre
-            session["correo"] = usuario.correo
-            session["rol"] = usuario.rol
+        session.clear()
 
-            print("DEBUG 8 - Sesión creada")
+        session["usuario_id"] = usuario.id
+        session["nombre"] = usuario.nombre
+        session["correo"] = usuario.correo
+        session["rol"] = usuario.rol
 
-            # TEMPORALMENTE DESACTIVADO
-            # registrar_entrada(usuario.id)
+        # ========================================
+        # REGISTRAR ENTRADA
+        # ========================================
 
-            print("DEBUG 9 - Antes de redireccionar")
+        registrar_entrada(
+            usuario.id
+        )
 
-            if usuario.rol == "admin":
+        # ========================================
+        # REDIRECCIÓN SEGÚN ROL
+        # ========================================
 
-                return redirect(
-                    url_for("admin.dashboard")
-                )
+        if usuario.rol == "admin":
 
             return redirect(
-                url_for("empleado.dashboard")
+                url_for("admin.dashboard")
             )
 
-        except Exception as e:
+        return redirect(
+            url_for("empleado.dashboard")
+        )
 
-            print("====================================")
-            print("ERROR REAL DEL LOGIN:")
-            print(type(e).__name__)
-            print(str(e))
-            print("====================================")
-
-            raise
+    # ============================================
+    # PETICIÓN GET
+    # ============================================
 
     return render_template(
         "login.html"
     )
-
 
 
 @auth_bp.route("/logout")
