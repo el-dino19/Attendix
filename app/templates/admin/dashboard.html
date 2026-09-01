@@ -323,32 +323,86 @@
         </div>
 
         <div class="report-box">
-          <div class="report-icon">
-            <i class="bi bi-file-earmark-excel-fill"></i>
-          </div>
+  <div class="report-icon">
+    <i class="bi bi-file-earmark-excel-fill"></i>
+  </div>
 
-          <div>
-            <h3>Exportar asistencia</h3>
+  <div>
+    <h3>Exportar asistencia</h3>
 
-            <p>
-              Descarga todos los registros de asistencia y descansos en formato
-              Excel.
-            </p>
-          </div>
-        </div>
+    <p>
+      Selecciona el período que deseas exportar en formato Excel.
+    </p>
+  </div>
+</div>
 
-        <a href="{{ url_for('admin.exportar') }}" class="btn export-button">
-          <i class="bi bi-download"></i>
+<form
+  action="{{ url_for('admin.exportar') }}"
+  method="GET"
+  class="export-form"
+>
+  <!-- Selección del período -->
+  <div class="export-options">
 
-          Exportar Excel
-        </a>
+    <label for="periodo">
+      <i class="bi bi-calendar-range"></i>
+      Período
+    </label>
 
-        <div class="report-info">
-          <i class="bi bi-info-circle"></i>
+    <select
+      name="periodo"
+      id="periodo"
+      class="form-select"
+      onchange="mostrarSelectorMes()"
+    >
+      <option value="mes">Mes específico</option>
+      <option value="3_meses">Últimos 3 meses</option>
+      <option value="6_meses">Últimos 6 meses</option>
+      <option value="todos">Todos los registros</option>
+    </select>
 
-          Solo los administradores pueden realizar exportaciones.
-        </div>
-      </div>
+  </div>
+
+  <!-- Selector de mes -->
+  <div
+    class="export-options"
+    id="selector-mes"
+  >
+
+    <label for="mes">
+      <i class="bi bi-calendar-month"></i>
+      Seleccionar mes
+    </label>
+
+    <input
+      type="month"
+      name="mes"
+      id="mes"
+      class="form-control"
+      value="{{ request.args.get('mes', '') }}"
+    >
+
+  </div>
+
+  <!-- Botón -->
+  <button
+    type="submit"
+    class="btn export-button"
+  >
+    <i class="bi bi-download"></i>
+    Exportar Excel
+  </button>
+
+</form>
+
+<div class="report-info">
+  <i class="bi bi-info-circle"></i>
+
+  Solo los administradores pueden realizar exportaciones.
+</div>
+
+</script>
+
     </section>
 
     <!-- =====================================================
@@ -374,5 +428,31 @@
     </section>
   </main>
 </div>
+
+<script>
+  function mostrarSelectorMes() {
+
+    const periodo = document.getElementById("periodo").value;
+    const selectorMes = document.getElementById("selector-mes");
+    const mes = document.getElementById("mes");
+
+    if (periodo === "mes") {
+
+      selectorMes.style.display = "block";
+      mes.required = true;
+
+    } else {
+
+      selectorMes.style.display = "none";
+      mes.required = false;
+
+    }
+  }
+
+  // Ejecutar al cargar la página
+  document.addEventListener("DOMContentLoaded", function () {
+    mostrarSelectorMes();
+  });
+</script>
 
 {% endblock %}
