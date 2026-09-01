@@ -1139,64 +1139,109 @@
 
 }
 
-/* ==========================================
-   EXPORTAR EXCEL
-========================================== */
+
+
+/* =====================================================
+   EXPORTACIÓN EXCEL
+===================================================== */
 
 .export-form {
+    width: 100%;
     margin-top: 20px;
 }
 
 .export-options {
+    width: 100%;
     margin-bottom: 18px;
 }
 
 .export-options label {
     display: block;
     margin-bottom: 8px;
+    color: #ffffff;
     font-weight: 600;
-    color: #344054;
+    font-size: 14px;
 }
 
 .export-options label i {
     margin-right: 6px;
-    color: #0d6efd;
+    color: #20c997;
 }
 
-.export-options .form-select,
-.export-options .form-control {
+.export-options select,
+.export-options input[type="month"] {
+    display: block;
     width: 100%;
-    min-height: 45px;
-    border: 1px solid #d0d5dd;
-    border-radius: 8px;
+    height: 45px;
     padding: 8px 12px;
-    background-color: #fff;
+    box-sizing: border-box;
+
+    background-color: #ffffff;
+    color: #222222;
+
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+
+    font-size: 14px;
 }
 
-.export-options .form-select:focus,
-.export-options .form-control:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12);
+.export-options select:focus,
+.export-options input[type="month"]:focus {
     outline: none;
+
+    border-color: #20c997;
+
+    box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.15);
 }
 
 .export-button {
+    display: block;
+
     width: 100%;
-    margin-top: 5px;
-    background-color: #198754;
-    color: white;
+    min-height: 46px;
+
     border: none;
-    padding: 11px 18px;
     border-radius: 8px;
-    font-weight: 600;
-    transition: 0.2s ease;
+
+    background-color: #20c997;
+    color: #001b20;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
 }
 
 .export-button:hover {
-    background-color: #157347;
-    color: white;
+    background-color: #16b887;
+    transform: translateY(-1px);
+}
+
+.export-button i {
+    margin-right: 6px;
+}
+
+#selectorMesExportacion {
+    display: block;
 }
 
 .report-info {
     margin-top: 18px;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 768px) {
+    .export-form {
+        width: 100%;
+    }
+
+    .export-options select,
+    .export-options input[type="month"] {
+        width: 100%;
+    }
 }

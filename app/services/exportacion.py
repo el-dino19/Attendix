@@ -1,9 +1,10 @@
 from io import BytesIO
 from datetime import date
-from dateutil.relativedelta import relativedelta
+from calendar import monthrange
 
 
 from openpyxl import Workbook
+
 from openpyxl.styles import (
     Font,
     PatternFill,
@@ -11,99 +12,254 @@ from openpyxl.styles import (
     Border,
     Side
 )
+
 from openpyxl.utils import get_column_letter
 
 
-def generar_excel_asistencia(registros, periodo="todos", mes=None):
+def restar_meses(fecha, meses):
     """
+    Resta meses a una fecha sin utilizar
+    librerías externas.
+    """
+
+    año = fecha.year
+
+    mes = fecha.month - meses
+
+
+    while mes <= 0:
+
+        mes += 12
+
+        año -= 1
+
+
+    return date(
+        año,
+        mes,
+        1
+    )
+
+
+def generar_excel_asistencia(
+    registros,
+    periodo="todos",
+    mes=None
+):
+
+    """
+    Genera el Excel de asistencia.
+
     periodo:
-        - "mes"       -> requiere mes="2026-08"
-        - "3_meses"   -> últimos 3 meses
-        - "6_meses"   -> últimos 6 meses
-        - "todos"     -> todos los registros
+
+        "mes"
+            Mes específico.
+            Requiere mes="YYYY-MM"
+
+        "3_meses"
+            Mes actual + 2 meses anteriores.
+
+        "6_meses"
+            Mes actual + 5 meses anteriores.
+
+        "todos"
+            Todos los registros.
 
     mes:
-        Formato "YYYY-MM", por ejemplo: "2026-08"
+
+        Formato YYYY-MM.
+
+        Ejemplo:
+
+        2026-10
     """
 
-    libro = Workbook()
-    hoja = libro.active
-    hoja.title = "Asistencia"
 
     # ==========================================
-    # CALCULAR RANGO DE FECHAS
+    # CREAR LIBRO
+    # ==========================================
+
+    libro = Workbook()
+
+    hoja = libro.active
+
+    hoja.title = "Asistencia"
+
+
+    # ==========================================
+    # FECHA ACTUAL
     # ==========================================
 
     hoy = date.today()
 
+
+    # ==========================================
+    # RANGO DE FECHAS
+    # ==========================================
+
     fecha_inicio = None
-    fecha_fin = hoy
+
+    fecha_fin = None
+
+
+    # =====================================================
+    # MES ESPECÍFICO
+    # =====================================================
 
     if periodo == "mes":
 
         if not mes:
+
             raise ValueError(
-                "Para el periodo 'mes' debes indicar mes='YYYY-MM'"
+                "Debes seleccionar un mes."
             )
+
 
         try:
-            año, numero_mes = map(int, mes.split("-"))
-            fecha_inicio = date(año, numero_mes, 1)
 
-        except ValueError:
-            raise ValueError(
-                "El mes debe tener el formato YYYY-MM. "
-                "Ejemplo: 2026-08"
+            partes = mes.split("-")
+
+            if len(partes) != 2:
+
+                raise ValueError
+
+
+            año = int(
+                partes[0]
             )
 
-        # Primer día del siguiente mes
-        if numero_mes == 12:
-            siguiente_mes = date(año + 1, 1, 1)
-        else:
-            siguiente_mes = date(año, numero_mes + 1, 1)
+            numero_mes = int(
+                partes[1]
+            )
 
-        fecha_fin = siguiente_mes - relativedelta(days=1)
+
+            if numero_mes < 1 or numero_mes > 12:
+
+                raise ValueError
+
+
+            fecha_inicio = date(
+                año,
+                numero_mes,
+                1
+            )
+
+
+            # Primer día del siguiente mes
+
+            if numero_mes == 12:
+
+                siguiente_mes = date(
+                    año + 1,
+                    1,
+                    1
+                )
+
+            else:
+
+                siguiente_mes = date(
+                    año,
+                    numero_mes + 1,
+                    1
+                )
+
+
+            # Último día del mes seleccionado
+
+            fecha_fin = (
+                siguiente_mes
+                - date(
+                    1,
+                    1,
+                    1
+                )
+            )
+
+
+        except (ValueError, TypeError):
+
+            raise ValueError(
+                "El mes debe tener el formato YYYY-MM."
+            )
+
+
+    # =====================================================
+    # ÚLTIMOS 3 MESES
+    # =====================================================
 
     elif periodo == "3_meses":
 
-        fecha_inicio = hoy - relativedelta(months=2)
+        fecha_inicio = restar_meses(
+            hoy,
+            2
+        )
 
-        # Llevar al primer día del mes
-        fecha_inicio = fecha_inicio.replace(day=1)
+        fecha_fin = hoy
+
+
+    # =====================================================
+    # ÚLTIMOS 6 MESES
+    # =====================================================
 
     elif periodo == "6_meses":
 
-        fecha_inicio = hoy - relativedelta(months=5)
+        fecha_inicio = restar_meses(
+            hoy,
+            5
+        )
 
-        # Llevar al primer día del mes
-        fecha_inicio = fecha_inicio.replace(day=1)
+        fecha_fin = hoy
+
+
+    # =====================================================
+    # TODOS
+    # =====================================================
 
     elif periodo == "todos":
 
         fecha_inicio = None
 
+        fecha_fin = None
+
+
     else:
+
         raise ValueError(
-            "Periodo inválido. Usa: mes, 3_meses, 6_meses o todos."
+            "Periodo inválido."
         )
+
 
     # ==========================================
     # ENCABEZADOS
     # ==========================================
 
     encabezados = [
+
         "ID Jornada",
+
         "Empleado",
+
         "Correo",
+
         "Fecha",
+
         "Entrada",
+
         "Break mañana",
+
         "Lunch",
+
         "Break tarde",
+
         "Salida"
+
     ]
 
-    hoja.append(encabezados)
+
+    hoja.append(
+        encabezados
+    )
+
 
     # ==========================================
     # ESTILO ENCABEZADOS
@@ -111,33 +267,54 @@ def generar_excel_asistencia(registros, periodo="todos", mes=None):
 
     color_azul = "0D6EFD"
 
+
     fondo = PatternFill(
+
         fill_type="solid",
+
         fgColor=color_azul
+
     )
 
+
     borde = Border(
+
         bottom=Side(
+
             style="thin",
+
             color="FFFFFF"
+
         )
+
     )
+
 
     for celda in hoja[1]:
 
         celda.font = Font(
+
             bold=True,
+
             color="FFFFFF"
+
         )
+
 
         celda.fill = fondo
 
+
         celda.alignment = Alignment(
+
             horizontal="center",
+
             vertical="center"
+
         )
 
+
         celda.border = borde
+
 
     # ==========================================
     # FORMATO HORA
@@ -146,9 +323,14 @@ def generar_excel_asistencia(registros, periodo="todos", mes=None):
     def formato_hora(hora):
 
         if hora is None:
+
             return ""
 
-        return hora.strftime("%H:%M:%S")
+
+        return hora.strftime(
+            "%H:%M:%S"
+        )
+
 
     # ==========================================
     # FORMATO DESCANSO
@@ -157,16 +339,30 @@ def generar_excel_asistencia(registros, periodo="todos", mes=None):
     def formato_descanso(descanso):
 
         if descanso is None:
+
             return ""
 
-        inicio = formato_hora(descanso.inicio)
+
+        inicio = formato_hora(
+            descanso.inicio
+        )
+
 
         if descanso.fin:
-            fin = formato_hora(descanso.fin)
+
+            fin = formato_hora(
+                descanso.fin
+            )
+
         else:
+
             fin = "En curso"
 
-        return f"{inicio} - {fin}"
+
+        return (
+            f"{inicio} - {fin}"
+        )
+
 
     # ==========================================
     # RECORRER JORNADAS
@@ -176,54 +372,103 @@ def generar_excel_asistencia(registros, periodo="todos", mes=None):
 
         usuario = jornada.usuario
 
+
+        # --------------------------------------
+        # USUARIO NO EXISTE
+        # --------------------------------------
+
         if usuario is None:
+
             continue
 
-        # ======================================
+
+        # --------------------------------------
         # NO EXPORTAR ADMIN
-        # ======================================
+        # --------------------------------------
 
-        if str(usuario.rol).strip().lower() == "admin":
+        if (
+            str(usuario.rol)
+            .strip()
+            .lower()
+            == "admin"
+        ):
+
             continue
 
+
         # ======================================
-        # FILTRAR POR FECHA
+        # FILTRO POR FECHA
         # ======================================
 
         if periodo != "todos":
 
             if not jornada.fecha:
+
                 continue
+
 
             fecha_jornada = jornada.fecha
 
-            if hasattr(fecha_jornada, "date"):
-                fecha_jornada = fecha_jornada.date()
+
+            # Si fecha es datetime
+            if hasattr(
+                fecha_jornada,
+                "date"
+            ):
+
+                fecha_jornada = (
+                    fecha_jornada.date()
+                )
+
+
+            # ----------------------------------
+            # COMPARAR FECHA
+            # ----------------------------------
 
             if (
                 fecha_jornada < fecha_inicio
                 or fecha_jornada > fecha_fin
             ):
+
                 continue
+
 
         # ======================================
         # DESCANSOS
         # ======================================
 
         break_manana = None
+
         lunch = None
+
         break_tarde = None
+
 
         for descanso in jornada.descansos:
 
-            if descanso.tipo == "break_manana":
+            if (
+                descanso.tipo
+                == "break_manana"
+            ):
+
                 break_manana = descanso
 
-            elif descanso.tipo == "lunch":
+
+            elif (
+                descanso.tipo
+                == "lunch"
+            ):
+
                 lunch = descanso
 
-            elif descanso.tipo == "break_tarde":
+
+            elif (
+                descanso.tipo
+                == "break_tarde"
+            ):
+
                 break_tarde = descanso
+
 
         # ======================================
         # AGREGAR FILA
@@ -237,7 +482,9 @@ def generar_excel_asistencia(registros, periodo="todos", mes=None):
 
             usuario.correo,
 
-            jornada.fecha.strftime("%Y-%m-%d")
+            jornada.fecha.strftime(
+                "%Y-%m-%d"
+            )
             if jornada.fecha
             else "",
 
@@ -260,23 +507,36 @@ def generar_excel_asistencia(registros, periodo="todos", mes=None):
             formato_hora(
                 jornada.salida
             )
+
         ])
+
 
     # ==========================================
     # AJUSTAR COLUMNAS
     # ==========================================
 
     anchos = {
+
         1: 14,
+
         2: 25,
+
         3: 35,
+
         4: 15,
+
         5: 15,
+
         6: 22,
+
         7: 22,
+
         8: 22,
+
         9: 15
+
     }
+
 
     for numero_columna, ancho in anchos.items():
 
@@ -284,23 +544,44 @@ def generar_excel_asistencia(registros, periodo="todos", mes=None):
             numero_columna
         )
 
+
         hoja.column_dimensions[
             letra
         ].width = ancho
+
 
     # ==========================================
     # CENTRAR COLUMNAS
     # ==========================================
 
-    for fila in hoja.iter_rows(min_row=2):
+    for fila in hoja.iter_rows(
+        min_row=2
+    ):
 
         for indice in [
-            0, 3, 4, 5, 6, 7, 8
+
+            0,
+
+            3,
+
+            4,
+
+            5,
+
+            6,
+
+            7,
+
+            8
+
         ]:
 
             fila[indice].alignment = Alignment(
+
                 horizontal="center"
+
             )
+
 
     # ==========================================
     # CONGELAR ENCABEZADO
@@ -308,11 +589,13 @@ def generar_excel_asistencia(registros, periodo="todos", mes=None):
 
     hoja.freeze_panes = "A2"
 
+
     # ==========================================
-    # FILTRO
+    # FILTRO EXCEL
     # ==========================================
 
     hoja.auto_filter.ref = hoja.dimensions
+
 
     # ==========================================
     # ALTURA ENCABEZADO
@@ -320,14 +603,20 @@ def generar_excel_asistencia(registros, periodo="todos", mes=None):
 
     hoja.row_dimensions[1].height = 25
 
+
     # ==========================================
     # CREAR ARCHIVO
     # ==========================================
 
     archivo = BytesIO()
 
-    libro.save(archivo)
+
+    libro.save(
+        archivo
+    )
+
 
     archivo.seek(0)
+
 
     return archivo

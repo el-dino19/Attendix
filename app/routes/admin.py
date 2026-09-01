@@ -393,7 +393,24 @@ def cambiar_estado(usuario_id):
 @admin_bp.route("/exportar")
 def exportar():
 
+    # ==========================================
+    # OBTENER PARÁMETROS DEL FORMULARIO
+    # ==========================================
 
+    periodo = request.args.get(
+        "periodo",
+        "todos"
+    )
+
+    mes = request.args.get(
+        "mes",
+        ""
+    ).strip()
+
+
+    # ==========================================
+    # OBTENER REGISTROS
+    # ==========================================
 
     registros = (
         Jornada.query
@@ -408,20 +425,64 @@ def exportar():
         .all()
     )
 
+
+    # ==========================================
+    # GENERAR EXCEL
+    # ==========================================
+
     archivo = generar_excel_asistencia(
-        registros
+        registros,
+        periodo=periodo,
+        mes=mes
     )
 
-    # Hora local de Bogotá, Colombia
+
+    # ==========================================
+    # HORA LOCAL DE BOGOTÁ
+    # ==========================================
+
     ahora = datetime.now(
         ZoneInfo("America/Bogota")
     )
 
-    nombre_archivo = (
-        f"Reporte_Asistencia_"
-        f"{ahora.strftime('%Y-%m-%d')}"
-        f".xlsx"
-    )
+
+    # ==========================================
+    # NOMBRE DEL ARCHIVO
+    # ==========================================
+
+    if periodo == "mes" and mes:
+
+        nombre_archivo = (
+            f"Reporte_Asistencia_"
+            f"{mes}.xlsx"
+        )
+
+    elif periodo == "3_meses":
+
+        nombre_archivo = (
+            "Reporte_Asistencia_"
+            "Ultimos_3_Meses.xlsx"
+        )
+
+    elif periodo == "6_meses":
+
+        nombre_archivo = (
+            "Reporte_Asistencia_"
+            "Ultimos_6_Meses.xlsx"
+        )
+
+    else:
+
+        nombre_archivo = (
+            f"Reporte_Asistencia_"
+            f"{ahora.strftime('%Y-%m-%d')}"
+            f".xlsx"
+        )
+
+
+    # ==========================================
+    # DESCARGAR
+    # ==========================================
 
     return send_file(
         archivo,
@@ -432,6 +493,7 @@ def exportar():
             "spreadsheetml.sheet"
         )
     )
+
 
 # =========================================================
 # VISTA DE ASISTENCIA
