@@ -230,7 +230,7 @@ def generar_excel_asistencia(
 
         "ID Jornada",
 
-        "Empleado",
+        "Colaborador",
 
         "Correo",
 
