@@ -1068,55 +1068,48 @@ Panel | Attendix
 document.addEventListener("DOMContentLoaded", function () {
 
     const periodo = document.getElementById("periodo");
-
-    const selectorMes = document.getElementById("selector-mes");
-
+    const selectorMes = document.getElementById("selectorMesExportacion");
     const mes = document.getElementById("mes");
 
+    console.log("Selector exportación cargado");
 
     if (!periodo || !selectorMes || !mes) {
-
-        console.error(
-            "No se encontraron los elementos del selector de exportación."
-        );
-
+        console.error("No se encontraron los elementos de exportación");
         return;
-
     }
 
+    function actualizarPeriodo() {
 
-    function actualizarSelectorMes() {
+        console.log("Periodo seleccionado:", periodo.value);
 
         if (periodo.value === "mes") {
 
             selectorMes.style.display = "block";
-
             mes.required = true;
 
         } else {
 
             selectorMes.style.display = "none";
-
             mes.required = false;
-
             mes.value = "";
 
         }
 
     }
 
-
     periodo.addEventListener(
         "change",
-        actualizarSelectorMes
+        actualizarPeriodo
     );
 
-
-    actualizarSelectorMes();
+    actualizarPeriodo();
 
 });
 
 </script>
+
+{% endblock %}
+
 
 
 {% endblock %}
