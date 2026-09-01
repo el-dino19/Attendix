@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, render_template
 from config import Config
 from app.extensions import db, bcrypt
+
 
 
 def create_app():
@@ -10,6 +11,10 @@ def create_app():
 
     db.init_app(app)
     bcrypt.init_app(app)
+    
+    @app.errorhandler(403)
+    def forbidden(error):
+        return render_template("403.html"), 403
 
     from app.models import Usuario, Jornada, Descanso
 
