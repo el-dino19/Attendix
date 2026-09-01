@@ -634,33 +634,231 @@ Panel | Attendix
            REPORTES
       ================================================== -->
 
-      <div class="panel-card">
+      <!-- =================================================
+     REPORTES
+================================================== -->
+
+<div class="panel-card">
+
+  <div class="panel-header">
+
+    <div>
+      <span class="panel-label">INFORMACIÓN</span>
+
+      <h2>Reportes</h2>
+    </div>
+
+    <div class="panel-header-icon green">
+      <i class="bi bi-bar-chart-fill"></i>
+    </div>
+
+  </div>
 
 
-        <!-- HEADER -->
+  <!-- INFORMACIÓN DEL REPORTE -->
 
-        <div class="panel-header">
+  <div class="report-box">
 
-          <div>
+    <div class="report-icon">
+      <i class="bi bi-file-earmark-excel-fill"></i>
+    </div>
 
-            <span class="panel-label">
-              INFORMACIÓN
-            </span>
+    <div>
 
-            <h2>
-              Reportes
-            </h2>
+      <h3>Exportar asistencia</h3>
 
-          </div>
+      <p>
+        Selecciona el período que deseas exportar en formato Excel.
+      </p>
+
+    </div>
+
+  </div>
 
 
-          <div class="panel-header-icon green">
+  <!-- ==========================================
+       FORMULARIO DE EXPORTACIÓN
+  =========================================== -->
 
-            <i class="bi bi-bar-chart-fill"></i>
+  <form
+    action="{{ url_for('admin.exportar') }}"
+    method="GET"
+    id="formExportar"
+    style="
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      margin-top: 20px;
+    "
+  >
 
-          </div>
+    <!-- PERÍODO -->
 
-        </div>
+    <div
+      style="
+        display: block !important;
+        visibility: visible !important;
+        margin-bottom: 18px;
+      "
+    >
+
+      <label
+        for="periodo"
+        style="
+          display: block !important;
+          margin-bottom: 8px;
+          color: #ffffff;
+          font-weight: 600;
+        "
+      >
+
+        <i class="bi bi-calendar-range"></i>
+
+        Período de exportación
+
+      </label>
+
+
+      <select
+        name="periodo"
+        id="periodo"
+        style="
+          display: block !important;
+          visibility: visible !important;
+          width: 100% !important;
+          height: 45px !important;
+          padding: 8px 12px !important;
+          background: #ffffff !important;
+          color: #222222 !important;
+          border: 1px solid #cccccc !important;
+          border-radius: 8px !important;
+          font-size: 14px !important;
+        "
+      >
+
+        <option value="mes">
+          Mes específico
+        </option>
+
+        <option value="3_meses">
+          Últimos 3 meses
+        </option>
+
+        <option value="6_meses">
+          Últimos 6 meses
+        </option>
+
+        <option value="todos">
+          Todos los registros
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- ==========================================
+         SELECCIONAR MES
+    =========================================== -->
+
+    <div
+      id="selectorMesExportacion"
+      style="
+        display: block !important;
+        visibility: visible !important;
+        margin-bottom: 18px;
+      "
+    >
+
+      <label
+        for="mes"
+        style="
+          display: block !important;
+          margin-bottom: 8px;
+          color: #ffffff;
+          font-weight: 600;
+        "
+      >
+
+        <i class="bi bi-calendar-month"></i>
+
+        Seleccionar mes
+
+      </label>
+
+
+      <input
+        type="month"
+        name="mes"
+        id="mes"
+        required
+        style="
+          display: block !important;
+          visibility: visible !important;
+          width: 100% !important;
+          height: 45px !important;
+          padding: 8px 12px !important;
+          background: #ffffff !important;
+          color: #222222 !important;
+          border: 1px solid #cccccc !important;
+          border-radius: 8px !important;
+          font-size: 14px !important;
+          box-sizing: border-box !important;
+        "
+      >
+
+    </div>
+
+
+    <!-- ==========================================
+         BOTÓN EXPORTAR
+    =========================================== -->
+
+    <button
+      type="submit"
+      style="
+        display: block !important;
+        visibility: visible !important;
+        width: 100% !important;
+        height: 46px !important;
+        border: none !important;
+        border-radius: 8px !important;
+        background: #20c997 !important;
+        color: #001b20 !important;
+        font-weight: 700 !important;
+        font-size: 15px !important;
+        cursor: pointer !important;
+      "
+    >
+
+      <i class="bi bi-download"></i>
+
+      Exportar Excel
+
+    </button>
+
+  </form>
+
+
+  <!-- INFORMACIÓN -->
+
+  <div
+    class="report-info"
+    style="
+      display: block !important;
+      visibility: visible !important;
+      margin-top: 18px;
+    "
+  >
+
+    <i class="bi bi-info-circle"></i>
+
+    Solo los administradores pueden realizar exportaciones.
+
+  </div>
+
+</div>
+
 
 
 
