@@ -1245,3 +1245,7 @@
         width: 100%;
     }
 }
+
+.form-control{
+    color: #cccccc;
+}
