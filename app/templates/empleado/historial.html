@@ -73,7 +73,7 @@
 
         <a
           href="#"
-          class="btn btn-danger"
+          class="btn btn-outline-danger btn-logout"
           data-bs-toggle="modal"
           data-bs-target="#confirmarLogoutModal"
           aria-label="Cerrar sesión"
@@ -95,39 +95,33 @@
       aria-hidden="true"
     >
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content logout-modal">
-          <div class="modal-body text-center">
-            <!-- ICONO -->
-            <div class="logout-icon">
+        <div class="modal-content confirm-modal">
+          <div class="modal-body text-center p-4">
+            <div class="confirm-icon logout-icon">
               <i class="bi bi-box-arrow-left"></i>
             </div>
 
-            <!-- TÍTULO -->
-            <h3 id="confirmarLogoutModalLabel">Cerrar sesión</h3>
+            <h3 class="confirm-title" id="confirmarLogoutModalLabel">
+              Cerrar sesión
+            </h3>
 
-            <!-- TEXTO -->
-            <p class="logout-question">¿Deseas cerrar tu sesión?</p>
+            <p class="confirm-text">¿Deseas cerrar tu sesión?</p>
 
-            <!-- SEGURIDAD -->
-            <p class="logout-security">
+            <p class="confirm-warning">
               <i class="bi bi-shield-check"></i>
               Tu sesión se cerrará de forma segura.
             </p>
 
-            <!-- BOTONES -->
-            <div class="logout-actions">
+            <div class="confirm-buttons">
               <button
                 type="button"
-                class="btn logout-cancel"
+                class="btn confirm-cancel"
                 data-bs-dismiss="modal"
               >
                 Cancelar
               </button>
 
-              <a
-                href="{{ url_for('auth.logout') }}"
-                class="btn btn-danger logout-confirm"
-              >
+              <a href="{{ url_for('auth.logout') }}" class="btn confirm-logout">
                 <i class="bi bi-box-arrow-left"></i>
                 Cerrar sesión
               </a>
