@@ -1138,3 +1138,65 @@
     }
 
 }
+
+/* ==========================================
+   EXPORTAR EXCEL
+========================================== */
+
+.export-form {
+    margin-top: 20px;
+}
+
+.export-options {
+    margin-bottom: 18px;
+}
+
+.export-options label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #344054;
+}
+
+.export-options label i {
+    margin-right: 6px;
+    color: #0d6efd;
+}
+
+.export-options .form-select,
+.export-options .form-control {
+    width: 100%;
+    min-height: 45px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    padding: 8px 12px;
+    background-color: #fff;
+}
+
+.export-options .form-select:focus,
+.export-options .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12);
+    outline: none;
+}
+
+.export-button {
+    width: 100%;
+    margin-top: 5px;
+    background-color: #198754;
+    color: white;
+    border: none;
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.export-button:hover {
+    background-color: #157347;
+    color: white;
+}
+
+.report-info {
+    margin-top: 18px;
+}

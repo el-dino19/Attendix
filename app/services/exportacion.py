@@ -2,6 +2,7 @@ from io import BytesIO
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
+
 from openpyxl import Workbook
 from openpyxl.styles import (
     Font,

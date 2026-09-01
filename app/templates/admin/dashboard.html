@@ -341,29 +341,43 @@
   method="GET"
   class="export-form"
 >
-  <!-- Selección del período -->
+
+  <!-- PERÍODO -->
   <div class="export-options">
 
     <label for="periodo">
       <i class="bi bi-calendar-range"></i>
-      Período
+      Período de exportación
     </label>
 
     <select
       name="periodo"
       id="periodo"
       class="form-select"
-      onchange="mostrarSelectorMes()"
     >
-      <option value="mes">Mes específico</option>
-      <option value="3_meses">Últimos 3 meses</option>
-      <option value="6_meses">Últimos 6 meses</option>
-      <option value="todos">Todos los registros</option>
+
+      <option value="mes">
+        Mes específico
+      </option>
+
+      <option value="3_meses">
+        Últimos 3 meses
+      </option>
+
+      <option value="6_meses">
+        Últimos 6 meses
+      </option>
+
+      <option value="todos">
+        Todos los registros
+      </option>
+
     </select>
 
   </div>
 
-  <!-- Selector de mes -->
+
+  <!-- MES -->
   <div
     class="export-options"
     id="selector-mes"
@@ -376,33 +390,71 @@
 
     <input
       type="month"
-      name="mes"
       id="mes"
+      name="mes"
       class="form-control"
-      value="{{ request.args.get('mes', '') }}"
+      required
     >
 
   </div>
 
-  <!-- Botón -->
+
+  <!-- BOTÓN -->
   <button
     type="submit"
     class="btn export-button"
   >
-    <i class="bi bi-download"></i>
+
+    <i class="bi bi-file-earmark-excel-fill"></i>
+
     Exportar Excel
+
   </button>
 
 </form>
 
+
 <div class="report-info">
+
   <i class="bi bi-info-circle"></i>
 
   Solo los administradores pueden realizar exportaciones.
+
 </div>
 
-</script>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const periodo = document.getElementById("periodo");
+    const selectorMes = document.getElementById("selector-mes");
+    const mes = document.getElementById("mes");
+
+    function actualizarSelector() {
+
+        if (periodo.value === "mes") {
+
+            selectorMes.style.display = "block";
+
+            mes.required = true;
+
+        } else {
+
+            selectorMes.style.display = "none";
+
+            mes.required = false;
+
+            mes.value = "";
+
+        }
+    }
+
+    periodo.addEventListener("change", actualizarSelector);
+
+    actualizarSelector();
+
+});
+</script>
     </section>
 
     <!-- =====================================================
@@ -428,31 +480,5 @@
     </section>
   </main>
 </div>
-
-<script>
-  function mostrarSelectorMes() {
-
-    const periodo = document.getElementById("periodo").value;
-    const selectorMes = document.getElementById("selector-mes");
-    const mes = document.getElementById("mes");
-
-    if (periodo === "mes") {
-
-      selectorMes.style.display = "block";
-      mes.required = true;
-
-    } else {
-
-      selectorMes.style.display = "none";
-      mes.required = false;
-
-    }
-  }
-
-  // Ejecutar al cargar la página
-  document.addEventListener("DOMContentLoaded", function () {
-    mostrarSelectorMes();
-  });
-</script>
 
 {% endblock %}
