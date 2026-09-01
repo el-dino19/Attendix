@@ -77,6 +77,60 @@
         </a>
       </div>
     </header>
+    <!-- =====================================================
+     MODAL CERRAR SESIÓN
+====================================================== -->
+
+    <div
+      class="modal fade"
+      id="confirmarLogoutModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content confirm-modal">
+          <div class="modal-body text-center p-4">
+            <!-- ICONO -->
+
+            <div class="confirm-icon logout-icon">
+              <i class="bi bi-box-arrow-left"></i>
+            </div>
+
+            <!-- TITULO -->
+
+            <h3 class="confirm-title">Cerrar sesión</h3>
+
+            <!-- MENSAJE -->
+
+            <p class="confirm-text">¿Deseas cerrar tu sesión?</p>
+
+            <p class="confirm-warning">
+              <i class="bi bi-shield-check"></i>
+
+              Tu sesión se cerrará de forma segura.
+            </p>
+
+            <!-- BOTONES -->
+
+            <div class="confirm-buttons">
+              <button
+                type="button"
+                class="btn confirm-cancel"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+
+              <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">
+                <i class="bi bi-box-arrow-left"></i>
+
+                Cerrar sesión
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- =====================================================
          CONTENIDO
@@ -145,60 +199,6 @@
         </div>
       </section>
       
-      <!-- =====================================================
-     MODAL CERRAR SESIÓN
-====================================================== -->
-
-    <div
-      class="modal fade"
-      id="confirmarLogoutModal"
-      tabindex="-1"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content confirm-modal">
-          <div class="modal-body text-center p-4">
-            <!-- ICONO -->
-
-            <div class="confirm-icon logout-icon">
-              <i class="bi bi-box-arrow-left"></i>
-            </div>
-
-            <!-- TITULO -->
-
-            <h3 class="confirm-title">Cerrar sesión</h3>
-
-            <!-- MENSAJE -->
-
-            <p class="confirm-text">¿Deseas cerrar tu sesión?</p>
-
-            <p class="confirm-warning">
-              <i class="bi bi-shield-check"></i>
-
-              Tu sesión se cerrará de forma segura.
-            </p>
-
-            <!-- BOTONES -->
-
-            <div class="confirm-buttons">
-              <button
-                type="button"
-                class="btn confirm-cancel"
-                data-bs-dismiss="modal"
-              >
-                Cancelar
-              </button>
-
-              <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">
-                <i class="bi bi-box-arrow-left"></i>
-
-                Cerrar sesión
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
       <!-- =================================================
              HISTORIAL
