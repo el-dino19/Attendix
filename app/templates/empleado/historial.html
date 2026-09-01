@@ -27,6 +27,13 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
       rel="stylesheet"
     />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
   </head>
 
   <body>
@@ -64,89 +71,71 @@
           Dashboard
         </a>
 
-        <button
-  type="button"
-  class="btn-logout"
-  id="btnAbrirLogout"
-  aria-label="Cerrar sesión"
->
-  <i class="bi bi-box-arrow-right"></i>
-</button>
-
+        <a
+          href="#"
+          class="btn btn-danger"
+          data-bs-toggle="modal"
+          data-bs-target="#confirmarLogoutModal"
+          aria-label="Cerrar sesión"
+        >
+          <i class="bi bi-box-arrow-right"></i>
+        </a>
       </div>
     </header>
 
     <!-- =====================================================
-     MODAL CONFIRMAR CERRAR SESIÓN
+     MODAL CERRAR SESIÓN
 ====================================================== -->
 
-<div
-  class="logout-modal-overlay"
-  id="logoutModal"
-  aria-hidden="true"
->
-  <div
-    class="logout-modal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="logoutModalTitle"
-  >
-
-    <!-- Cerrar modal -->
-    <button
-      type="button"
-      class="logout-modal-close"
-      id="btnCerrarLogout"
-      aria-label="Cerrar"
+    <div
+      class="modal fade"
+      id="confirmarLogoutModal"
+      tabindex="-1"
+      aria-labelledby="confirmarLogoutModalLabel"
+      aria-hidden="true"
     >
-      <i class="bi bi-x-lg"></i>
-    </button>
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content logout-modal">
+          <div class="modal-body text-center">
+            <!-- ICONO -->
+            <div class="logout-icon">
+              <i class="bi bi-box-arrow-left"></i>
+            </div>
 
-    <!-- Icono -->
-    <div class="logout-modal-icon">
-      <i class="bi bi-box-arrow-right"></i>
+            <!-- TÍTULO -->
+            <h3 id="confirmarLogoutModalLabel">Cerrar sesión</h3>
+
+            <!-- TEXTO -->
+            <p class="logout-question">¿Deseas cerrar tu sesión?</p>
+
+            <!-- SEGURIDAD -->
+            <p class="logout-security">
+              <i class="bi bi-shield-check"></i>
+              Tu sesión se cerrará de forma segura.
+            </p>
+
+            <!-- BOTONES -->
+            <div class="logout-actions">
+              <button
+                type="button"
+                class="btn logout-cancel"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+
+              <a
+                href="{{ url_for('auth.logout') }}"
+                class="btn btn-danger logout-confirm"
+              >
+                <i class="bi bi-box-arrow-left"></i>
+                Cerrar sesión
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <!-- Contenido -->
-    <h2 id="logoutModalTitle">
-      ¿Cerrar sesión?
-    </h2>
-
-    <p>
-      ¿Estás seguro de que deseas cerrar tu sesión?
-    </p>
-
-    <div class="logout-modal-security">
-      <i class="bi bi-shield-check"></i>
-      <span>
-        Tu sesión se cerrará de forma segura.
-      </span>
-    </div>
-
-    <!-- Acciones -->
-    <div class="logout-modal-actions">
-
-      <button
-        type="button"
-        class="logout-modal-cancel"
-        id="btnCancelarLogout"
-      >
-        Cancelar
-      </button>
-
-      <a
-        href="{{ url_for('auth.logout') }}"
-        class="logout-modal-confirm"
-      >
-        <i class="bi bi-box-arrow-right"></i>
-        Cerrar sesión
-      </a>
-
-    </div>
-
-  </div>
-</div>
-
 
     <!-- =====================================================
          CONTENIDO
@@ -466,51 +455,10 @@
         {% endif %}
       </section>
     </main>
-    <script>
-  const logoutModal = document.getElementById("logoutModal");
-
-  const btnAbrirLogout = document.getElementById("btnAbrirLogout");
-  const btnCerrarLogout = document.getElementById("btnCerrarLogout");
-  const btnCancelarLogout = document.getElementById("btnCancelarLogout");
-
-  function abrirLogoutModal() {
-    logoutModal.classList.add("active");
-    logoutModal.setAttribute("aria-hidden", "false");
-
-    // Evita que el contenido de fondo haga scroll
-    document.body.style.overflow = "hidden";
-  }
-
-  function cerrarLogoutModal() {
-    logoutModal.classList.remove("active");
-    logoutModal.setAttribute("aria-hidden", "true");
-
-    document.body.style.overflow = "";
-  }
-
-  // Abrir
-  btnAbrirLogout.addEventListener("click", abrirLogoutModal);
-
-  // Cerrar con X
-  btnCerrarLogout.addEventListener("click", cerrarLogoutModal);
-
-  // Cerrar con Cancelar
-  btnCancelarLogout.addEventListener("click", cerrarLogoutModal);
-
-  // Cerrar haciendo clic fuera de la modal
-  logoutModal.addEventListener("click", function (event) {
-    if (event.target === logoutModal) {
-      cerrarLogoutModal();
-    }
-  });
-
-  // Cerrar con tecla ESC
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && logoutModal.classList.contains("active")) {
-      cerrarLogoutModal();
-    }
-  });
-</script>
-
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
