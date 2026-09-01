@@ -1,6 +1,5 @@
 from io import BytesIO
-from datetime import date
-from calendar import monthrange
+from datetime import date, timedelta
 
 
 from openpyxl import Workbook
@@ -166,14 +165,8 @@ def generar_excel_asistencia(
 
             # Último día del mes seleccionado
 
-            fecha_fin = (
-                siguiente_mes
-                - date(
-                    1,
-                    1,
-                    1
-                )
-            )
+            fecha_fin = siguiente_mes - timedelta(days=1)
+
 
 
         except (ValueError, TypeError):
