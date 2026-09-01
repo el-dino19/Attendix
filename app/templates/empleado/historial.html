@@ -27,6 +27,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
       rel="stylesheet"
     />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
   </head>
 
   <body>
@@ -64,8 +65,15 @@
           Dashboard
         </a>
 
-        <a href="{{ url_for('auth.logout') }}" class="btn-logout">
-          <i class="bi bi-box-arrow-right"> </i>
+        <a
+          href="#"
+          class="btn btn-danger"
+          data-bs-toggle="modal"
+          data-bs-target="#confirmarLogoutModal"
+        >
+          <i class="bi bi-box-arrow-left"></i>
+
+          
         </a>
       </div>
     </header>
@@ -136,6 +144,61 @@
           </div>
         </div>
       </section>
+      
+      <!-- =====================================================
+     MODAL CERRAR SESIÓN
+====================================================== -->
+
+    <div
+      class="modal fade"
+      id="confirmarLogoutModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content confirm-modal">
+          <div class="modal-body text-center p-4">
+            <!-- ICONO -->
+
+            <div class="confirm-icon logout-icon">
+              <i class="bi bi-box-arrow-left"></i>
+            </div>
+
+            <!-- TITULO -->
+
+            <h3 class="confirm-title">Cerrar sesión</h3>
+
+            <!-- MENSAJE -->
+
+            <p class="confirm-text">¿Deseas cerrar tu sesión?</p>
+
+            <p class="confirm-warning">
+              <i class="bi bi-shield-check"></i>
+
+              Tu sesión se cerrará de forma segura.
+            </p>
+
+            <!-- BOTONES -->
+
+            <div class="confirm-buttons">
+              <button
+                type="button"
+                class="btn confirm-cancel"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+
+              <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">
+                <i class="bi bi-box-arrow-left"></i>
+
+                Cerrar sesión
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
       <!-- =================================================
              HISTORIAL
