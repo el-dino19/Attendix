@@ -48,16 +48,12 @@ body {
         sans-serif;
 
     background:
-        radial-gradient(
-            circle at 90% 0%,
+        radial-gradient(circle at 90% 0%,
             rgba(0, 212, 216, .12),
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 0% 100%,
+            transparent 28%),
+        radial-gradient(circle at 0% 100%,
             rgba(25, 167, 206, .08),
-            transparent 30%
-        ),
+            transparent 30%),
         var(--bg);
 }
 
@@ -119,11 +115,9 @@ body {
     border-radius: 12px;
 
     background:
-        linear-gradient(
-            135deg,
+        linear-gradient(135deg,
             var(--primary),
-            var(--secondary)
-        );
+            var(--secondary));
 
     color: #031217;
 
@@ -181,11 +175,9 @@ body {
     justify-content: center;
 
     background:
-        linear-gradient(
-            135deg,
+        linear-gradient(135deg,
             var(--primary),
-            var(--secondary)
-        );
+            var(--secondary));
 
     color: #031217;
 
@@ -353,11 +345,9 @@ body {
     padding: 20px;
 
     background:
-        linear-gradient(
-            145deg,
+        linear-gradient(145deg,
             var(--card),
-            var(--bg-2)
-        );
+            var(--bg-2));
 
     border:
         1px solid var(--border);
@@ -467,11 +457,9 @@ body {
     margin-bottom: 20px;
 
     background:
-        linear-gradient(
-            145deg,
+        linear-gradient(145deg,
             rgba(11, 39, 49, .98),
-            rgba(7, 29, 38, .98)
-        );
+            rgba(7, 29, 38, .98));
 
     border:
         1px solid var(--border);
@@ -746,7 +734,7 @@ body {
     margin-bottom: 12px;
 }
 
-.break-header > div {
+.break-header>div {
     display: flex;
 
     align-items: center;
@@ -762,7 +750,7 @@ body {
     font-size: 13px;
 }
 
-.break-header > span {
+.break-header>span {
     min-width: 24px;
 
     height: 24px;
@@ -874,7 +862,7 @@ body {
     gap: 14px;
 }
 
-.break-time > div {
+.break-time>div {
     text-align: right;
 }
 
@@ -896,7 +884,7 @@ body {
     font-size: 11px;
 }
 
-.break-time > i {
+.break-time>i {
     color: var(--primary);
 
     font-size: 12px;
@@ -947,11 +935,9 @@ body {
     padding: 70px 25px;
 
     background:
-        linear-gradient(
-            145deg,
+        linear-gradient(145deg,
             var(--card),
-            var(--bg-2)
-        );
+            var(--bg-2));
 
     border:
         1px solid var(--border);
@@ -1014,11 +1000,9 @@ body {
     color: #031217;
 
     background:
-        linear-gradient(
-            135deg,
+        linear-gradient(135deg,
             var(--primary),
-            var(--secondary)
-        );
+            var(--secondary));
 
     font-size: 12px;
 
@@ -1164,5 +1148,395 @@ body {
 
     .page-header h1 {
         font-size: 25px;
+    }
+}
+
+/* =====================================================
+   BOTÓN CERRAR SESIÓN - HEADER
+===================================================== */
+
+.btn-logout {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 12px;
+
+    background: rgba(239, 68, 68, 0.08);
+    color: #ef4444;
+
+    font-size: 19px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.btn-logout:hover {
+    background: #ef4444;
+    color: #ffffff;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.25);
+}
+
+.btn-logout:active {
+    transform: translateY(0);
+}
+
+
+/* =====================================================
+   MODAL CERRAR SESIÓN
+===================================================== */
+
+/* Fondo detrás de la modal */
+
+.modal-backdrop.show {
+    opacity: 0.65;
+    background-color: #0f172a;
+}
+
+
+/* Contenedor principal */
+
+.logout-modal {
+    position: relative;
+
+    width: 100%;
+
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 24px;
+
+    background: #ffffff;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 25px 60px rgba(15, 23, 42, 0.20),
+        0 10px 25px rgba(15, 23, 42, 0.08);
+
+    animation: logoutModalIn 0.25s ease;
+}
+
+
+/* Animación */
+
+@keyframes logoutModalIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* =====================================================
+   BOTÓN X
+===================================================== */
+
+.modal-close {
+    position: absolute;
+
+    top: 18px;
+    right: 18px;
+
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #f8fafc;
+    color: #64748b;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.modal-close:hover {
+    background: #fee2e2;
+    color: #dc2626;
+
+    transform: rotate(5deg);
+}
+
+
+/* =====================================================
+   CONTENIDO
+===================================================== */
+
+.logout-modal .modal-body {
+    padding: 42px 38px 34px;
+
+    text-align: center;
+}
+
+
+/* =====================================================
+   ICONO
+===================================================== */
+
+.logout-modal-icon {
+    width: 72px;
+    height: 72px;
+
+    margin: 0 auto 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 20px;
+
+    background: linear-gradient(135deg,
+            #fee2e2,
+            #fef2f2);
+
+    color: #ef4444;
+
+    font-size: 30px;
+
+    box-shadow:
+        0 8px 20px rgba(239, 68, 68, 0.12);
+}
+
+
+/* =====================================================
+   TÍTULO
+===================================================== */
+
+.logout-modal h3 {
+    margin: 0 0 10px;
+
+    color: #0f172a;
+
+    font-size: 24px;
+    font-weight: 750;
+
+    letter-spacing: -0.4px;
+}
+
+
+/* =====================================================
+   TEXTO
+===================================================== */
+
+.logout-modal-text {
+    max-width: 350px;
+
+    margin: 0 auto 20px;
+
+    color: #64748b;
+
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+/* =====================================================
+   MENSAJE DE SEGURIDAD
+===================================================== */
+
+.logout-modal-info {
+    max-width: 390px;
+
+    margin: 0 auto 28px;
+    padding: 12px 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    border: 1px solid #dbeafe;
+    border-radius: 12px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.logout-modal-info i {
+    font-size: 16px;
+}
+
+
+/* =====================================================
+   BOTONES
+===================================================== */
+
+.logout-modal-actions {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+}
+
+
+/* Cancelar */
+
+.logout-btn-cancel {
+    min-width: 125px;
+    height: 46px;
+
+    padding: 0 20px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.logout-btn-cancel:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+
+    color: #1e293b;
+
+    transform: translateY(-1px);
+}
+
+
+/* Confirmar */
+
+.logout-btn-confirm {
+    min-width: 155px;
+    height: 46px;
+
+    padding: 0 20px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    border: none;
+    border-radius: 11px;
+
+    background: linear-gradient(135deg,
+            #ef4444,
+            #dc2626);
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    box-shadow:
+        0 6px 15px rgba(239, 68, 68, 0.22);
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.logout-btn-confirm:hover {
+    background: linear-gradient(135deg,
+            #dc2626,
+            #b91c1c);
+
+    color: #ffffff;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 22px rgba(239, 68, 68, 0.30);
+}
+
+.logout-btn-confirm:active {
+    transform: translateY(0);
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 576px) {
+
+    .logout-modal {
+        margin: 0 14px;
+
+        border-radius: 20px;
+    }
+
+    .logout-modal .modal-body {
+        padding: 36px 22px 25px;
+    }
+
+    .logout-modal-icon {
+        width: 64px;
+        height: 64px;
+
+        margin-bottom: 18px;
+
+        font-size: 26px;
+    }
+
+    .logout-modal h3 {
+        font-size: 21px;
+    }
+
+    .logout-modal-text {
+        font-size: 14px;
+    }
+
+    .logout-modal-info {
+        font-size: 12px;
+    }
+
+    .logout-modal-actions {
+        flex-direction: column-reverse;
+
+        width: 100%;
+    }
+
+    .logout-btn-cancel,
+    .logout-btn-confirm {
+        width: 100%;
     }
 }
