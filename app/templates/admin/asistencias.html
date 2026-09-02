@@ -34,7 +34,7 @@
     >
 
 
-    <!-- BOOTSTRAP ICONS -->
+    <!-- ICONOS -->
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
@@ -42,7 +42,7 @@
     >
 
 
-    <!-- CSS GLOBAL -->
+    <!-- CSS -->
 
     <link
         rel="stylesheet"
@@ -52,9 +52,6 @@
         ) }}"
     >
 
-
-    <!-- CSS DASHBOARD ADMIN -->
-
     <link
         rel="stylesheet"
         href="{{ url_for(
@@ -63,9 +60,6 @@
         ) }}"
     >
 
-
-    <!-- CSS ASISTENCIAS -->
-
     <link
         rel="stylesheet"
         href="{{ url_for(
@@ -73,9 +67,6 @@
             filename='css/admin_asistencias.css'
         ) }}"
     >
-
-
-    <!-- CSS HISTORIAL -->
 
     <link
         rel="stylesheet"
@@ -101,16 +92,11 @@
     <aside class="admin-sidebar">
 
 
-        <!-- BRAND -->
-
         <div class="sidebar-brand">
 
             <div class="sidebar-logo">
-
                 <i class="bi bi-clock-history"></i>
-
             </div>
-
 
             <div>
 
@@ -127,19 +113,13 @@
         </div>
 
 
-        <!-- SECCIÓN -->
-
         <div class="sidebar-section-title">
             ADMINISTRACIÓN
         </div>
 
 
-        <!-- MENÚ -->
-
         <nav class="sidebar-menu">
 
-
-            <!-- DASHBOARD -->
 
             <a
                 href="{{ url_for('admin.dashboard') }}"
@@ -155,8 +135,6 @@
             </a>
 
 
-            <!-- COLABORADORES -->
-
             <a
                 href="{{ url_for('admin.usuarios') }}"
                 class="sidebar-link"
@@ -170,8 +148,6 @@
 
             </a>
 
-
-            <!-- ASISTENCIA -->
 
             <a
                 href="{{ url_for('admin.asistencia') }}"
@@ -190,9 +166,7 @@
         </nav>
 
 
-        <!-- =================================================
-             USUARIO
-        ================================================== -->
+        <!-- USUARIO -->
 
         <div class="sidebar-bottom">
 
@@ -223,8 +197,6 @@
             </div>
 
 
-            <!-- LOGOUT -->
-
             <a
                 href="#"
                 class="logout-link"
@@ -247,7 +219,7 @@
 
 
     <!-- =====================================================
-         MODAL CERRAR SESIÓN
+         MODAL LOGOUT
     ====================================================== -->
 
     <div
@@ -267,16 +239,12 @@
                 <div class="modal-body text-center p-4">
 
 
-                    <!-- ICONO -->
-
                     <div class="confirm-icon logout-icon">
 
                         <i class="bi bi-box-arrow-left"></i>
 
                     </div>
 
-
-                    <!-- TITULO -->
 
                     <h3
                         class="confirm-title"
@@ -286,14 +254,10 @@
                     </h3>
 
 
-                    <!-- MENSAJE -->
-
                     <p class="confirm-text">
                         ¿Deseas cerrar tu sesión?
                     </p>
 
-
-                    <!-- ADVERTENCIA -->
 
                     <p class="confirm-warning">
 
@@ -304,8 +268,6 @@
                     </p>
 
 
-                    <!-- BOTONES -->
-
                     <div class="confirm-buttons">
 
 
@@ -314,9 +276,7 @@
                             class="btn confirm-cancel"
                             data-bs-dismiss="modal"
                         >
-
                             Cancelar
-
                         </button>
 
 
@@ -337,7 +297,6 @@
 
                 </div>
 
-
             </div>
 
         </div>
@@ -347,7 +306,7 @@
 
 
     <!-- =====================================================
-         CONTENIDO PRINCIPAL
+         CONTENIDO
     ====================================================== -->
 
     <main class="admin-main">
@@ -363,8 +322,6 @@
             <div>
 
 
-                <!-- BREADCRUMB -->
-
                 <div class="page-breadcrumb">
 
                     Administración
@@ -376,25 +333,18 @@
                 </div>
 
 
-                <!-- TITULO -->
-
                 <h1>
                     Control de asistencia
                 </h1>
 
 
-                <!-- DESCRIPCIÓN -->
-
                 <p>
-                    Consulta las entradas y salidas de los colaboradores.
+                    Consulta las jornadas y descansos de los colaboradores.
                 </p>
 
 
             </div>
 
-
-
-            <!-- USUARIO -->
 
             <div class="topbar-user">
 
@@ -433,16 +383,18 @@
         <section class="attendance-filter-card">
 
 
-            <!-- CABECERA -->
-
             <div class="filter-header">
 
 
                 <div>
 
+
                     <span class="panel-label">
+
                         <i class="bi bi-funnel-fill"></i>
+
                         CONSULTA
+
                     </span>
 
 
@@ -454,6 +406,7 @@
                     <p>
                         Selecciona un colaborador o un rango de fechas.
                     </p>
+
 
                 </div>
 
@@ -469,8 +422,6 @@
 
 
 
-            <!-- FORMULARIO -->
-
             <form
                 method="GET"
                 action="{{ url_for('admin.asistencia') }}"
@@ -478,9 +429,7 @@
             >
 
 
-                <!-- =========================================
-                     COLABORADOR
-                ========================================== -->
+                <!-- COLABORADOR -->
 
                 <div class="col-12 col-md-4">
 
@@ -530,9 +479,7 @@
 
 
 
-                <!-- =========================================
-                     FECHA DESDE
-                ========================================== -->
+                <!-- DESDE -->
 
                 <div class="col-12 col-md-3">
 
@@ -558,9 +505,7 @@
 
 
 
-                <!-- =========================================
-                     FECHA HASTA
-                ========================================== -->
+                <!-- HASTA -->
 
                 <div class="col-12 col-md-3">
 
@@ -586,14 +531,10 @@
 
 
 
-                <!-- =========================================
-                     BOTONES
-                ========================================== -->
+                <!-- BOTONES -->
 
                 <div class="col-12 col-md-2 d-flex align-items-end gap-2">
 
-
-                    <!-- FILTRAR -->
 
                     <button
                         type="submit"
@@ -606,8 +547,6 @@
 
                     </button>
 
-
-                    <!-- LIMPIAR -->
 
                     <a
                         href="{{ url_for('admin.asistencia') }}"
@@ -631,13 +570,13 @@
 
 
         <!-- =================================================
-             RESUMEN DE REGISTROS
+             RESUMEN
         ================================================== -->
 
         <section class="summary-grid">
 
 
-            <!-- JORNADAS -->
+            <!-- TOTAL -->
 
             <div class="summary-card">
 
@@ -654,6 +593,7 @@
                     <span>
                         Jornadas encontradas
                     </span>
+
 
                     <strong>
                         {{ jornadas | length }}
@@ -777,30 +717,24 @@
 
 
                     <p>
-                        Consulta las jornadas registradas por los colaboradores.
+                        Consulta entradas, salidas y descansos registrados.
                     </p>
 
 
                 </div>
 
 
-                <!-- CONTADOR -->
-
                 <div class="record-count">
 
-
                     <i class="bi bi-people-fill"></i>
-
 
                     <strong>
                         {{ jornadas | length }}
                     </strong>
 
-
                     <span>
                         registros
                     </span>
-
 
                 </div>
 
@@ -810,7 +744,7 @@
 
 
             <!-- =================================================
-                 SI EXISTEN JORNADAS
+                 JORNADAS
             ================================================== -->
 
             {% if jornadas %}
@@ -822,16 +756,12 @@
                 {% for jornada in jornadas %}
 
 
-                <!-- =================================================
-                     TARJETA DE JORNADA
-                ================================================== -->
-
                 <article class="history-card">
 
 
-                    <!-- =============================================
+                    <!-- =========================================
                          FECHA
-                    ============================================== -->
+                    ========================================== -->
 
                     <div class="date-column">
 
@@ -879,24 +809,22 @@
 
 
 
-                    <!-- =============================================
+                    <!-- =========================================
                          CONTENIDO
-                    ============================================== -->
+                    ========================================== -->
 
                     <div class="history-content">
 
 
-                        <!-- =========================================
-                             CABECERA DE LA JORNADA
-                        ========================================== -->
+                        <!-- =====================================
+                             CABECERA
+                        ====================================== -->
 
                         <div class="history-header">
 
 
                             <div>
 
-
-                                <!-- COLABORADOR -->
 
                                 <div class="employee-heading">
 
@@ -912,9 +840,7 @@
 
 
                                         <h3>
-
                                             {{ jornada.usuario.nombre }}
-
                                         </h3>
 
 
@@ -989,21 +915,16 @@
 
 
 
-                            <!-- =====================================
-                                 ESTADO
-                            ====================================== -->
+                            <!-- ESTADO -->
 
                             {% if jornada.salida %}
 
 
                             <span class="status finished">
 
-
                                 <i class="bi bi-check-circle-fill"></i>
 
-
                                 Finalizada
-
 
                             </span>
 
@@ -1013,12 +934,9 @@
 
                             <span class="status active">
 
-
                                 <i class="bi bi-circle-fill"></i>
 
-
                                 En jornada
-
 
                             </span>
 
@@ -1030,9 +948,9 @@
 
 
 
-                        <!-- =========================================
-                             HORARIOS
-                        ========================================== -->
+                        <!-- =====================================
+                             ENTRADA / SALIDA
+                        ====================================== -->
 
                         <div class="time-row">
 
@@ -1061,22 +979,19 @@
 
                                         {% if jornada.entrada %}
 
-
                                             {{ jornada.entrada.strftime(
                                                 "%I:%M:%S %p"
                                             ) }}
 
-
                                         {% else %}
 
-
                                             --
-
 
                                         {% endif %}
 
 
                                     </strong>
+
 
                                 </div>
 
@@ -1085,7 +1000,7 @@
 
 
 
-                            <!-- LÍNEA -->
+                            <!-- LINEA -->
 
                             <div class="time-line">
 
@@ -1119,24 +1034,21 @@
 
                                         {% if jornada.salida %}
 
-
                                             {{ jornada.salida.strftime(
                                                 "%I:%M:%S %p"
                                             ) }}
 
-
                                         {% else %}
-
 
                                             <em>
                                                 En curso
                                             </em>
 
-
                                         {% endif %}
 
 
                                     </strong>
+
 
                                 </div>
 
@@ -1148,55 +1060,271 @@
 
 
 
-                        <!-- =========================================
+                        <!-- =================================================
+                             DESCANSOS
+                        ================================================== -->
+
+                        <div class="break-section">
+
+
+                            <!-- CABECERA DESCANSOS -->
+
+                            <div class="break-header">
+
+
+                                <div>
+
+                                    <i class="bi bi-cup-hot-fill"></i>
+
+                                    <strong>
+                                        Descansos
+                                    </strong>
+
+                                </div>
+
+
+                                <span>
+
+                                    {{ jornada.descansos | length }}
+
+                                </span>
+
+
+                            </div>
+
+
+
+                            <!-- SI HAY DESCANSOS -->
+
+                            {% if jornada.descansos %}
+
+
+                            <div class="break-list">
+
+
+                                {% for descanso in jornada.descansos %}
+
+
+                                <div class="break-item">
+
+
+                                    <!-- TIPO -->
+
+                                    <div class="break-type">
+
+
+                                        <div class="break-icon">
+
+
+                                            {% if descanso.tipo == "lunch" %}
+
+                                                <i class="bi bi-egg-fried"></i>
+
+                                            {% elif descanso.tipo == "break_manana" %}
+
+                                                <i class="bi bi-cup-hot-fill"></i>
+
+                                            {% elif descanso.tipo == "break_tarde" %}
+
+                                                <i class="bi bi-cup-hot-fill"></i>
+
+                                            {% else %}
+
+                                                <i class="bi bi-cup-hot-fill"></i>
+
+                                            {% endif %}
+
+
+                                        </div>
+
+
+                                        <div>
+
+
+                                            <strong>
+
+
+                                                {% if descanso.tipo == "break_manana" %}
+
+                                                    Break mañana
+
+                                                {% elif descanso.tipo == "lunch" %}
+
+                                                    Lunch
+
+                                                {% elif descanso.tipo == "break_tarde" %}
+
+                                                    Break tarde
+
+                                                {% else %}
+
+                                                    {{ descanso.tipo }}
+
+                                                {% endif %}
+
+
+                                            </strong>
+
+
+                                            <small>
+                                                Descanso registrado
+                                            </small>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                    <!-- HORARIOS DEL DESCANSO -->
+
+                                    <div class="break-time">
+
+
+                                        <!-- INICIO -->
+
+                                        <div>
+
+                                            <span>
+                                                Inicio
+                                            </span>
+
+
+                                            <strong>
+
+
+                                                {% if descanso.inicio %}
+
+                                                    {{ descanso.inicio.strftime(
+                                                        "%I:%M:%S %p"
+                                                    ) }}
+
+                                                {% else %}
+
+                                                    --
+
+                                                {% endif %}
+
+
+                                            </strong>
+
+
+                                        </div>
+
+
+
+                                        <i class="bi bi-arrow-right"></i>
+
+
+
+                                        <!-- FIN -->
+
+                                        <div>
+
+                                            <span>
+                                                Fin
+                                            </span>
+
+
+                                            <strong>
+
+
+                                                {% if descanso.fin %}
+
+                                                    {{ descanso.fin.strftime(
+                                                        "%I:%M:%S %p"
+                                                    ) }}
+
+                                                {% else %}
+
+                                                    <em>
+                                                        En curso
+                                                    </em>
+
+                                                {% endif %}
+
+
+                                            </strong>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+
+
+                                {% endfor %}
+
+
+                            </div>
+
+
+                            {% else %}
+
+
+                            <!-- SIN DESCANSOS -->
+
+                            <div class="no-breaks">
+
+
+                                <i class="bi bi-cup-hot"></i>
+
+
+                                <span>
+                                    No hay descansos registrados.
+                                </span>
+
+
+                            </div>
+
+
+                            {% endif %}
+
+
+                        </div>
+
+
+
+                        <!-- =====================================
                              INFORMACIÓN DEL COLABORADOR
-                        ========================================== -->
+                        ====================================== -->
 
                         <div class="employee-info">
 
 
-                            <!-- NOMBRE -->
-
                             <div>
 
-
                                 <i class="bi bi-person-fill"></i>
-
 
                                 <span>
                                     Colaborador
                                 </span>
 
-
                                 <strong>
                                     {{ jornada.usuario.nombre }}
                                 </strong>
 
-
                             </div>
 
 
-
-                            <!-- CORREO -->
-
                             <div>
 
-
                                 <i class="bi bi-envelope-fill"></i>
-
 
                                 <span>
                                     Correo
                                 </span>
 
-
                                 <strong>
                                     {{ jornada.usuario.correo }}
                                 </strong>
 
-
                             </div>
-
 
 
                         </div>
@@ -1215,7 +1343,7 @@
 
 
             <!-- =================================================
-                 SIN JORNADAS
+                 SIN RESULTADOS
             ================================================== -->
 
             {% else %}
@@ -1270,9 +1398,7 @@
 
 
 
-<!-- =====================================================
-     BOOTSTRAP JS
-====================================================== -->
+<!-- BOOTSTRAP JS -->
 
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
