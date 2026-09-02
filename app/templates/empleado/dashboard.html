@@ -7,14 +7,14 @@
 
     <title>Attendix</title>
     <link
-    rel="icon"
-    type="image/png"
-    sizes="512x512"
-    href="{{ url_for(
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="{{ url_for(
         'static',
         filename='img/Logo_Asistencia.png'
     ) }}"
->
+    />
 
     <!-- =====================================================
          BOOTSTRAP ICONS
@@ -93,8 +93,6 @@
           data-bs-target="#confirmarLogoutModal"
         >
           <i class="bi bi-box-arrow-left"></i>
-
-          
         </a>
       </div>
     </header>
@@ -827,6 +825,24 @@
       actualizarReloj();
 
       setInterval(actualizarReloj, 1000);
+    </script>
+
+    <script>
+      setInterval(async function () {
+        try {
+          const response = await fetch("{{ url_for('auth.check_session') }}", {
+            method: "GET",
+            credentials: "same-origin",
+            cache: "no-store",
+          });
+
+          if (!response.ok) {
+            window.location.href = "{{ url_for('auth.login') }}";
+          }
+        } catch (error) {
+          console.error("Error comprobando la sesión:", error);
+        }
+      }, 5000);
     </script>
   </body>
 </html>

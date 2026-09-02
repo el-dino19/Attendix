@@ -7,6 +7,7 @@ from flask import (
     session,
     flash
 )
+from models import Usuario
 
 from app.services.autenticacion import autenticar_usuario
 from app.services.asistencia import registrar_entrada
@@ -123,9 +124,46 @@ def login():
 
 @auth_bp.route("/logout")
 def logout():
+    
 
     session.clear()
 
     return redirect(
         url_for("auth.login")
     )
+    
+from flask import session, jsonify
+
+@auth_bp.route("/check-session")
+def check_session():
+
+    usuario_id = session.get("usuario_id")
+
+    if not usuario_id:
+        return jsonify({
+            "activo": False,
+            "sesion": False
+        }), 401
+
+    usuario = Usuario.query.get(usuario_id)
+
+    if not usuario:
+        session.clear()
+
+        return jsonify({
+            "activo": False,
+            "sesion": False
+        }), 401
+
+    if not usuario.activo:
+        session.clear()
+
+        return jsonify({
+            "activo": False,
+            "sesion": False
+        }), 401
+
+    return jsonify({
+        "activo": True,
+        "sesion": True
+    })
