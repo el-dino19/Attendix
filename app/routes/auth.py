@@ -7,7 +7,7 @@ from flask import (
     session,
     flash
 )
-from models import Usuario
+from app.models import Usuario
 
 from app.services.autenticacion import autenticar_usuario
 from app.services.asistencia import registrar_entrada
