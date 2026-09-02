@@ -5,7 +5,8 @@ from flask import (
     redirect,
     url_for,
     session,
-    flash
+    flash,
+    jsonify
 )
 from app.models import Usuario
 
@@ -156,7 +157,7 @@ def logout():
         url_for("auth.login")
     )
     
-from flask import session, jsonify
+
 
 @auth_bp.route("/check-session")
 def check_session():
