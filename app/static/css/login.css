@@ -94,28 +94,7 @@ body {
 }
 
 
-.background-effect-1 {
-    width: 450px;
-    height: 450px;
 
-    background:
-        rgba(0, 212, 216, 0.10);
-
-    top: -180px;
-    right: -120px;
-}
-
-
-.background-effect-2 {
-    width: 400px;
-    height: 400px;
-
-    background:
-        rgba(25, 167, 206, 0.08);
-
-    bottom: -180px;
-    left: -120px;
-}
 
 
 /* =====================================================
