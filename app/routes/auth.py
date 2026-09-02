@@ -53,7 +53,7 @@ def login():
 
             flash(
                 "Debes ingresar correo y contraseña.",
-                "error"
+                "danger"
             )
 
             return render_template(
@@ -73,7 +73,23 @@ def login():
 
             flash(
                 "Correo o contraseña incorrectos.",
-                "error"
+                "danger"
+            )
+
+            return render_template(
+                "login.html"
+            )
+
+        # ========================================
+        # VALIDAR ESTADO DE LA CUENTA
+        # ========================================
+
+        if not usuario.activo:
+
+            flash(
+                "Tu cuenta está desactivada. "
+                "Contacta con un administrador para recuperar el acceso.",
+                "warning"
             )
 
             return render_template(
@@ -120,7 +136,6 @@ def login():
     return render_template(
         "login.html"
     )
-
 
 @auth_bp.route("/logout")
 def logout():
