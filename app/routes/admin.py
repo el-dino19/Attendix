@@ -506,37 +506,72 @@ def asistencia():
     fecha_desde = request.args.get("fecha_desde")
     fecha_hasta = request.args.get("fecha_hasta")
 
-    query = Jornada.query.join(Usuario)
+    # ==========================================
+    # CONSULTA DE JORNADAS
+    # Solo colaboradores, nunca administradores
+    # ==========================================
+
+    query = (
+        Jornada.query
+        .join(Usuario)
+        .filter(Usuario.rol != "admin")
+    )
+
+    # ==========================================
+    # FILTRO POR COLABORADOR
+    # ==========================================
 
     if usuario_id:
-
         query = query.filter(
             Jornada.usuario_id == int(usuario_id)
         )
 
-    if fecha_desde:
+    # ==========================================
+    # FILTRO FECHA DESDE
+    # ==========================================
 
+    if fecha_desde:
         query = query.filter(
             Jornada.fecha >= fecha_desde
         )
 
-    if fecha_hasta:
+    # ==========================================
+    # FILTRO FECHA HASTA
+    # ==========================================
 
+    if fecha_hasta:
         query = query.filter(
             Jornada.fecha <= fecha_hasta
         )
+
+    # ==========================================
+    # ORDEN
+    # ==========================================
 
     jornadas = query.order_by(
         Jornada.fecha.desc(),
         Jornada.entrada.desc()
     ).all()
 
-    usuarios = Usuario.query.order_by(
-        Usuario.nombre.asc()
-    ).all()
+    # ==========================================
+    # USUARIOS PARA EL SELECT
+    # Solo colaboradores
+    # ==========================================
+
+    usuarios = (
+        Usuario.query
+        .filter(Usuario.rol != "admin")
+        .order_by(Usuario.nombre.asc())
+        .all()
+    )
+
+    # ==========================================
+    # RENDER
+    # ==========================================
 
     return render_template(
         "admin/asistencias.html",
         jornadas=jornadas,
         usuarios=usuarios
     )
+
