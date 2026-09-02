@@ -828,24 +828,7 @@
     </script>
 
 
-    <!-- FINSION DE SESION  -->
-    <script>
-      setInterval(async function () {
-        try {
-          const response = await fetch("{{ url_for('auth.check_session') }}", {
-            method: "GET",
-            credentials: "same-origin",
-            cache: "no-store",
-          });
-
-          if (!response.ok) {
-            window.location.href = "{{ url_for('auth.login') }}";
-          }
-        } catch (error) {
-          console.error("Error comprobando la sesión:", error);
-        }
-      }, 2000);
-    </script>
+    
     
     <!-- MENSAJE DE BANEO -->
     <script>
