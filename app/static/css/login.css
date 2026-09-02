@@ -83,16 +83,9 @@ body {
 ===================================================== */
 
 .background-effect {
-    position: absolute;
-
-    border-radius: 50%;
-
-    pointer-events: none;
-
-    filter: blur(80px);
-
-    z-index: 0;
+    display: none;
 }
+
 
 
 
