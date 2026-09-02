@@ -33,6 +33,10 @@ def health():
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
 
+    # ========================================
+    # PETICIÓN POST
+    # ========================================
+
     if request.method == "POST":
 
         correo = request.form.get(
@@ -65,38 +69,40 @@ def login():
         # ========================================
 
         usuario = autenticar_usuario(
-    correo,
-    password
-)
-
-    if usuario is None:
-
-        flash(
-            "Correo o contraseña incorrectos.",
-            "danger"
+            correo,
+            password
         )
 
-        return render_template(
-            "login.html"
-        )
+        # ========================================
+        # USUARIO NO EXISTE / CONTRASEÑA INCORRECTA
+        # ========================================
 
+        if usuario is None:
 
-    # ========================================
-    # VALIDAR ESTADO DE LA CUENTA
-    # ========================================
+            flash(
+                "Correo o contraseña incorrectos.",
+                "danger"
+            )
 
-    if not usuario.activo:
+            return render_template(
+                "login.html"
+            )
 
-        flash(
-            "Tu cuenta está desactivada. "
-            "Contacta con un administrador para recuperar el acceso.",
-            "warning"
-        )
+        # ========================================
+        # VALIDAR ESTADO
+        # ========================================
 
-        return render_template(
-            "login.html"
-        )
+        if not usuario.activo:
 
+            flash(
+                "Tu cuenta está desactivada. "
+                "Contacta con un administrador para recuperar el acceso.",
+                "warning"
+            )
+
+            return render_template(
+                "login.html"
+            )
 
         # ========================================
         # CREAR SESIÓN
@@ -131,13 +137,14 @@ def login():
             url_for("empleado.dashboard")
         )
 
-    # ============================================
+    # ========================================
     # PETICIÓN GET
-    # ============================================
+    # ========================================
 
     return render_template(
         "login.html"
     )
+
 
 @auth_bp.route("/logout")
 def logout():
