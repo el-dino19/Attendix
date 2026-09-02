@@ -65,36 +65,38 @@ def login():
         # ========================================
 
         usuario = autenticar_usuario(
-            correo,
-            password
+    correo,
+    password
+)
+
+    if usuario is None:
+
+        flash(
+            "Correo o contraseña incorrectos.",
+            "danger"
         )
 
-        if usuario is None:
+        return render_template(
+            "login.html"
+        )
 
-            flash(
-                "Correo o contraseña incorrectos.",
-                "danger"
-            )
 
-            return render_template(
-                "login.html"
-            )
+    # ========================================
+    # VALIDAR ESTADO DE LA CUENTA
+    # ========================================
 
-        # ========================================
-        # VALIDAR ESTADO DE LA CUENTA
-        # ========================================
+    if not usuario.activo:
 
-        if not usuario.activo:
+        flash(
+            "Tu cuenta está desactivada. "
+            "Contacta con un administrador para recuperar el acceso.",
+            "warning"
+        )
 
-            flash(
-                "Tu cuenta está desactivada. "
-                "Contacta con un administrador para recuperar el acceso.",
-                "warning"
-            )
+        return render_template(
+            "login.html"
+        )
 
-            return render_template(
-                "login.html"
-            )
 
         # ========================================
         # CREAR SESIÓN
