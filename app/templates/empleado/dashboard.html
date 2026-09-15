@@ -368,204 +368,91 @@
           {% endif %}
         </section>
 
-        <!-- =================================================
-             HORAS EXTRAS
-        ================================================== -->
+        <!-- =====================================================
+     HORAS EXTRAS
+====================================================== -->
 
-        <section class="app-card horas-extras-card">
-          <div class="card-header">
-            <div>
-              <span class="card-label"> TIEMPO ADICIONAL </span>
-
-              <h2>
-                <i class="bi bi-clock-history"></i>
-
-                Horas extras
-              </h2>
-            </div>
-
-            <div class="card-header-icon green">
-              <i class="bi bi-plus-circle-fill"></i>
-            </div>
-          </div>
-
-          {% if not jornada %}
-
-          <!-- SIN JORNADA -->
-
-          <div class="empty-state">
-            <div class="empty-icon">
-              <i class="bi bi-clock-history"></i>
-            </div>
-
-            <h3>Horas extras no disponibles</h3>
-
-            <p>Debes tener una jornada registrada.</p>
-          </div>
-
-          {% elif not jornada.salida %}
-
-          <!-- JORNADA ACTIVA -->
-
-          <div class="warning-box">
-            <i class="bi bi-info-circle-fill"></i>
-
-            <span>
-              Debes finalizar tu jornada antes de iniciar horas extras.
-            </span>
-          </div>
-
-          {% elif hora_extra_activa %}
+        <section class="horas-extras-section">
+          {% if jornada and jornada.salida %} {% if hora_extra_activa %}
 
           <!-- =================================================
-                 HORAS EXTRAS ACTIVAS
-            ================================================== -->
+             HORAS EXTRAS ACTIVAS
+        ================================================== -->
 
-          <div class="active-break">
-            <div class="break-status">
-              <div class="break-pulse">
-                <span></span>
+          <div class="horas-extras-active">
+            <div class="horas-extras-header">
+              <div class="horas-extras-icon">
+                <i class="bi bi-clock-fill"></i>
               </div>
 
               <div>
-                <span class="card-label"> HORAS EXTRAS EN PROGRESO </span>
+                <span class="card-label"> HORAS EXTRAS </span>
 
-                <h3>
-                  <i class="bi bi-clock-fill"></i>
-
-                  Tiempo adicional activo
-                </h3>
+                <h3>Horas extras en progreso</h3>
               </div>
             </div>
 
-            <!-- INICIO -->
+            <div class="horas-extras-time">
+              <span> Tiempo trabajado </span>
 
-            <div class="break-start">
-              <span> Inicio </span>
-
-              <strong>
-                {{ hora_extra_activa.inicio.strftime("%I:%M:%S %p") }}
-              </strong>
-            </div>
-
-            <!-- UBICACIÓN -->
-
-            <div class="info-row">
-              <div class="info-icon green">
-                <i class="bi bi-geo-alt-fill"></i>
-              </div>
-
-              <div class="info-content">
-                <span> Ubicación de inicio </span>
-
-                <strong>
-                  {% if hora_extra_activa.ubicacion_inicio %} {{
-                  hora_extra_activa.ubicacion_inicio }} {% else %} GPS
-                  registrado {% endif %}
-                </strong>
-              </div>
-            </div>
-
-            <!-- COORDENADAS -->
-
-            {% if hora_extra_activa.latitud_inicio and
-            hora_extra_activa.longitud_inicio %}
-
-            <div class="info-row">
-              <div class="info-icon blue">
-                <i class="bi bi-pin-map-fill"></i>
-              </div>
-
-              <div class="info-content">
-                <span> Coordenadas de inicio </span>
-
-                <strong>
-                  {{ "%.6f"|format(hora_extra_activa.latitud_inicio|float) }},
-                  {{ "%.6f"|format(hora_extra_activa.longitud_inicio|float) }}
-                </strong>
-              </div>
-            </div>
-
-            {% endif %}
-
-            <!-- CONTADOR -->
-
-            <div class="contador-container">
-              <span class="contador-label"> Tiempo trabajado </span>
-
-              <div
+              <strong
                 id="contador-horas-extras"
-                class="contador"
                 data-inicio="{{ hora_extra_activa.inicio.isoformat() }}"
               >
                 00:00:00
-              </div>
-
-              <p>Horas extras en progreso</p>
+              </strong>
             </div>
 
-            <!-- FINALIZAR -->
+            <div class="horas-extras-location">
+              <i class="bi bi-geo-alt-fill"></i>
+
+              <span> Ubicación registrada al iniciar </span>
+            </div>
 
             <button
               type="button"
-              class="btn-salida"
+              class="btn-finalizar-horas-extras"
               onclick="finalizarHorasExtras()"
             >
               <i class="bi bi-stop-circle-fill"></i>
 
-              FINALIZAR HORAS EXTRAS
+              Finalizar horas extras
             </button>
           </div>
 
           {% else %}
 
           <!-- =================================================
-                 JORNADA FINALIZADA
-            ================================================== -->
+             INICIAR HORAS EXTRAS
+        ================================================== -->
 
-          <div class="break-selection">
-            <div class="info-row">
-              <div class="info-icon blue">
-                <i class="bi bi-check-circle-fill"></i>
+          <div class="horas-extras-start">
+            <div class="horas-extras-start-info">
+              <div class="horas-extras-icon green">
+                <i class="bi bi-clock-history"></i>
               </div>
 
-              <div class="info-content">
-                <span> Jornada </span>
+              <div>
+                <span class="card-label"> JORNADA FINALIZADA </span>
 
-                <strong> Jornada finalizada </strong>
+                <h3>¿Quieres registrar horas extras?</h3>
+
+                <p>Inicia el tiempo adicional cuando estés listo.</p>
               </div>
-            </div>
-
-            <!-- ESTADO GPS -->
-
-            <div id="gps-status" class="warning-box">
-              <i class="bi bi-geo-alt-fill"></i>
-
-              <span>
-                Se solicitará tu ubicación al iniciar las horas extras.
-              </span>
             </div>
 
             <button
               type="button"
-              class="break-option break-blue"
+              class="btn-iniciar-horas-extras"
               onclick="iniciarHorasExtras()"
             >
-              <div class="break-option-icon">
-                <i class="bi bi-clock-fill"></i>
-              </div>
+              <i class="bi bi-clock-fill"></i>
 
-              <div class="break-option-info">
-                <strong> Iniciar horas extras </strong>
-
-                <small> Registrar tiempo adicional y ubicación </small>
-              </div>
-
-              <i class="bi bi-chevron-right"></i>
+              Iniciar horas extras
             </button>
           </div>
 
-          {% endif %}
+          {% endif %} {% endif %}
         </section>
 
         <!-- =================================================
@@ -898,7 +785,8 @@
 
     <script>
       window.ATTENDIX = {
-        iniciarHorasExtrasUrl: "{{url_for('empleado.iniciar_horas_extras_ruta')}}",
+        iniciarHorasExtrasUrl:
+          "{{url_for('empleado.iniciar_horas_extras_ruta')}}",
 
         finalizarHorasExtrasUrl:
           "{{ url_for('empleado.finalizar_horas_extras_ruta')}}",

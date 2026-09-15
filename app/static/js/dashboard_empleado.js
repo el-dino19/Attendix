@@ -1,313 +1,224 @@
-// ============================================================
+// =========================================================
 // DASHBOARD EMPLEADO
-// - Contador de descansos
-// - Contador de horas extras
-// - Solicitud de ubicación GPS
-// - Inicio de horas extras con GPS
-// - Finalización de horas extras con GPS
-// ============================================================
+// =========================================================
 
+document.addEventListener("DOMContentLoaded", function () {
 
-// ============================================================
-// VARIABLES GLOBALES
-// ============================================================
+    // =====================================================
+    // RELOJ DIGITAL
+    // =====================================================
 
-let ubicacionActual = null;
+    function actualizarReloj() {
 
+        const reloj = document.getElementById("reloj");
+        const fecha = document.getElementById("fecha-actual");
 
-// ============================================================
-// OBTENER UBICACIÓN DEL USUARIO
-// ============================================================
-
-function obtenerUbicacion() {
-
-    return new Promise(function (resolve, reject) {
-
-        if (!navigator.geolocation) {
-
-            reject(
-                new Error(
-                    "Tu navegador no soporta la ubicación GPS."
-                )
-            );
-
+        if (!reloj) {
             return;
         }
 
+        const ahora = new Date();
 
-        navigator.geolocation.getCurrentPosition(
+        // Colombia
+        const opcionesHora = {
+            timeZone: "America/Bogota",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+        };
 
-            function (position) {
+        const opcionesFecha = {
+            timeZone: "America/Bogota",
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        };
 
-                const ubicacion = {
+        const horaColombia = new Intl.DateTimeFormat(
+            "es-CO",
+            opcionesHora
+        ).format(ahora);
 
-                    latitud:
-                        position.coords.latitude,
+        const fechaColombia = new Intl.DateTimeFormat(
+            "es-CO",
+            opcionesFecha
+        ).format(ahora);
 
-                    longitud:
-                        position.coords.longitude
-                };
+        reloj.textContent = horaColombia;
 
-
-                // Guardamos la última ubicación conocida
-
-                ubicacionActual = ubicacion;
-
-
-                console.log(
-                    "Ubicación obtenida:",
-                    ubicacion
-                );
-
-
-                resolve(ubicacion);
-            },
-
-
-            function (error) {
-
-                console.error(
-                    "Error obteniendo ubicación:",
-                    error
-                );
-
-
-                let mensaje =
-                    "No fue posible obtener tu ubicación.";
+        if (fecha) {
+            fecha.textContent = fechaColombia;
+        }
+    }
 
 
-                switch (error.code) {
+    // Ejecutar inmediatamente
+    actualizarReloj();
 
-                    case error.PERMISSION_DENIED:
-
-                        mensaje =
-                            "Debes permitir el acceso a tu ubicación para registrar las horas extras.";
-
-                        break;
-
-
-                    case error.POSITION_UNAVAILABLE:
-
-                        mensaje =
-                            "No se pudo determinar tu ubicación.";
-
-                        break;
+    // Actualizar cada segundo
+    setInterval(
+        actualizarReloj,
+        1000
+    );
 
 
-                    case error.TIMEOUT:
+    // =====================================================
+    // MENSAJES FLASH
+    // =====================================================
 
-                        mensaje =
-                            "La ubicación tardó demasiado en responder.";
+    const mensajes = document.querySelectorAll(
+        ".custom-toast"
+    );
 
-                        break;
+    mensajes.forEach(function (mensaje) {
+
+        // Esperar 4 segundos
+        setTimeout(function () {
+
+            mensaje.classList.add(
+                "toast-hide"
+            );
+
+            // Eliminar después de la animación
+            setTimeout(function () {
+
+                mensaje.remove();
+
+            }, 400);
+
+        }, 4000);
+
+    });
+
+
+    // =====================================================
+    // CONTADOR DE DESCANSO
+    // =====================================================
+
+    const contador =
+        document.getElementById("contador");
+
+    if (contador) {
+
+        iniciarContadorDescanso(
+            contador
+        );
+
+    }
+
+
+    // =====================================================
+    // CONTADOR DE HORAS EXTRAS
+    // =====================================================
+
+    const contadorHorasExtras =
+        document.getElementById(
+            "contador-horas-extras"
+        );
+
+    if (contadorHorasExtras) {
+
+        iniciarContadorHorasExtras(
+            contadorHorasExtras
+        );
+
+    }
+
+
+    // =====================================================
+    // BOTÓN FINALIZAR DESCANSO
+    // =====================================================
+
+    const formularioDescanso =
+        document.getElementById(
+            "form-finalizar-descanso"
+        );
+
+    if (formularioDescanso) {
+
+        formularioDescanso.addEventListener(
+            "submit",
+            function () {
+
+                const boton =
+                    formularioDescanso.querySelector(
+                        "button"
+                    );
+
+                if (boton) {
+
+                    boton.disabled = true;
+
+                    boton.innerHTML =
+                        '<i class="bi bi-hourglass-split"></i> FINALIZANDO...';
+
                 }
 
-
-                reject(
-                    new Error(mensaje)
-                );
-            },
-
-
-            {
-                enableHighAccuracy: true,
-
-                timeout: 15000,
-
-                maximumAge: 0
             }
         );
 
-    });
-}
-
-
-// ============================================================
-// SOLICITAR UBICACIÓN AL ENTRAR AL DASHBOARD
-// ============================================================
-
-function solicitarUbicacionInicial() {
-
-    if (!navigator.geolocation) {
-
-        console.warn(
-            "El navegador no soporta geolocalización."
-        );
-
-        return;
     }
 
-
-    navigator.geolocation.getCurrentPosition(
-
-        function (position) {
-
-            ubicacionActual = {
-
-                latitud:
-                    position.coords.latitude,
-
-                longitud:
-                    position.coords.longitude
-            };
+});
 
 
-            console.log(
-                "Permiso de ubicación concedido."
-            );
+// =========================================================
+// CONTADOR DE DESCANSO
+// =========================================================
 
-
-            console.log(
-                "Ubicación:",
-                ubicacionActual
-            );
-        },
-
-
-        function (error) {
-
-            console.warn(
-                "El usuario no permitió la ubicación:",
-                error
-            );
-        },
-
-
-        {
-            enableHighAccuracy: true,
-
-            timeout: 15000,
-
-            maximumAge: 0
-        }
-    );
-}
-
-
-// ============================================================
-// CONTADOR DE DESCANSOS
-// ============================================================
-
-function iniciarContadorDescanso() {
-
-    const contador =
-        document.getElementById(
-            "contador"
-        );
-
-
-    // No existe descanso activo
-
-    if (!contador) {
-        return;
-    }
-
-
-    // ========================================================
-    // ELEMENTOS
-    // ========================================================
+function iniciarContadorDescanso(contador) {
 
     const mensaje =
         document.getElementById(
             "mensaje-contador"
         );
 
-
-    const formulario =
-        document.getElementById(
-            "form-finalizar-descanso"
-        );
-
-
-    const boton =
-        document.getElementById(
-            "btn-finalizar-descanso"
-        );
-
-
-    // ========================================================
-    // DATOS
-    // ========================================================
-
-    const tipoDescanso =
-        (
-            contador.dataset.tipo ||
-            ""
-        ).trim();
-
+    const tipo =
+        (contador.dataset.tipo || "").trim();
 
     const horaInicio =
-        (
-            contador.dataset.inicio ||
-            ""
-        ).trim();
+        (contador.dataset.inicio || "").trim();
 
 
-    console.log(
-        "Tipo de descanso:",
-        tipoDescanso
-    );
-
-
-    console.log(
-        "Hora de inicio:",
-        horaInicio
-    );
-
-
-    // ========================================================
+    // -----------------------------------------------------
     // DURACIONES
-    // ========================================================
+    // -----------------------------------------------------
 
     const duraciones = {
 
-        break_manana:
-            15 * 60,
+        break_manana: 15 * 60,
 
-        lunch:
-            60 * 60,
+        lunch: 60 * 60,
 
-        break_tarde:
-            15 * 60
+        break_tarde: 15 * 60
+
     };
 
 
     const duracionTotal =
-        duraciones[
-            tipoDescanso
-        ];
+        duraciones[tipo];
 
-
-    // ========================================================
-    // VALIDAR TIPO
-    // ========================================================
 
     if (!duracionTotal) {
 
-        console.error(
-            "Tipo de descanso no válido:",
-            tipoDescanso
-        );
-
-
-        contador.textContent =
-            "00:00";
-
+        contador.textContent = "00:00";
 
         if (mensaje) {
 
             mensaje.textContent =
                 "Tipo de descanso no válido.";
-        }
 
+        }
 
         return;
     }
 
 
-    // ========================================================
-    // CONVERTIR HORA A SEGUNDOS
-    // ========================================================
+    // -----------------------------------------------------
+    // CONVERTIR HORA
+    // -----------------------------------------------------
 
     function convertirHoraASegundos(hora) {
 
@@ -317,23 +228,16 @@ function iniciarContadorDescanso() {
 
         if (partes.length !== 3) {
 
-            console.error(
-                "Formato de hora incorrecto:",
-                hora
-            );
-
-
             return null;
+
         }
 
 
         const horas =
             Number(partes[0]);
 
-
         const minutos =
             Number(partes[1]);
-
 
         const segundos =
             Number(partes[2]);
@@ -346,6 +250,7 @@ function iniciarContadorDescanso() {
         ) {
 
             return null;
+
         }
 
 
@@ -357,10 +262,6 @@ function iniciarContadorDescanso() {
     }
 
 
-    // ========================================================
-    // HORA INICIO
-    // ========================================================
-
     const inicioSegundos =
         convertirHoraASegundos(
             horaInicio
@@ -369,24 +270,22 @@ function iniciarContadorDescanso() {
 
     if (inicioSegundos === null) {
 
-        contador.textContent =
-            "00:00";
-
+        contador.textContent = "00:00";
 
         if (mensaje) {
 
             mensaje.textContent =
                 "No se pudo calcular el tiempo.";
-        }
 
+        }
 
         return;
     }
 
 
-    // ========================================================
-    // HORA ACTUAL
-    // ========================================================
+    // -----------------------------------------------------
+    // HORA ACTUAL COLOMBIA
+    // -----------------------------------------------------
 
     function obtenerHoraActualSegundos() {
 
@@ -394,17 +293,52 @@ function iniciarContadorDescanso() {
             new Date();
 
 
+        const partes =
+            new Intl.DateTimeFormat(
+                "en-US",
+                {
+                    timeZone: "America/Bogota",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: false
+                }
+            ).formatToParts(ahora);
+
+
+        let horas = 0;
+        let minutos = 0;
+        let segundos = 0;
+
+
+        partes.forEach(function (parte) {
+
+            if (parte.type === "hour") {
+                horas = Number(parte.value);
+            }
+
+            if (parte.type === "minute") {
+                minutos = Number(parte.value);
+            }
+
+            if (parte.type === "second") {
+                segundos = Number(parte.value);
+            }
+
+        });
+
+
         return (
-            ahora.getHours() * 3600 +
-            ahora.getMinutes() * 60 +
-            ahora.getSeconds()
+            horas * 3600 +
+            minutos * 60 +
+            segundos
         );
     }
 
 
-    // ========================================================
+    // -----------------------------------------------------
     // TIEMPO TRANSCURRIDO
-    // ========================================================
+    // -----------------------------------------------------
 
     function obtenerTiempoTranscurrido() {
 
@@ -413,19 +347,14 @@ function iniciarContadorDescanso() {
 
 
         let diferencia =
-            actual -
-            inicioSegundos;
+            actual - inicioSegundos;
 
-
-        /*
-         * Si el descanso cruza medianoche,
-         * corregimos la diferencia.
-         */
 
         if (diferencia < 0) {
 
             diferencia +=
                 24 * 60 * 60;
+
         }
 
 
@@ -433,9 +362,9 @@ function iniciarContadorDescanso() {
     }
 
 
-    // ========================================================
-    // FORMATEAR TIEMPO
-    // ========================================================
+    // -----------------------------------------------------
+    // FORMATEAR
+    // -----------------------------------------------------
 
     function formatearTiempo(segundos) {
 
@@ -457,25 +386,16 @@ function iniciarContadorDescanso() {
 
 
         return (
-
-            String(minutos)
-                .padStart(2, "0")
-
-            +
-
-            ":"
-
-            +
-
-            String(segundosRestantes)
-                .padStart(2, "0")
+            String(minutos).padStart(2, "0") +
+            ":" +
+            String(segundosRestantes).padStart(2, "0")
         );
     }
 
 
-    // ========================================================
-    // ACTUALIZAR CONTADOR
-    // ========================================================
+    // -----------------------------------------------------
+    // ACTUALIZAR
+    // -----------------------------------------------------
 
     function actualizarContador() {
 
@@ -488,10 +408,6 @@ function iniciarContadorDescanso() {
             transcurrido;
 
 
-        // ====================================================
-        // TIEMPO TERMINADO
-        // ====================================================
-
         if (restante <= 0) {
 
             contador.textContent =
@@ -502,16 +418,12 @@ function iniciarContadorDescanso() {
 
                 mensaje.textContent =
                     "El tiempo del descanso ha terminado. Pulsa finalizar para registrar la hora.";
-            }
 
+            }
 
             return;
         }
 
-
-        // ====================================================
-        // MOSTRAR TIEMPO
-        // ====================================================
 
         contador.textContent =
             formatearTiempo(
@@ -523,187 +435,14 @@ function iniciarContadorDescanso() {
 
             mensaje.textContent =
                 "Descanso en progreso";
+
         }
+
     }
 
-
-    // ========================================================
-    // PRIMERA EJECUCIÓN
-    // ========================================================
 
     actualizarContador();
 
-
-    // ========================================================
-    // ACTUALIZAR CADA SEGUNDO
-    // ========================================================
-
-    const intervalo =
-        setInterval(
-            actualizarContador,
-            1000
-        );
-
-
-    // ========================================================
-    // FINALIZACIÓN MANUAL
-    // ========================================================
-
-    if (formulario) {
-
-        formulario.addEventListener(
-            "submit",
-            function () {
-
-                if (boton) {
-
-                    boton.disabled =
-                        true;
-
-
-                    boton.textContent =
-                        "FINALIZANDO...";
-                }
-
-
-                clearInterval(
-                    intervalo
-                );
-            }
-        );
-    }
-}
-
-
-// ============================================================
-// CONTADOR DE HORAS EXTRAS
-// ============================================================
-
-function iniciarContadorHorasExtras() {
-
-    const contador =
-        document.getElementById(
-            "contador-horas-extras"
-        );
-
-
-    // No hay horas extras activas
-
-    if (!contador) {
-        return;
-    }
-
-
-    const inicioTexto =
-        contador.dataset.inicio;
-
-
-    if (!inicioTexto) {
-
-        console.error(
-            "No existe la fecha de inicio de las horas extras."
-        );
-
-        return;
-    }
-
-
-    // ========================================================
-    // CONVERTIR FECHA
-    // ========================================================
-
-    const inicio =
-        new Date(
-            inicioTexto
-        );
-
-
-    if (Number.isNaN(inicio.getTime())) {
-
-        console.error(
-            "Fecha de inicio inválida:",
-            inicioTexto
-        );
-
-        contador.textContent =
-            "00:00:00";
-
-        return;
-    }
-
-
-    // ========================================================
-    // ACTUALIZAR
-    // ========================================================
-
-    function actualizarContador() {
-
-        const ahora =
-            new Date();
-
-
-        let segundos =
-            Math.floor(
-                (
-                    ahora.getTime() -
-                    inicio.getTime()
-                ) / 1000
-            );
-
-
-        if (segundos < 0) {
-
-            segundos = 0;
-        }
-
-
-        const horas =
-            Math.floor(
-                segundos / 3600
-            );
-
-
-        const minutos =
-            Math.floor(
-                (segundos % 3600) / 60
-            );
-
-
-        const segundosRestantes =
-            segundos % 60;
-
-
-        contador.textContent =
-
-            String(horas)
-                .padStart(2, "0")
-
-            +
-
-            ":"
-
-            +
-
-            String(minutos)
-                .padStart(2, "0")
-
-            +
-
-            ":"
-
-            +
-
-            String(segundosRestantes)
-                .padStart(2, "0");
-    }
-
-
-    // Primera ejecución
-
-    actualizarContador();
-
-
-    // Cada segundo
 
     setInterval(
         actualizarContador,
@@ -712,360 +451,365 @@ function iniciarContadorHorasExtras() {
 }
 
 
-// ============================================================
-// INICIAR HORAS EXTRAS
-// ============================================================
+// =========================================================
+// CONTADOR HORAS EXTRAS
+// =========================================================
 
-async function iniciarHorasExtras() {
+function iniciarContadorHorasExtras(
+    contador
+) {
 
-    try {
-
-        // ====================================================
-        // OBTENER GPS ACTUAL
-        // ====================================================
-
-        const ubicacion =
-            await obtenerUbicacion();
+    const inicio =
+        contador.dataset.inicio;
 
 
-        // ====================================================
-        // DESHABILITAR BOTÓN
-        // ====================================================
+    if (!inicio) {
 
-        const boton =
-            document.querySelector(
-                '[onclick="iniciarHorasExtras()"]'
-            );
+        return;
 
-
-        if (boton) {
-
-            boton.disabled =
-                true;
-
-            boton.style.opacity =
-                "0.6";
-
-            boton.style.pointerEvents =
-                "none";
-        }
-
-
-        // ====================================================
-        // ENVIAR AL SERVIDOR
-        // ====================================================
-
-        const response =
-            await fetch(
-                "/Attendix/horas-extras/iniciar",
-                {
-
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    credentials:
-                        "same-origin",
-
-                    body:
-                        JSON.stringify({
-
-                            latitud:
-                                ubicacion.latitud,
-
-                            longitud:
-                                ubicacion.longitud
-                        })
-                }
-            );
-
-
-        // ====================================================
-        // RESPUESTA
-        // ====================================================
-
-        const resultado =
-            await response.json();
-
-
-        if (
-            !response.ok ||
-            !resultado.ok
-        ) {
-
-            throw new Error(
-                resultado.mensaje ||
-                "No se pudieron iniciar las horas extras."
-            );
-        }
-
-
-        // ====================================================
-        // ÉXITO
-        // ====================================================
-
-        console.log(
-            "Horas extras iniciadas:",
-            resultado
-        );
-
-
-        window.location.reload();
     }
 
 
-    catch (error) {
-
-        console.error(
-            "Error iniciando horas extras:",
-            error
-        );
+    const fechaInicio =
+        new Date(inicio);
 
 
-        alert(
-            error.message ||
-            "No fue posible iniciar las horas extras."
-        );
+    if (isNaN(fechaInicio.getTime())) {
+
+        contador.textContent =
+            "00:00:00";
+
+        return;
+
+    }
 
 
-        // ====================================================
-        // RESTAURAR BOTÓN
-        // ====================================================
+    function actualizar() {
 
-        const boton =
-            document.querySelector(
-                '[onclick="iniciarHorasExtras()"]'
+        const ahora =
+            new Date();
+
+
+        let diferencia =
+            Math.floor(
+                (ahora - fechaInicio) / 1000
             );
 
 
-        if (boton) {
+        if (diferencia < 0) {
 
-            boton.disabled =
-                false;
+            diferencia = 0;
 
-            boton.style.opacity =
-                "";
-
-            boton.style.pointerEvents =
-                "";
         }
+
+
+        const horas =
+            Math.floor(
+                diferencia / 3600
+            );
+
+
+        const minutos =
+            Math.floor(
+                (diferencia % 3600) / 60
+            );
+
+
+        const segundos =
+            diferencia % 60;
+
+
+        contador.textContent =
+            String(horas).padStart(2, "0") +
+            ":" +
+            String(minutos).padStart(2, "0") +
+            ":" +
+            String(segundos).padStart(2, "0");
     }
+
+
+    actualizar();
+
+
+    setInterval(
+        actualizar,
+        1000
+    );
 }
 
 
-// ============================================================
-// FINALIZAR HORAS EXTRAS
-// ============================================================
+// =========================================================
+// INICIAR HORAS EXTRAS
+// =========================================================
 
-async function finalizarHorasExtras() {
+async function iniciarHorasExtras() {
 
-    const confirmar =
-        confirm(
-            "¿Estás seguro de que deseas finalizar las horas extras?"
+    if (!navigator.geolocation) {
+
+        alert(
+            "Tu navegador no permite obtener la ubicación."
         );
 
-
-    if (!confirmar) {
         return;
     }
 
 
-    try {
-
-        // ====================================================
-        // OBTENER GPS ACTUAL
-        // ====================================================
-
-        const ubicacion =
-            await obtenerUbicacion();
+    const boton =
+        document.querySelector(
+            "[onclick='iniciarHorasExtras()']"
+        );
 
 
-        // ====================================================
-        // BOTÓN
-        // ====================================================
+    if (boton) {
 
-        const boton =
-            document.querySelector(
-                '[onclick="finalizarHorasExtras()"]'
-            );
+        boton.disabled = true;
 
+        boton.innerHTML =
+            '<i class="bi bi-hourglass-split"></i> OBTENIENDO UBICACIÓN...';
 
-        if (boton) {
-
-            boton.disabled =
-                true;
-
-            boton.textContent =
-                "FINALIZANDO...";
-
-            boton.style.opacity =
-                "0.6";
-        }
+    }
 
 
-        // ====================================================
-        // ENVIAR AL SERVIDOR
-        // ====================================================
+    navigator.geolocation.getCurrentPosition(
 
-        const response =
-            await fetch(
-                "/Attendix/horas-extras/finalizar",
-                {
+        async function (position) {
 
-                    method: "POST",
+            const latitud =
+                position.coords.latitude;
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+            const longitud =
+                position.coords.longitude;
 
-                    credentials:
-                        "same-origin",
 
-                    body:
-                        JSON.stringify({
+            try {
 
-                            latitud:
-                                ubicacion.latitud,
+                const response =
+                    await fetch(
+                        "/Attendix/horas-extras/iniciar",
+                        {
+                            method: "POST",
 
-                            longitud:
-                                ubicacion.longitud
-                        })
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                latitud: latitud,
+                                longitud: longitud,
+                                ubicacion:
+                                    `${latitud}, ${longitud}`
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok || !data.exito) {
+
+                    throw new Error(
+                        data.mensaje ||
+                        "No se pudieron iniciar las horas extras."
+                    );
+
                 }
+
+
+                window.location.reload();
+
+
+            } catch (error) {
+
+                alert(
+                    error.message
+                );
+
+
+                if (boton) {
+
+                    boton.disabled = false;
+
+                    boton.innerHTML =
+                        '<i class="bi bi-clock-fill"></i> INICIAR HORAS EXTRAS';
+
+                }
+
+            }
+
+        },
+
+        function (error) {
+
+            let mensaje =
+                "No se pudo obtener tu ubicación.";
+
+
+            if (
+                error.code ===
+                error.PERMISSION_DENIED
+            ) {
+
+                mensaje =
+                    "Debes permitir el acceso a tu ubicación para iniciar horas extras.";
+
+            }
+
+
+            alert(
+                mensaje
             );
 
 
-        // ====================================================
-        // RESPUESTA
-        // ====================================================
+            if (boton) {
 
-        const resultado =
-            await response.json();
+                boton.disabled = false;
 
+                boton.innerHTML =
+                    '<i class="bi bi-clock-fill"></i> INICIAR HORAS EXTRAS';
 
-        if (
-            !response.ok ||
-            !resultado.ok
-        ) {
+            }
 
-            throw new Error(
-                resultado.mensaje ||
-                "No se pudieron finalizar las horas extras."
-            );
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
         }
 
-
-        // ====================================================
-        // MOSTRAR RESULTADO
-        // ====================================================
-
-        const minutos =
-            resultado.minutos_totales;
-
-
-        let mensaje =
-            resultado.mensaje ||
-            "Horas extras finalizadas correctamente.";
-
-
-        if (
-            minutos !== undefined &&
-            minutos !== null
-        ) {
-
-            mensaje +=
-                "\n\nTiempo trabajado: " +
-                minutos +
-                " minutos.";
-        }
-
-
-        alert(
-            mensaje
-        );
-
-
-        // ====================================================
-        // ACTUALIZAR DASHBOARD
-        // ====================================================
-
-        window.location.reload();
-    }
-
-
-    catch (error) {
-
-        console.error(
-            "Error finalizando horas extras:",
-            error
-        );
-
-
-        alert(
-            error.message ||
-            "No fue posible finalizar las horas extras."
-        );
-
-
-        // ====================================================
-        // RESTAURAR BOTÓN
-        // ====================================================
-
-        const boton =
-            document.querySelector(
-                '[onclick="finalizarHorasExtras()"]'
-            );
-
-
-        if (boton) {
-
-            boton.disabled =
-                false;
-
-            boton.innerHTML =
-                '<i class="bi bi-stop-circle-fill"></i> FINALIZAR HORAS EXTRAS';
-
-            boton.style.opacity =
-                "";
-        }
-    }
+    );
 }
 
 
-// ============================================================
-// INICIALIZAR TODO EL DASHBOARD
-// ============================================================
+// =========================================================
+// FINALIZAR HORAS EXTRAS
+// =========================================================
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+async function finalizarHorasExtras() {
 
-        console.log(
-            "Dashboard de empleado cargado."
+    if (!navigator.geolocation) {
+
+        alert(
+            "Tu navegador no permite obtener la ubicación."
+        );
+
+        return;
+    }
+
+
+    const boton =
+        document.querySelector(
+            "[onclick='finalizarHorasExtras()']"
         );
 
 
-        // ====================================================
-        // SOLICITAR UBICACIÓN
-        // ====================================================
+    if (boton) {
 
-        solicitarUbicacionInicial();
+        boton.disabled = true;
 
+        boton.innerHTML =
+            '<i class="bi bi-hourglass-split"></i> FINALIZANDO...';
 
-        // ====================================================
-        // CONTADOR DESCANSO
-        // ====================================================
-
-        iniciarContadorDescanso();
-
-
-        // ====================================================
-        // CONTADOR HORAS EXTRAS
-        // ====================================================
-
-        iniciarContadorHorasExtras();
     }
-);
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        async function (position) {
+
+            const latitud =
+                position.coords.latitude;
+
+            const longitud =
+                position.coords.longitude;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/Attendix/horas-extras/finalizar",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                latitud: latitud,
+                                longitud: longitud,
+                                ubicacion:
+                                    `${latitud}, ${longitud}`
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok || !data.exito) {
+
+                    throw new Error(
+                        data.mensaje ||
+                        "No se pudieron finalizar las horas extras."
+                    );
+
+                }
+
+
+                window.location.reload();
+
+
+            } catch (error) {
+
+                alert(
+                    error.message
+                );
+
+
+                if (boton) {
+
+                    boton.disabled = false;
+
+                    boton.innerHTML =
+                        '<i class="bi bi-stop-circle-fill"></i> FINALIZAR HORAS EXTRAS';
+
+                }
+
+            }
+
+        },
+
+        function () {
+
+            alert(
+                "Debes permitir el acceso a tu ubicación para finalizar las horas extras."
+            );
+
+
+            if (boton) {
+
+                boton.disabled = false;
+
+                boton.innerHTML =
+                    '<i class="bi bi-stop-circle-fill"></i> FINALIZAR HORAS EXTRAS';
+
+            }
+
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+
+    );
+}

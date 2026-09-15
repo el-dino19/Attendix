@@ -1940,3 +1940,314 @@ main .reloj-card {
     outline: none;
     box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.3);
 }
+
+/* =========================================================
+   HORAS EXTRAS
+========================================================= */
+
+.horas-extras-section {
+    width: 100%;
+    margin-top: 24px;
+}
+
+
+/* =========================================================
+   INICIAR HORAS EXTRAS
+========================================================= */
+
+.horas-extras-start {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 22px 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+}
+
+
+.horas-extras-start-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+
+.horas-extras-start-info h3 {
+    margin: 4px 0 4px;
+    font-size: 18px;
+    color: #1e293b;
+}
+
+
+.horas-extras-start-info p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+.horas-extras-icon {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #dbeafe;
+    color: #2563eb;
+
+    font-size: 22px;
+
+    flex-shrink: 0;
+}
+
+
+.horas-extras-icon.green {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+
+/* =========================================================
+   BOTÓN INICIAR
+========================================================= */
+
+.btn-iniciar-horas-extras {
+    border: none;
+
+    background: #16a34a;
+    color: white;
+
+    padding: 13px 22px;
+
+    border-radius: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+
+    white-space: nowrap;
+}
+
+
+.btn-iniciar-horas-extras:hover {
+    background: #15803d;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 18px rgba(22, 163, 74, 0.22);
+}
+
+
+.btn-iniciar-horas-extras:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   HORAS EXTRAS ACTIVAS
+========================================================= */
+
+.horas-extras-active {
+    background: #ffffff;
+
+    border: 1px solid #bbf7d0;
+
+    border-radius: 18px;
+
+    padding: 24px;
+
+    box-shadow:
+        0 8px 25px rgba(15, 23, 42, 0.06);
+}
+
+
+.horas-extras-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+.horas-extras-header h3 {
+    margin: 4px 0 0;
+
+    font-size: 18px;
+
+    color: #166534;
+}
+
+
+/* =========================================================
+   CONTADOR
+========================================================= */
+
+.horas-extras-time {
+    margin-top: 22px;
+
+    padding: 18px;
+
+    background: #f0fdf4;
+
+    border-radius: 14px;
+
+    text-align: center;
+}
+
+
+.horas-extras-time span {
+    display: block;
+
+    font-size: 12px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.08em;
+
+    color: #64748b;
+
+    margin-bottom: 5px;
+}
+
+
+.horas-extras-time strong {
+    display: block;
+
+    font-size: 36px;
+
+    color: #16a34a;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================================================
+   UBICACIÓN
+========================================================= */
+
+.horas-extras-location {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 15px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+.horas-extras-location i {
+    color: #16a34a;
+}
+
+
+/* =========================================================
+   BOTÓN FINALIZAR
+========================================================= */
+
+.btn-finalizar-horas-extras {
+    width: 100%;
+
+    margin-top: 20px;
+
+    border: none;
+
+    background: #dc2626;
+
+    color: white;
+
+    padding: 13px 20px;
+
+    border-radius: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.btn-finalizar-horas-extras:hover {
+    background: #b91c1c;
+
+    transform: translateY(-1px);
+}
+
+
+.btn-finalizar-horas-extras:disabled {
+    opacity: 0.7;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+.custom-toast {
+    transition:
+        opacity 0.4s ease,
+        transform 0.4s ease;
+}
+
+
+.custom-toast.toast-hide {
+    opacity: 0 !important;
+
+    transform: translateX(30px) !important;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .horas-extras-start {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .horas-extras-start-info {
+        align-items: flex-start;
+    }
+
+
+    .btn-iniciar-horas-extras {
+        width: 100%;
+    }
+
+
+    .horas-extras-time strong {
+        font-size: 30px;
+    }
+
+}
