@@ -1,5 +1,6 @@
 
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
 from app.extensions import db
 from app.models.hora_extra import HoraExtra
@@ -11,15 +12,35 @@ def obtener_utc_actual():
     return datetime.now(timezone.utc)
 
 
+
 # ASEGURAR UTC
+
 def asegurar_utc(fecha):
     if fecha is None:
         return None
 
     if fecha.tzinfo is None:
-        return fecha.replace(tzinfo=timezone.utc)
+        return fecha.replace(
+            tzinfo=timezone.utc
+        )
 
-    return fecha.astimezone(timezone.utc)
+    return fecha.astimezone(
+        timezone.utc
+    )
+
+
+# CONVERTIR UTC A HORA LOCAL
+
+def convertir_a_hora_local(fecha, zona_horaria):
+    if fecha is None:
+        return None
+
+    fecha_utc = asegurar_utc(fecha)
+
+    return fecha_utc.astimezone(
+        ZoneInfo(zona_horaria)
+    )
+
 
 
 # OBTENER HORA EXTRA ACTIVA
