@@ -898,10 +898,10 @@
 
     <script>
       window.ATTENDIX = {
-        iniciarHorasExtrasUrl: "{{ url_for('empleado.iniciar_horas_extras') }}",
+        iniciarHorasExtrasUrl: "{{url_for('empleado.iniciar_horas_extras_ruta')}}",
 
         finalizarHorasExtrasUrl:
-          "{{ url_for('empleado.finalizar_horas_extras') }}",
+          "{{ url_for('empleado.finalizar_horas_extras_ruta')}}",
 
         checkSessionUrl: "{{ url_for('auth.check_session') }}",
 
