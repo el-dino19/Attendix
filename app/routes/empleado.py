@@ -360,7 +360,7 @@ def finalizar_descanso_ruta():
     "/horas-extras/iniciar",
     methods=["POST"]
 )
-def iniciar_horas_extras_ruta():
+def iniciar_horas_extras():
 
     usuario_id = session["usuario_id"]
 
@@ -482,18 +482,6 @@ def iniciar_horas_extras_ruta():
                 "Ya tienes unas horas extras activas."
         }), 400
 
-
-    # -----------------------------------------------------
-    # VERIFICAR JORNADA
-    #
-    # IMPORTANTE:
-    #
-    # obtener_jornada_abierta() debe devolver None
-    # cuando la jornada ya está finalizada.
-    #
-    # Aquí no usamos una jornada abierta porque las
-    # horas extras empiezan DESPUÉS de la salida.
-    # -----------------------------------------------------
 
     from app.models.jornada import Jornada
 
