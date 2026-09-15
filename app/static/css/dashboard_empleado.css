@@ -6,7 +6,6 @@
 
     --bg-dark: #061820;
     --bg-dark-2: #091f29;
-
     --bg-card: #0b2731;
 
     --primary: #00d4d8;
@@ -52,12 +51,16 @@ body {
     min-height: 100vh;
 
     background:
-        radial-gradient(circle at top right,
+        radial-gradient(
+            circle at top right,
             rgba(0, 212, 216, 0.10),
-            transparent 30%),
-        radial-gradient(circle at bottom left,
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at bottom left,
             rgba(25, 167, 206, 0.08),
-            transparent 30%),
+            transparent 30%
+        ),
         var(--bg-dark);
 
     color: var(--text-white);
@@ -78,8 +81,7 @@ body {
 
     min-height: 82px;
 
-    padding:
-        0 40px;
+    padding: 0 40px;
 
     display: flex;
 
@@ -103,7 +105,9 @@ body {
 }
 
 
-/* BRAND */
+/* =====================================================
+   BRAND
+===================================================== */
 
 .header-brand {
 
@@ -118,25 +122,30 @@ body {
 .brand-icon {
 
     width: 44px;
-
     height: 44px;
+
+    flex-shrink: 0;
 
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     border-radius: 12px;
 
     background:
-        linear-gradient(135deg,
+        linear-gradient(
+            135deg,
             var(--primary),
-            var(--secondary));
+            var(--secondary)
+        );
 
     color: #031217;
 
     font-size: 22px;
+
+    box-shadow:
+        0 6px 20px rgba(0, 212, 216, 0.12);
 }
 
 
@@ -145,6 +154,8 @@ body {
     display: block;
 
     font-size: 17px;
+
+    line-height: 1.2;
 }
 
 
@@ -156,11 +167,13 @@ body {
 
     font-size: 11px;
 
-    margin-top: 2px;
+    margin-top: 3px;
 }
 
 
-/* USER */
+/* =====================================================
+   USER
+===================================================== */
 
 .header-user {
 
@@ -175,25 +188,30 @@ body {
 .user-avatar {
 
     width: 40px;
-
     height: 40px;
+
+    flex-shrink: 0;
 
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     border-radius: 50%;
 
     background:
-        linear-gradient(135deg,
+        linear-gradient(
+            135deg,
             var(--primary),
-            var(--secondary));
+            var(--secondary)
+        );
 
     color: #031217;
 
     font-weight: 800;
+
+    box-shadow:
+        0 5px 18px rgba(0, 212, 216, 0.12);
 }
 
 
@@ -219,14 +237,19 @@ body {
 }
 
 
-/* HEADER BUTTONS */
+/* =====================================================
+   HEADER BUTTONS
+===================================================== */
 
 .btn-header,
 .btn-logout {
 
+    min-height: 40px;
+
     display: flex;
 
     align-items: center;
+    justify-content: center;
 
     gap: 7px;
 
@@ -240,7 +263,8 @@ body {
 
     font-weight: 600;
 
-    transition: all .2s ease;
+    transition:
+        all .2s ease;
 }
 
 
@@ -262,10 +286,15 @@ body {
         var(--primary);
 
     color: #031217;
+
+    transform:
+        translateY(-1px);
 }
 
 
 .btn-logout {
+
+    width: 40px;
 
     color: var(--danger);
 
@@ -283,6 +312,9 @@ body {
 
     background:
         var(--danger);
+
+    transform:
+        translateY(-1px);
 }
 
 
@@ -292,12 +324,13 @@ body {
 
 .employee-main {
 
+    width: 100%;
+
     max-width: 1400px;
 
     margin: 0 auto;
 
-    padding:
-        40px;
+    padding: 40px;
 }
 
 
@@ -313,7 +346,9 @@ body {
 
     justify-content: space-between;
 
-    margin-bottom: 30px;
+    gap: 20px;
+
+    margin-bottom: 25px;
 }
 
 
@@ -340,6 +375,8 @@ body {
     margin: 0;
 
     font-size: 30px;
+
+    line-height: 1.2;
 
     font-weight: 800;
 }
@@ -378,21 +415,137 @@ body {
     font-size: 12px;
 
     font-weight: 600;
+
+    white-space: nowrap;
 }
 
 
 .status-online span {
 
     width: 8px;
-
     height: 8px;
+
+    flex-shrink: 0;
 
     border-radius: 50%;
 
-    background: var(--success);
+    background:
+        var(--success);
 
     box-shadow:
         0 0 10px var(--success);
+}
+
+
+/* =====================================================
+   RELOJ
+===================================================== */
+
+.reloj-card {
+
+    width: 100%;
+
+    margin: 0 0 25px;
+
+    padding: 22px 28px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(11, 39, 49, 0.98),
+            rgba(7, 29, 38, 0.98)
+        );
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        var(--radius);
+
+    box-shadow:
+        var(--shadow);
+}
+
+
+.reloj-icon {
+
+    width: 58px;
+    height: 58px;
+
+    min-width: 58px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--secondary)
+        );
+
+    color: #031217;
+
+    font-size: 25px;
+}
+
+
+.reloj-info {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.reloj-label {
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+}
+
+
+.reloj {
+
+    color: var(--text-white);
+
+    font-size: 32px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    letter-spacing: 2px;
+
+    font-variant-numeric:
+        tabular-nums;
+}
+
+
+.fecha-actual {
+
+    color: var(--text-muted);
+
+    font-size: 13px;
+
+    margin-top: 3px;
 }
 
 
@@ -409,6 +562,9 @@ body {
     right: 25px;
 
     width: 360px;
+
+    max-width:
+        calc(100% - 30px);
 
     z-index: 2000;
 }
@@ -438,8 +594,17 @@ body {
         0 12px 35px rgba(0, 0, 0, .35);
 
     transition:
-        opacity .3s ease,
-        transform .3s ease;
+        opacity .4s ease,
+        transform .4s ease;
+}
+
+
+.custom-toast.toast-hide {
+
+    opacity: 0 !important;
+
+    transform:
+        translateX(30px) !important;
 }
 
 
@@ -456,6 +621,8 @@ body {
     color: var(--text-light);
 
     font-size: 13px;
+
+    line-height: 1.4;
 }
 
 
@@ -463,9 +630,11 @@ body {
 
     border: 0;
 
-    background: transparent;
+    background:
+        transparent;
 
-    color: var(--text-muted);
+    color:
+        var(--text-muted);
 
     cursor: pointer;
 
@@ -477,6 +646,7 @@ body {
     border-left: 4px solid var(--success);
 }
 
+
 .toast-success .toast-icon {
     color: var(--success);
 }
@@ -485,6 +655,7 @@ body {
 .toast-warning {
     border-left: 4px solid var(--warning);
 }
+
 
 .toast-warning .toast-icon {
     color: var(--warning);
@@ -495,13 +666,14 @@ body {
     border-left: 4px solid var(--danger);
 }
 
+
 .toast-danger .toast-icon {
     color: var(--danger);
 }
 
 
 /* =====================================================
-   GRID
+   GRID PRINCIPAL
 ===================================================== */
 
 .dashboard-grid {
@@ -521,21 +693,27 @@ body {
 
 .app-card {
 
+    width: 100%;
+
     background:
-        linear-gradient(145deg,
+        linear-gradient(
+            145deg,
             rgba(11, 39, 49, .98),
-            rgba(7, 29, 38, .98));
+            rgba(7, 29, 38, .98)
+        );
 
     border:
         1px solid var(--border);
 
-    border-radius: var(--radius);
+    border-radius:
+        var(--radius);
 
-    box-shadow: var(--shadow);
+    box-shadow:
+        var(--shadow);
 
     padding: 27px;
 
-    min-height: 500px;
+    min-width: 0;
 }
 
 
@@ -546,6 +724,8 @@ body {
     align-items: center;
 
     justify-content: space-between;
+
+    gap: 15px;
 
     margin-bottom: 25px;
 }
@@ -588,13 +768,13 @@ body {
 .card-header-icon {
 
     width: 47px;
-
     height: 47px;
+
+    flex-shrink: 0;
 
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     border-radius: 13px;
@@ -609,6 +789,15 @@ body {
 
     background:
         rgba(0, 212, 216, .10);
+}
+
+
+.card-header-icon.green {
+
+    color: var(--success);
+
+    background:
+        rgba(34, 211, 166, .10);
 }
 
 
@@ -643,7 +832,6 @@ body {
 .info-icon {
 
     width: 40px;
-
     height: 40px;
 
     flex-shrink: 0;
@@ -651,7 +839,6 @@ body {
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     border-radius: 10px;
@@ -697,10 +884,12 @@ body {
 .info-content {
 
     flex: 1;
+
+    min-width: 0;
 }
 
 
-.info-content span {
+.info-content > span:first-child {
 
     display: block;
 
@@ -765,7 +954,7 @@ body {
 
 
 /* =====================================================
-   ACTION
+   ACTION JORNADA
 ===================================================== */
 
 .form-action {
@@ -785,9 +974,11 @@ body {
     border-radius: 10px;
 
     background:
-        linear-gradient(135deg,
+        linear-gradient(
+            135deg,
             #ff5c70,
-            #e6455c);
+            #e6455c
+        );
 
     color: white;
 
@@ -795,13 +986,15 @@ body {
 
     cursor: pointer;
 
-    transition: all .2s ease;
+    transition:
+        all .2s ease;
 }
 
 
 .btn-danger-action:hover {
 
-    transform: translateY(-2px);
+    transform:
+        translateY(-2px);
 
     box-shadow:
         0 8px 25px rgba(255, 92, 112, .20);
@@ -831,6 +1024,8 @@ body {
         1px solid rgba(255, 200, 87, .16);
 
     font-size: 12px;
+
+    line-height: 1.5;
 }
 
 
@@ -880,13 +1075,15 @@ body {
 
     text-align: left;
 
-    transition: all .2s ease;
+    transition:
+        all .2s ease;
 }
 
 
 .break-option:hover {
 
-    transform: translateX(4px);
+    transform:
+        translateX(4px);
 
     border-color:
         rgba(0, 212, 216, .30);
@@ -899,13 +1096,13 @@ body {
 .break-option-icon {
 
     width: 43px;
-
     height: 43px;
+
+    flex-shrink: 0;
 
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     border-radius: 11px;
@@ -944,6 +1141,8 @@ body {
 .break-option-info {
 
     flex: 1;
+
+    min-width: 0;
 }
 
 
@@ -963,7 +1162,7 @@ body {
 }
 
 
-.break-option>i {
+.break-option > i {
 
     color: var(--text-muted);
 }
@@ -1000,13 +1199,13 @@ body {
 .break-pulse {
 
     width: 45px;
-
     height: 45px;
+
+    flex-shrink: 0;
 
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     border-radius: 12px;
@@ -1019,12 +1218,12 @@ body {
 .break-pulse span {
 
     width: 12px;
-
     height: 12px;
 
     border-radius: 50%;
 
-    background: var(--primary);
+    background:
+        var(--primary);
 
     box-shadow:
         0 0 0 7px rgba(0, 212, 216, .10);
@@ -1097,7 +1296,7 @@ body {
 
 
 /* =====================================================
-   CONTADOR
+   CONTADOR DESCANSO
 ===================================================== */
 
 .contador-container {
@@ -1138,6 +1337,9 @@ body {
 
     text-shadow:
         0 0 25px rgba(0, 212, 216, .25);
+
+    font-variant-numeric:
+        tabular-nums;
 }
 
 
@@ -1151,7 +1353,11 @@ body {
 }
 
 
-.btn-finalizar {
+/* =====================================================
+   BOTÓN SALIDA DESCANSO
+===================================================== */
+
+.btn-salida {
 
     width: 100%;
 
@@ -1162,31 +1368,42 @@ body {
     border-radius: 10px;
 
     background:
-        linear-gradient(135deg,
-            var(--primary),
-            var(--secondary));
+        linear-gradient(
+            135deg,
+            #ff5c70,
+            #e6455c
+        );
 
-    color: #031217;
+    color: white;
 
     font-weight: 800;
 
     cursor: pointer;
 
-    transition: all .2s ease;
+    transition:
+        all .2s ease;
 }
 
 
-.btn-finalizar:hover {
+.btn-salida:hover {
 
-    transform: translateY(-2px);
+    transform:
+        translateY(-2px);
 
     box-shadow:
-        0 8px 25px rgba(0, 212, 216, .20);
+        0 8px 25px rgba(255, 92, 112, .20);
+}
+
+
+.btn-salida:active {
+
+    transform:
+        scale(.98);
 }
 
 
 /* =====================================================
-   EMPTY
+   EMPTY STATE
 ===================================================== */
 
 .empty-state {
@@ -1208,13 +1425,11 @@ body {
 .empty-icon {
 
     width: 65px;
-
     height: 65px;
 
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     border-radius: 18px;
@@ -1253,1001 +1468,153 @@ body {
 
 
 /* =====================================================
-   SYSTEM INFO
+   HORAS EXTRAS
 ===================================================== */
 
-.system-info {
+.horas-extras-section {
+
+    width: 100%;
 
     margin-top: 25px;
+}
 
-    padding: 18px 20px;
+
+/* =====================================================
+   HORAS EXTRAS - INICIAR
+===================================================== */
+
+.horas-extras-start {
 
     display: flex;
 
     align-items: center;
 
-    gap: 14px;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    padding: 22px 24px;
 
     background:
-        linear-gradient(145deg,
-            rgba(11, 39, 49, .98),
-            rgba(7, 29, 38, .98));
+        rgba(34, 211, 166, .045);
 
     border:
-        1px solid var(--border);
-
-    border-radius: 14px;
-}
-
-
-.system-info-icon {
-
-    width: 42px;
-
-    height: 42px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border-radius: 11px;
-
-    color: var(--success);
-
-    background:
-        rgba(34, 211, 166, .09);
-
-    font-size: 20px;
-}
-
-
-.system-info strong {
-
-    display: block;
-
-    font-size: 13px;
-}
-
-
-.system-info p {
-
-    margin: 3px 0 0;
-
-    color: var(--text-muted);
-
-    font-size: 11px;
-}
-
-
-.system-online {
-
-    margin-left: auto;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 7px;
-
-    color: var(--success);
-
-    font-size: 11px;
-
-    font-weight: 700;
-}
-
-
-.system-online span {
-
-    width: 7px;
-
-    height: 7px;
-
-    border-radius: 50%;
-
-    background: var(--success);
-}
-
-
-/* =====================================================
-   RESPONSIVE
-===================================================== */
-
-@media (max-width: 1000px) {
-
-    .dashboard-grid {
-
-        grid-template-columns: 1fr;
-
-    }
-
-}
-
-
-@media (max-width: 700px) {
-
-    .main-header {
-
-        padding: 0 18px;
-
-    }
-
-
-    .user-info {
-
-        display: none;
-
-    }
-
-
-    .btn-header {
-
-        display: none;
-
-    }
-
-
-    .employee-main {
-
-        padding: 25px 18px;
-
-    }
-
-
-    .page-header {
-
-        align-items: flex-start;
-
-    }
-
-
-    .status-online {
-
-        display: none;
-
-    }
-
-
-    .page-header h1 {
-
-        font-size: 25px;
-
-    }
-
-
-    .app-card {
-
-        padding: 20px;
-
-    }
-
-
-    .toast-container {
-
-        width: calc(100% - 30px);
-
-        right: 15px;
-
-        top: 90px;
-
-    }
-
-
-    .contador {
-
-        font-size: 43px;
-
-    }
-
-}
-
-
-@media (max-width: 450px) {
-
-    .header-brand small {
-
-        display: none;
-
-    }
-
-
-    .header-brand strong {
-
-        font-size: 14px;
-
-    }
-
-
-    .btn-logout {
-
-        padding: 8px;
-
-    }
-
-
-    .btn-logout {
-
-        font-size: 0;
-
-    }
-
-
-    .btn-logout i {
-
-        font-size: 18px;
-
-    }
-
-}
-
-/* =====================================================
-   RELOJ DIGITAL
-===================================================== */
-
-.reloj-card {
-    width: 100%;
-
-    margin: 25px 0;
-
-    padding: 22px 28px;
-
-    display: flex;
-    align-items: center;
-
-    gap: 20px;
-
-    background:
-        linear-gradient(145deg,
-            rgba(11, 39, 49, 0.98),
-            rgba(7, 29, 38, 0.98));
-
-    border: 1px solid rgba(0, 212, 216, 0.18);
-
-    border-radius: 18px;
-
-    box-shadow:
-        0 10px 35px rgba(0, 0, 0, 0.25);
-
-    /* misma estructura que el contenido */
-    box-sizing: border-box;
-}
-
-
-/* =====================================================
-   ICONO DEL RELOJ
-===================================================== */
-
-.reloj-icon {
-    width: 58px;
-    height: 58px;
-
-    min-width: 58px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        1px solid rgba(34, 211, 166, .16);
 
     border-radius: 15px;
-
-    background:
-        linear-gradient(135deg,
-            #00d4d8,
-            #19a7ce);
-
-    color: #031217;
-
-    font-size: 25px;
 }
 
 
-/* =====================================================
-   INFORMACIÓN
-===================================================== */
+.horas-extras-start-content {
 
-.reloj-info {
     display: flex;
 
-    flex-direction: column;
+    align-items: center;
 
-    gap: 2px;
+    gap: 16px;
+
+    min-width: 0;
 }
 
 
-.reloj-label {
-    color: #8ba3aa;
+.horas-extras-start-content > div:last-child {
 
-    font-size: 11px;
-
-    font-weight: 700;
-
-    letter-spacing: 1.5px;
+    min-width: 0;
 }
 
 
-.reloj {
-    color: #ffffff;
+.horas-extras-start-content h3 {
 
-    font-size: 32px;
-
-    font-weight: 700;
-
-    line-height: 1.2;
-
-    letter-spacing: 2px;
-
-    font-variant-numeric: tabular-nums;
-}
-
-
-.fecha-actual {
-    color: #8ba3aa;
-
-    font-size: 13px;
-
-    margin-top: 3px;
-}
-
-
-/* =====================================================
-   ALINEACIÓN CON EL CONTENIDO
-===================================================== */
-
-/*
-   Si tu dashboard tiene un <main>, hacemos que
-   el reloj respete exactamente sus límites.
-*/
-
-.admin-main .reloj-card,
-main .reloj-card {
-    width: 100%;
-    max-width: 100%;
-}
-
-
-/* =====================================================
-   RESPONSIVE
-===================================================== */
-
-@media (max-width: 576px) {
-
-    .reloj-card {
-        padding: 18px;
-        margin: 20px 0;
-    }
-
-    .reloj-icon {
-        width: 50px;
-        height: 50px;
-        min-width: 50px;
-
-        font-size: 21px;
-    }
-
-    .reloj {
-        font-size: 25px;
-        letter-spacing: 1px;
-    }
-
-}
-
-/* =====================================================
-   MODALES DE CONFIRMACIÓN
-===================================================== */
-
-.confirm-modal {
-
-    background:
-        linear-gradient(145deg,
-            #0b2731,
-            #071d26) !important;
-
-    border:
-        1px solid rgba(0, 212, 216, .20) !important;
-
-    border-radius: 22px !important;
+    margin: 4px 0 5px;
 
     color: white;
 
-    box-shadow:
-        0 25px 70px rgba(0, 0, 0, .55);
+    font-size: 18px;
 
+    font-weight: 800;
 }
 
 
-/* =====================================================
-   ICONO
-===================================================== */
+.horas-extras-start-content p {
 
-.confirm-icon {
+    margin: 0;
 
-    width: 75px;
+    color: var(--text-muted);
 
-    height: 75px;
+    font-size: 13px;
 
-    margin:
-        0 auto 20px;
+    line-height: 1.5;
+}
 
-    border-radius: 50%;
+
+.horas-extras-start-content p strong {
+
+    color: var(--text-light);
+}
+
+
+.horas-extras-icon {
+
+    width: 50px;
+    height: 50px;
+
+    flex-shrink: 0;
 
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
-    font-size: 32px;
-
-}
-
-
-/* FINALIZAR */
-
-.confirm-icon.danger {
-
-    background:
-        rgba(255, 92, 112, .12);
-
-    color:
-        #ff5c70;
-
-    border:
-        1px solid rgba(255, 92, 112, .25);
-
-}
-
-
-/* LOGOUT */
-
-.confirm-icon.logout-icon {
+    border-radius: 14px;
 
     background:
         rgba(0, 212, 216, .10);
 
     color:
-        #00d4d8;
-
-    border:
-        1px solid rgba(0, 212, 216, .25);
-
-}
-
-
-/* =====================================================
-   TITULO
-===================================================== */
-
-.confirm-title {
-
-    margin-bottom: 10px;
-
-    font-size: 23px;
-
-    font-weight: 700;
-
-    color: #ffffff;
-
-}
-
-
-/* =====================================================
-   TEXTO
-===================================================== */
-
-.confirm-text {
-
-    color: #c9d7db;
-
-    font-size: 15px;
-
-    margin-bottom: 12px;
-
-}
-
-
-/* =====================================================
-   ADVERTENCIA
-===================================================== */
-
-.confirm-warning {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 7px;
-
-    color: #8ba3aa;
-
-    font-size: 13px;
-
-    margin-bottom: 25px;
-
-}
-
-
-/* =====================================================
-   BOTONES
-===================================================== */
-
-.confirm-buttons {
-
-    display: flex;
-
-    justify-content: center;
-
-    gap: 12px;
-
-}
-
-
-.confirm-buttons .btn {
-
-    min-width: 130px;
-
-    padding: 10px 18px;
-
-    border-radius: 10px;
-
-    font-weight: 600;
-
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease;
-
-}
-
-
-.confirm-buttons .btn:hover {
-
-    transform:
-        translateY(-2px);
-
-}
-
-
-/* =====================================================
-   CANCELAR
-===================================================== */
-
-.confirm-cancel {
-
-    background:
-        rgba(255, 255, 255, .06);
-
-    color:
-        #c9d7db;
-
-    border:
-        1px solid rgba(255, 255, 255, .12);
-
-}
-
-
-.confirm-cancel:hover {
-
-    background:
-        rgba(255, 255, 255, .10);
-
-    color: white;
-
-}
-
-
-/* =====================================================
-   FINALIZAR
-===================================================== */
-
-.confirm-danger {
-
-    background:
-        linear-gradient(135deg,
-            #ff5c70,
-            #e9445a);
-
-    border: none;
-
-    color: white;
-
-}
-
-
-.confirm-danger:hover {
-
-    color: white;
-
-    box-shadow:
-        0 8px 25px rgba(255, 92, 112, .25);
-
-}
-
-
-/* =====================================================
-   CERRAR SESIÓN
-===================================================== */
-
-.confirm-logout {
-
-    background:
-        linear-gradient(135deg,
-            #00d4d8,
-            #19a7ce);
-
-    border: none;
-
-    color: #031217;
-
-}
-
-
-.confirm-logout:hover {
-
-    color: #031217;
-
-    box-shadow:
-        0 8px 25px rgba(0, 212, 216, .25);
-
-}
-
-
-/* =====================================================
-   RESPONSIVE
-===================================================== */
-
-@media (max-width: 576px) {
-
-    .confirm-buttons {
-
-        flex-direction: column-reverse;
-
-    }
-
-    .confirm-buttons .btn {
-
-        width: 100%;
-
-    }
-
-}
-
-
-.btn-salida {
-    background-color: #dc3545;
-    color: #fff;
-    border: 1px solid #dc3545;
-    padding: 10px 18px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-salida:hover {
-    background-color: #bb2d3b;
-    border-color: #b02a37;
-}
-
-.btn-salida:active {
-    background-color: #a52834;
-    transform: scale(0.98);
-}
-
-.btn-salida:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.3);
-}
-
-/* =========================================================
-   HORAS EXTRAS
-========================================================= */
-
-.horas-extras-section {
-    width: 100%;
-    margin-top: 24px;
-}
-
-
-/* =========================================================
-   INICIAR HORAS EXTRAS
-========================================================= */
-
-.horas-extras-start {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 18px;
-    padding: 22px 24px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-
-    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
-}
-
-
-.horas-extras-start-info {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-
-.horas-extras-start-info h3 {
-    margin: 4px 0 4px;
-    font-size: 18px;
-    color: #1e293b;
-}
-
-
-.horas-extras-start-info p {
-    margin: 0;
-    color: #64748b;
-    font-size: 14px;
-}
-
-
-.horas-extras-icon {
-    width: 50px;
-    height: 50px;
-
-    border-radius: 14px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: #dbeafe;
-    color: #2563eb;
+        var(--primary);
 
     font-size: 22px;
-
-    flex-shrink: 0;
 }
 
 
 .horas-extras-icon.green {
-    background: #dcfce7;
-    color: #16a34a;
+
+    background:
+        rgba(34, 211, 166, .10);
+
+    color:
+        var(--success);
 }
 
 
-/* =========================================================
-   BOTÓN INICIAR
-========================================================= */
+/* =====================================================
+   BOTÓN INICIAR HORAS EXTRAS
+===================================================== */
 
 .btn-iniciar-horas-extras {
+
+    flex-shrink: 0;
+
     border: none;
 
-    background: #16a34a;
-    color: white;
+    background:
+        linear-gradient(
+            135deg,
+            #22d3a6,
+            #16a34a
+        );
+
+    color: #031217;
 
     padding: 13px 22px;
 
     border-radius: 11px;
 
-    font-weight: 700;
-
-    cursor: pointer;
-
-    transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        box-shadow 0.2s ease;
-
-    white-space: nowrap;
-}
-
-
-.btn-iniciar-horas-extras:hover {
-    background: #15803d;
-
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 8px 18px rgba(22, 163, 74, 0.22);
-}
-
-
-.btn-iniciar-horas-extras:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-
-/* =========================================================
-   HORAS EXTRAS ACTIVAS
-========================================================= */
-
-.horas-extras-active {
-    background: #ffffff;
-
-    border: 1px solid #bbf7d0;
-
-    border-radius: 18px;
-
-    padding: 24px;
-
-    box-shadow:
-        0 8px 25px rgba(15, 23, 42, 0.06);
-}
-
-
-.horas-extras-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-
-.horas-extras-header h3 {
-    margin: 4px 0 0;
-
-    font-size: 18px;
-
-    color: #166534;
-}
-
-
-/* =========================================================
-   CONTADOR
-========================================================= */
-
-.horas-extras-time {
-    margin-top: 22px;
-
-    padding: 18px;
-
-    background: #f0fdf4;
-
-    border-radius: 14px;
-
-    text-align: center;
-}
-
-
-.horas-extras-time span {
-    display: block;
-
-    font-size: 12px;
-
-    text-transform: uppercase;
-
-    letter-spacing: 0.08em;
-
-    color: #64748b;
-
-    margin-bottom: 5px;
-}
-
-
-.horas-extras-time strong {
-    display: block;
-
-    font-size: 36px;
-
-    color: #16a34a;
-
     font-weight: 800;
 
-    letter-spacing: 2px;
-}
-
-
-/* =========================================================
-   UBICACIÓN
-========================================================= */
-
-.horas-extras-location {
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    margin-top: 15px;
-
-    color: #64748b;
-
-    font-size: 13px;
-}
-
-
-.horas-extras-location i {
-    color: #16a34a;
-}
-
-
-/* =========================================================
-   BOTÓN FINALIZAR
-========================================================= */
-
-.btn-finalizar-horas-extras {
-    width: 100%;
-
-    margin-top: 20px;
-
-    border: none;
-
-    background: #dc2626;
-
-    color: white;
-
-    padding: 13px 20px;
-
-    border-radius: 11px;
-
-    font-weight: 700;
-
     cursor: pointer;
 
     transition:
-        background 0.2s ease,
-        transform 0.2s ease;
-}
-
-
-.btn-finalizar-horas-extras:hover {
-    background: #b91c1c;
-
-    transform: translateY(-1px);
-}
-
-
-.btn-finalizar-horas-extras:disabled {
-    opacity: 0.7;
-
-    cursor: not-allowed;
-}
-
-
-/* =========================================================
-   MENSAJES
-========================================================= */
-
-.custom-toast {
-    transition:
-        opacity 0.4s ease,
-        transform 0.4s ease;
-}
-
-
-.custom-toast.toast-hide {
-    opacity: 0 !important;
-
-    transform: translateX(30px) !important;
-}
-
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media (max-width: 768px) {
-
-    .horas-extras-start {
-        flex-direction: column;
-
-        align-items: stretch;
-    }
-
-
-    .horas-extras-start-info {
-        align-items: flex-start;
-    }
-
-
-    .btn-iniciar-horas-extras {
-        width: 100%;
-    }
-
-
-    .horas-extras-time strong {
-        font-size: 30px;
-    }
-
+        transform .2s ease,
+        box-shadow .2s ease,
 }

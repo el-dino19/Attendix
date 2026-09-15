@@ -9,66 +9,36 @@
 
 document.addEventListener("DOMContentLoaded", function () {
 
-
     // =====================================================
     // RELOJ DIGITAL
     // =====================================================
 
     function actualizarReloj() {
 
-        const reloj =
-            document.getElementById("reloj");
-
-        const fecha =
-            document.getElementById("fecha-actual");
-
+        const reloj = document.getElementById("reloj");
+        const fecha = document.getElementById("fecha-actual");
 
         if (!reloj) {
             return;
         }
 
-
-        const ahora =
-            new Date();
-
-
-        // -------------------------------------------------
-        // HORA COLOMBIA
-        // -------------------------------------------------
+        const ahora = new Date();
 
         const opcionesHora = {
-
             timeZone: "America/Bogota",
-
             hour: "2-digit",
-
             minute: "2-digit",
-
             second: "2-digit",
-
             hour12: true
-
         };
-
-
-        // -------------------------------------------------
-        // FECHA COLOMBIA
-        // -------------------------------------------------
 
         const opcionesFecha = {
-
             timeZone: "America/Bogota",
-
             weekday: "long",
-
             year: "numeric",
-
             month: "long",
-
             day: "numeric"
-
         };
-
 
         const horaColombia =
             new Intl.DateTimeFormat(
@@ -76,40 +46,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 opcionesHora
             ).format(ahora);
 
-
         const fechaColombia =
             new Intl.DateTimeFormat(
                 "es-CO",
                 opcionesFecha
             ).format(ahora);
 
-
-        reloj.textContent =
-            horaColombia;
-
+        reloj.textContent = horaColombia;
 
         if (fecha) {
-
             fecha.textContent =
-                fechaColombia;
-
+                fechaColombia.charAt(0).toUpperCase() +
+                fechaColombia.slice(1);
         }
-
     }
 
-
-    // Ejecutar inmediatamente
-
     actualizarReloj();
-
-
-    // Actualizar cada segundo
 
     setInterval(
         actualizarReloj,
         1000
     );
-
 
 
     // =====================================================
@@ -121,17 +78,13 @@ document.addEventListener("DOMContentLoaded", function () {
             ".custom-toast"
         );
 
-
     mensajes.forEach(function (mensaje) {
 
-
         setTimeout(function () {
-
 
             mensaje.classList.add(
                 "toast-hide"
             );
-
 
             setTimeout(function () {
 
@@ -139,11 +92,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }, 400);
 
-
         }, 4000);
 
     });
-
 
 
     // =====================================================
@@ -155,7 +106,6 @@ document.addEventListener("DOMContentLoaded", function () {
             "contador"
         );
 
-
     if (contador) {
 
         iniciarContadorDescanso(
@@ -163,7 +113,6 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
     }
-
 
 
     // =====================================================
@@ -175,7 +124,6 @@ document.addEventListener("DOMContentLoaded", function () {
             "contador-horas-extras"
         );
 
-
     if (contadorHorasExtras) {
 
         iniciarContadorHorasExtras(
@@ -185,14 +133,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     // =====================================================
-    // UBICACIÓN DEL USUARIO
+    // UBICACIÓN
     // =====================================================
 
     obtenerUbicacionUsuario();
-
-
 
 });
 
@@ -202,16 +147,12 @@ document.addEventListener("DOMContentLoaded", function () {
 // CONTADOR DE DESCANSO
 // =========================================================
 
-function iniciarContadorDescanso(
-    contador
-) {
-
+function iniciarContadorDescanso(contador) {
 
     const mensaje =
         document.getElementById(
             "mensaje-contador"
         );
-
 
     const tipo =
         (
@@ -219,18 +160,12 @@ function iniciarContadorDescanso(
             ""
         ).trim();
 
-
     const horaInicio =
         (
             contador.dataset.inicio ||
             ""
         ).trim();
 
-
-
-    // =====================================================
-    // DURACIONES
-    // =====================================================
 
     const duraciones = {
 
@@ -252,10 +187,8 @@ function iniciarContadorDescanso(
 
     if (!duracionTotal) {
 
-
         contador.textContent =
             "00:00";
-
 
         if (mensaje) {
 
@@ -264,74 +197,43 @@ function iniciarContadorDescanso(
 
         }
 
-
         return;
-
     }
 
 
-
-    // =====================================================
-    // CONVERTIR HORA A SEGUNDOS
-    // =====================================================
-
-    function convertirHoraASegundos(
-        hora
-    ) {
-
+    function convertirHoraASegundos(hora) {
 
         const partes =
             hora.split(":");
 
-
-        if (
-            partes.length !== 3
-        ) {
-
+        if (partes.length !== 3) {
             return null;
-
         }
-
 
         const horas =
             Number(partes[0]);
 
-
         const minutos =
             Number(partes[1]);
-
 
         const segundos =
             Number(partes[2]);
 
-
         if (
-
             Number.isNaN(horas) ||
-
             Number.isNaN(minutos) ||
-
             Number.isNaN(segundos)
-
         ) {
 
             return null;
-
         }
 
-
         return (
-
             horas * 3600 +
-
             minutos * 60 +
-
             segundos
-
         );
-
     }
-
 
 
     const inicioSegundos =
@@ -340,14 +242,10 @@ function iniciarContadorDescanso(
         );
 
 
-    if (
-        inicioSegundos === null
-    ) {
-
+    if (inicioSegundos === null) {
 
         contador.textContent =
             "00:00";
-
 
         if (mensaje) {
 
@@ -356,29 +254,19 @@ function iniciarContadorDescanso(
 
         }
 
-
         return;
-
     }
 
 
-
-    // =====================================================
-    // HORA ACTUAL DE COLOMBIA
-    // =====================================================
-
     function obtenerHoraActualSegundos() {
-
 
         const ahora =
             new Date();
-
 
         const partes =
             new Intl.DateTimeFormat(
                 "en-US",
                 {
-
                     timeZone:
                         "America/Bogota",
 
@@ -393,119 +281,69 @@ function iniciarContadorDescanso(
 
                     hour12:
                         false
-
                 }
             ).formatToParts(ahora);
 
-
-
         let horas = 0;
-
         let minutos = 0;
-
         let segundos = 0;
 
+        partes.forEach(function (parte) {
 
+            if (parte.type === "hour") {
 
-        partes.forEach(
-            function (parte) {
-
-
-                if (
-                    parte.type === "hour"
-                ) {
-
-                    horas =
-                        Number(
-                            parte.value
-                        );
-
-                }
-
-
-                if (
-                    parte.type === "minute"
-                ) {
-
-                    minutos =
-                        Number(
-                            parte.value
-                        );
-
-                }
-
-
-                if (
-                    parte.type === "second"
-                ) {
-
-                    segundos =
-                        Number(
-                            parte.value
-                        );
-
-                }
-
+                horas =
+                    Number(
+                        parte.value
+                    );
             }
-        );
 
+            if (parte.type === "minute") {
+
+                minutos =
+                    Number(
+                        parte.value
+                    );
+            }
+
+            if (parte.type === "second") {
+
+                segundos =
+                    Number(
+                        parte.value
+                    );
+            }
+
+        });
 
         return (
-
             horas * 3600 +
-
             minutos * 60 +
-
             segundos
-
         );
-
     }
 
 
-
-    // =====================================================
-    // TIEMPO TRANSCURRIDO
-    // =====================================================
-
     function obtenerTiempoTranscurrido() {
-
 
         const actual =
             obtenerHoraActualSegundos();
-
 
         let diferencia =
             actual -
             inicioSegundos;
 
-
-        // Cambio de día
-
-        if (
-            diferencia < 0
-        ) {
+        if (diferencia < 0) {
 
             diferencia +=
                 24 * 60 * 60;
-
         }
 
-
         return diferencia;
-
     }
 
 
-
-    // =====================================================
-    // FORMATEAR TIEMPO
-    // =====================================================
-
-    function formatearTiempo(
-        segundos
-    ) {
-
+    function formatearTiempo(segundos) {
 
         segundos =
             Math.max(
@@ -513,60 +351,35 @@ function iniciarContadorDescanso(
                 Math.floor(segundos)
             );
 
-
         const minutos =
             Math.floor(
                 segundos / 60
             );
 
-
         const segundosRestantes =
             segundos % 60;
 
-
         return (
-
-            String(
-                minutos
-            ).padStart(2, "0") +
-
+            String(minutos).padStart(2, "0") +
             ":" +
-
-            String(
-                segundosRestantes
-            ).padStart(2, "0")
-
+            String(segundosRestantes).padStart(2, "0")
         );
-
     }
 
 
-
-    // =====================================================
-    // ACTUALIZAR CONTADOR
-    // =====================================================
-
     function actualizarContador() {
-
 
         const transcurrido =
             obtenerTiempoTranscurrido();
-
 
         const restante =
             duracionTotal -
             transcurrido;
 
-
-
-        if (
-            restante <= 0
-        ) {
-
+        if (restante <= 0) {
 
             contador.textContent =
                 "00:00";
-
 
             if (mensaje) {
 
@@ -575,18 +388,13 @@ function iniciarContadorDescanso(
 
             }
 
-
             return;
-
         }
-
-
 
         contador.textContent =
             formatearTiempo(
                 restante
             );
-
 
         if (mensaje) {
 
@@ -594,19 +402,15 @@ function iniciarContadorDescanso(
                 "Descanso en progreso";
 
         }
-
     }
 
 
-
     actualizarContador();
-
 
     setInterval(
         actualizarContador,
         1000
     );
-
 }
 
 
@@ -615,10 +419,7 @@ function iniciarContadorDescanso(
 // CONTADOR DE HORAS EXTRAS
 // =========================================================
 
-function iniciarContadorHorasExtras(
-    contador
-) {
-
+function iniciarContadorHorasExtras(contador) {
 
     const inicio =
         (
@@ -626,35 +427,24 @@ function iniciarContadorHorasExtras(
             ""
         ).trim();
 
-
     if (!inicio) {
 
         contador.textContent =
             "00:00:00";
 
         return;
-
     }
 
-
-
-    // =====================================================
-    // CONVERTIR FECHA DE FLASK
-    // =====================================================
 
     let fechaInicio =
         new Date(inicio);
 
-
-    // Si el navegador no reconoce directamente
-    // la fecha, intentamos normalizarla.
 
     if (
         isNaN(
             fechaInicio.getTime()
         )
     ) {
-
 
         const normalizada =
             inicio.replace(
@@ -662,14 +452,11 @@ function iniciarContadorHorasExtras(
                 "T"
             );
 
-
         fechaInicio =
             new Date(
                 normalizada
             );
-
     }
-
 
 
     if (
@@ -678,46 +465,29 @@ function iniciarContadorHorasExtras(
         )
     ) {
 
-
         contador.textContent =
             "00:00:00";
 
         return;
-
     }
 
 
-
-    // =====================================================
-    // ACTUALIZAR
-    // =====================================================
-
     function actualizar() {
-
 
         const ahora =
             new Date();
 
-
         let diferencia =
             Math.floor(
-
                 (
                     ahora.getTime() -
                     fechaInicio.getTime()
                 ) / 1000
-
             );
 
-
-        if (
-            diferencia < 0
-        ) {
-
+        if (diferencia < 0) {
             diferencia = 0;
-
         }
-
 
 
         const horas =
@@ -725,61 +495,46 @@ function iniciarContadorHorasExtras(
                 diferencia / 3600
             );
 
-
         const minutos =
             Math.floor(
-
                 (
                     diferencia % 3600
                 ) / 60
-
             );
-
 
         const segundos =
             diferencia % 60;
 
 
-
         contador.textContent =
 
-            String(
-                horas
-            ).padStart(
+            String(horas).padStart(
                 2,
                 "0"
             ) +
 
             ":" +
 
-            String(
-                minutos
-            ).padStart(
+            String(minutos).padStart(
                 2,
                 "0"
             ) +
 
             ":" +
 
-            String(
-                segundos
-            ).padStart(
+            String(segundos).padStart(
                 2,
                 "0"
             );
-
     }
 
 
-
     actualizar();
-
 
     setInterval(
         actualizar,
         1000
     );
-
 }
 
 
@@ -787,9 +542,319 @@ function iniciarContadorHorasExtras(
 // =========================================================
 // OBTENER UBICACIÓN DEL USUARIO
 // =========================================================
+//
+// IMPORTANTE:
+//
+// Las coordenadas NO se muestran al usuario.
+//
+// Se utilizan internamente para:
+// - identificar aproximadamente la ubicación
+// - enviarlas al backend cuando sea necesario
+//
+// La interfaz muestra únicamente una dirección aproximada.
+// =========================================================
 
 function obtenerUbicacionUsuario() {
 
+    const ubicacionTexto =
+        document.getElementById(
+            "ubicacion-texto"
+        );
+
+    const ubicacionActual =
+        document.getElementById(
+            "ubicacion-actual"
+        );
+
+
+    if (!navigator.geolocation) {
+
+        mostrarMensajeUbicacion(
+            "Tu navegador no permite obtener la ubicación.",
+            true
+        );
+
+        return;
+    }
+
+
+    if (ubicacionTexto) {
+
+        ubicacionTexto.textContent =
+            "Obteniendo ubicación aproximada...";
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        async function (position) {
+
+            const latitud =
+                position.coords.latitude;
+
+            const longitud =
+                position.coords.longitude;
+
+            const precision =
+                position.coords.accuracy;
+
+
+            try {
+
+                const direccion =
+                    await obtenerDireccionAproximada(
+                        latitud,
+                        longitud
+                    );
+
+
+                mostrarDireccion(
+                    direccion
+                );
+
+
+            } catch (error) {
+
+                console.warn(
+                    "No se pudo obtener la dirección:",
+                    error
+                );
+
+
+                mostrarDireccion(
+                    "Ubicación disponible"
+                );
+            }
+
+        },
+
+        function (error) {
+
+            manejarErrorUbicacion(
+                error
+            );
+        },
+
+        {
+
+            enableHighAccuracy:
+                true,
+
+            timeout:
+                10000,
+
+            maximumAge:
+                60000
+
+        }
+    );
+}
+
+
+
+// =========================================================
+// OBTENER DIRECCIÓN APROXIMADA
+// =========================================================
+//
+// Se utiliza Nominatim/OpenStreetMap para convertir
+// las coordenadas GPS en una dirección legible.
+//
+// No se muestran las coordenadas en pantalla.
+// =========================================================
+
+async function obtenerDireccionAproximada(
+    latitud,
+    longitud
+) {
+
+    const url =
+        "https://nominatim.openstreetmap.org/reverse" +
+        "?format=json" +
+        "&lat=" +
+        encodeURIComponent(latitud) +
+        "&lon=" +
+        encodeURIComponent(longitud) +
+        "&zoom=18" +
+        "&addressdetails=1" +
+        "&accept-language=es";
+
+
+    const response =
+        await fetch(
+            url,
+            {
+                method: "GET",
+                headers: {
+                    "Accept":
+                        "application/json"
+                }
+            }
+        );
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            "No se pudo obtener la dirección."
+        );
+    }
+
+
+    const data =
+        await response.json();
+
+
+    if (
+        !data ||
+        !data.address
+    ) {
+
+        throw new Error(
+            "No se encontró una dirección."
+        );
+    }
+
+
+    const address =
+        data.address;
+
+
+    /*
+     * Intentamos mostrar una dirección útil
+     * sin revelar coordenadas.
+     */
+
+    const calle =
+        address.road ||
+        address.pedestrian ||
+        address.footway ||
+        address.residential ||
+        "";
+
+
+    const numero =
+        address.house_number ||
+        "";
+
+
+    const barrio =
+        address.neighbourhood ||
+        address.suburb ||
+        address.quarter ||
+        "";
+
+
+    const localidad =
+        address.city ||
+        address.town ||
+        address.village ||
+        address.municipality ||
+        "";
+
+
+    const departamento =
+        address.state ||
+        "";
+
+
+    const partes = [];
+
+
+    if (calle) {
+
+        if (numero) {
+
+            partes.push(
+                `${calle} ${numero}`
+            );
+
+        } else {
+
+            partes.push(
+                calle
+            );
+        }
+    }
+
+
+    if (barrio) {
+
+        partes.push(
+            barrio
+        );
+    }
+
+
+    if (localidad) {
+
+        partes.push(
+            localidad
+        );
+    }
+
+
+    /*
+     * Si encontramos una dirección completa,
+     * la utilizamos.
+     */
+
+    if (partes.length > 0) {
+
+        return partes.join(", ");
+    }
+
+
+    /*
+     * En caso de no encontrar calle,
+     * mostramos localidad/departamento.
+     */
+
+    const alternativa = [
+        barrio,
+        localidad,
+        departamento
+    ]
+        .filter(Boolean)
+        .join(", ");
+
+
+    if (alternativa) {
+
+        return alternativa;
+    }
+
+
+    /*
+     * Último recurso.
+     */
+
+    if (data.display_name) {
+
+        const nombre =
+            data.display_name
+                .split(",")
+                .slice(0, 3)
+                .join(",");
+
+        if (nombre.trim()) {
+
+            return nombre.trim();
+        }
+    }
+
+
+    return "Ubicación aproximada disponible";
+}
+
+
+
+// =========================================================
+// MOSTRAR DIRECCIÓN
+// =========================================================
+
+function mostrarDireccion(
+    direccion
+) {
 
     const ubicacionTexto =
         document.getElementById(
@@ -803,222 +868,137 @@ function obtenerUbicacionUsuario() {
         );
 
 
-    const latitudElemento =
-        document.getElementById(
-            "latitud"
-        );
+    if (ubicacionTexto) {
 
-
-    const longitudElemento =
-        document.getElementById(
-            "longitud"
-        );
-
-
-
-    // =====================================================
-    // COMPROBAR GEOLOCALIZACIÓN
-    // =====================================================
-
-    if (
-        !navigator.geolocation
-    ) {
-
-
-        const mensaje =
-            "Tu navegador no permite obtener la ubicación.";
-
-
-        if (
-            ubicacionTexto
-        ) {
-
-            ubicacionTexto.textContent =
-                mensaje;
-
-        }
-
-
-        if (
-            ubicacionActual
-        ) {
-
-            ubicacionActual.textContent =
-                mensaje;
-
-        }
-
-
-        return;
-
+        ubicacionTexto.textContent =
+            direccion;
     }
 
 
+    if (ubicacionActual) {
 
-    // =====================================================
-    // SOLICITAR UBICACIÓN
-    // =====================================================
+        ubicacionActual.textContent =
+            direccion;
+    }
 
-    navigator.geolocation.getCurrentPosition(
 
+    /*
+     * Ocultamos cualquier elemento antiguo
+     * de coordenadas que pudiera existir
+     * en el HTML.
+     */
 
-        function(position) {
+    const coordenadas =
+        document.querySelector(
+            ".ubicacion-coordenadas"
+        );
 
 
-            const latitud =
-                position.coords.latitude;
+    if (coordenadas) {
 
+        coordenadas.style.display =
+            "none";
+    }
+}
 
-            const longitud =
-                position.coords.longitude;
 
 
+// =========================================================
+// MENSAJES DE UBICACIÓN
+// =========================================================
 
-            // =================================================
-            // MOSTRAR LATITUD
-            // =================================================
+function mostrarMensajeUbicacion(
+    mensaje,
+    ocultarCoordenadas = true
+) {
 
-            if (
-                latitudElemento
-            ) {
+    const ubicacionTexto =
+        document.getElementById(
+            "ubicacion-texto"
+        );
 
-                latitudElemento.textContent =
-                    latitud.toFixed(6);
 
-            }
+    const ubicacionActual =
+        document.getElementById(
+            "ubicacion-actual"
+        );
 
 
+    if (ubicacionTexto) {
 
-            // =================================================
-            // MOSTRAR LONGITUD
-            // =================================================
+        ubicacionTexto.textContent =
+            mensaje;
+    }
 
-            if (
-                longitudElemento
-            ) {
 
-                longitudElemento.textContent =
-                    longitud.toFixed(6);
+    if (ubicacionActual) {
 
-            }
+        ubicacionActual.textContent =
+            mensaje;
+    }
 
 
+    if (ocultarCoordenadas) {
 
-            // =================================================
-            // TEXTO DE UBICACIÓN
-            // =================================================
+        const coordenadas =
+            document.querySelector(
+                ".ubicacion-coordenadas"
+            );
 
-            const coordenadas =
 
-                `${latitud.toFixed(6)}, ${longitud.toFixed(6)}`;
+        if (coordenadas) {
 
-
-
-            if (
-                ubicacionTexto
-            ) {
-
-                ubicacionTexto.textContent =
-                    coordenadas;
-
-            }
-
-
-            if (
-                ubicacionActual
-            ) {
-
-                ubicacionActual.textContent =
-                    coordenadas;
-
-            }
-
-        },
-
-
-        function(error) {
-
-
-            let mensaje =
-                "No se pudo obtener tu ubicación.";
-
-
-
-            if (
-                error.code ===
-                error.PERMISSION_DENIED
-            ) {
-
-
-                mensaje =
-                    "Debes permitir el acceso a tu ubicación.";
-
-            }
-
-
-            else if (
-                error.code ===
-                error.POSITION_UNAVAILABLE
-            ) {
-
-
-                mensaje =
-                    "La ubicación no está disponible.";
-
-            }
-
-
-            else if (
-                error.code ===
-                error.TIMEOUT
-            ) {
-
-
-                mensaje =
-                    "Se agotó el tiempo para obtener la ubicación.";
-
-            }
-
-
-
-            if (
-                ubicacionTexto
-            ) {
-
-                ubicacionTexto.textContent =
-                    mensaje;
-
-            }
-
-
-            if (
-                ubicacionActual
-            ) {
-
-                ubicacionActual.textContent =
-                    mensaje;
-
-            }
-
-
-        },
-
-
-        {
-
-            enableHighAccuracy:
-                true,
-
-            timeout:
-                10000,
-
-            maximumAge:
-                0
-
+            coordenadas.style.display =
+                "none";
         }
+    }
+}
 
+
+
+// =========================================================
+// MANEJAR ERROR DE UBICACIÓN
+// =========================================================
+
+function manejarErrorUbicacion(
+    error
+) {
+
+    let mensaje =
+        "No se pudo obtener tu ubicación.";
+
+
+    if (
+        error.code ===
+        error.PERMISSION_DENIED
+    ) {
+
+        mensaje =
+            "Debes permitir el acceso a tu ubicación.";
+    }
+
+    else if (
+        error.code ===
+        error.POSITION_UNAVAILABLE
+    ) {
+
+        mensaje =
+            "La ubicación no está disponible.";
+    }
+
+    else if (
+        error.code ===
+        error.TIMEOUT
+    ) {
+
+        mensaje =
+            "Se agotó el tiempo para obtener la ubicación.";
+    }
+
+
+    mostrarMensajeUbicacion(
+        mensaje
     );
-
 }
 
 
@@ -1026,17 +1006,19 @@ function obtenerUbicacionUsuario() {
 // =========================================================
 // OBTENER UBICACIÓN COMO PROMESA
 // =========================================================
+//
+// Esta función se utiliza para registrar las horas extras.
+//
+// Las coordenadas se mantienen internamente.
+// NO se muestran en la interfaz.
+// =========================================================
 
 function obtenerUbicacion() {
-
 
     return new Promise(
         function(resolve, reject) {
 
-
-            if (
-                !navigator.geolocation
-            ) {
+            if (!navigator.geolocation) {
 
                 reject(
                     new Error(
@@ -1045,16 +1027,12 @@ function obtenerUbicacion() {
                 );
 
                 return;
-
             }
-
 
 
             navigator.geolocation.getCurrentPosition(
 
-
                 function(position) {
-
 
                     resolve({
 
@@ -1071,13 +1049,10 @@ function obtenerUbicacion() {
 
                 },
 
-
                 function(error) {
-
 
                     let mensaje =
                         "No se pudo obtener tu ubicación.";
-
 
 
                     if (
@@ -1087,9 +1062,7 @@ function obtenerUbicacion() {
 
                         mensaje =
                             "Debes permitir el acceso a tu ubicación para continuar.";
-
                     }
-
 
                     else if (
                         error.code ===
@@ -1098,9 +1071,7 @@ function obtenerUbicacion() {
 
                         mensaje =
                             "La ubicación no está disponible.";
-
                     }
-
 
                     else if (
                         error.code ===
@@ -1109,9 +1080,7 @@ function obtenerUbicacion() {
 
                         mensaje =
                             "Se agotó el tiempo para obtener la ubicación.";
-
                     }
-
 
 
                     reject(
@@ -1122,7 +1091,6 @@ function obtenerUbicacion() {
 
                 },
 
-
                 {
 
                     enableHighAccuracy:
@@ -1132,15 +1100,13 @@ function obtenerUbicacion() {
                         10000,
 
                     maximumAge:
-                        0
+                        60000
 
                 }
-
             );
 
         }
     );
-
 }
 
 
@@ -1148,90 +1114,58 @@ function obtenerUbicacion() {
 // =========================================================
 // MOSTRAR UBICACIÓN EN LA VISTA
 // =========================================================
+//
+// Esta función ya NO muestra coordenadas.
+//
+// Se mantiene por compatibilidad con otras partes
+// del dashboard.
+// =========================================================
 
-function mostrarUbicacion(
+async function mostrarUbicacion(
     ubicacion
 ) {
 
-
-    const latitud =
-        ubicacion.latitud;
-
-
-    const longitud =
-        ubicacion.longitud;
-
-
-    const coordenadas =
-
-        `${latitud.toFixed(6)}, ${longitud.toFixed(6)}`;
-
-
-
-    const ubicacionTexto =
-        document.getElementById(
-            "ubicacion-texto"
-        );
-
-
-    const ubicacionActual =
-        document.getElementById(
-            "ubicacion-actual"
-        );
-
-
-    const latitudElemento =
-        document.getElementById(
-            "latitud"
-        );
-
-
-    const longitudElemento =
-        document.getElementById(
-            "longitud"
-        );
-
-
-
     if (
-        ubicacionTexto
+        !ubicacion ||
+        typeof ubicacion.latitud !== "number" ||
+        typeof ubicacion.longitud !== "number"
     ) {
 
-        ubicacionTexto.textContent =
-            coordenadas;
+        mostrarMensajeUbicacion(
+            "Ubicación no disponible."
+        );
 
+        return;
     }
 
 
-    if (
-        ubicacionActual
-    ) {
+    try {
 
-        ubicacionActual.textContent =
-            coordenadas;
+        const direccion =
+            await obtenerDireccionAproximada(
+                ubicacion.latitud,
+                ubicacion.longitud
+            );
 
-    }
 
-
-    if (
-        latitudElemento
-    ) {
-
-        latitudElemento.textContent =
-            latitud.toFixed(6);
+        mostrarDireccion(
+            direccion
+        );
 
     }
 
+    catch (error) {
 
-    if (
-        longitudElemento
-    ) {
+        console.warn(
+            "Error obteniendo dirección:",
+            error
+        );
 
-        longitudElemento.textContent =
-            longitud.toFixed(6);
 
+        mostrarDireccion(
+            "Ubicación aproximada disponible"
+        );
     }
-
 }
 
 
@@ -1242,13 +1176,16 @@ function mostrarUbicacion(
 
 async function obtenerUbicacionParaHorasExtras() {
 
-
     try {
-
 
         const ubicacion =
             await obtenerUbicacion();
 
+
+        /*
+         * Actualizamos visualmente la dirección,
+         * pero nunca mostramos las coordenadas.
+         */
 
         mostrarUbicacion(
             ubicacion
@@ -1257,16 +1194,12 @@ async function obtenerUbicacionParaHorasExtras() {
 
         return ubicacion;
 
-
     }
 
     catch (error) {
 
-
         throw error;
-
     }
-
 }
 
 
@@ -1277,64 +1210,50 @@ async function obtenerUbicacionParaHorasExtras() {
 
 async function iniciarHorasExtras() {
 
-
     const boton =
         document.querySelector(
             ".btn-iniciar-horas-extras"
         );
 
 
-    // =====================================================
-    // DESACTIVAR BOTÓN
-    // =====================================================
-
     if (boton) {
 
         boton.disabled =
             true;
 
-
         boton.innerHTML =
-
             '<i class="bi bi-hourglass-split"></i> OBTENIENDO UBICACIÓN...';
-
     }
-
 
 
     try {
 
-
-        // =================================================
-        // OBTENER GPS
-        // =================================================
-
         const ubicacion =
             await obtenerUbicacionParaHorasExtras();
 
-
-
-        // =================================================
-        // COMPROBAR URL
-        // =================================================
 
         if (
             !window.ATTENDIX ||
             !window.ATTENDIX.iniciarHorasExtrasUrl
         ) {
 
-
             throw new Error(
                 "No se encontró la URL para iniciar horas extras."
             );
-
         }
 
 
+        if (boton) {
 
-        // =================================================
-        // ENVIAR AL SERVIDOR
-        // =================================================
+            boton.innerHTML =
+                '<i class="bi bi-hourglass-split"></i> REGISTRANDO...';
+        }
+
+
+        /*
+         * Las coordenadas se envían al backend,
+         * pero nunca se muestran al usuario.
+         */
 
         const response =
             await fetch(
@@ -1370,21 +1289,19 @@ async function iniciarHorasExtras() {
                             precision:
                                 ubicacion.precision,
 
-                            ubicacion:
+                            /*
+                             * Se mantiene este campo por
+                             * compatibilidad con tu backend.
+                             */
 
+                            ubicacion:
                                 `${ubicacion.latitud}, ${ubicacion.longitud}`
 
                         })
 
                 }
-
             );
 
-
-
-        // =================================================
-        // LEER RESPUESTA
-        // =================================================
 
         let data;
 
@@ -1399,20 +1316,13 @@ async function iniciarHorasExtras() {
         catch {
 
             data = {};
-
         }
 
-
-
-        // =================================================
-        // COMPROBAR RESPUESTA
-        // =================================================
 
         if (
             !response.ok ||
             !data.exito
         ) {
-
 
             throw new Error(
 
@@ -1421,22 +1331,14 @@ async function iniciarHorasExtras() {
                 "No se pudieron iniciar las horas extras."
 
             );
-
         }
 
 
-
-        // =================================================
-        // RECARGAR
-        // =================================================
-
         window.location.reload();
-
 
     }
 
     catch (error) {
-
 
         console.error(
             "Error iniciando horas extras:",
@@ -1449,26 +1351,15 @@ async function iniciarHorasExtras() {
         );
 
 
-
-        // =================================================
-        // RESTAURAR BOTÓN
-        // =================================================
-
         if (boton) {
-
 
             boton.disabled =
                 false;
 
-
             boton.innerHTML =
-
-                '<i class="bi bi-clock-fill"></i> INICIAR HORAS EXTRAS';
-
+                '<i class="bi bi-play-circle-fill"></i> INICIAR HORAS EXTRAS';
         }
-
     }
-
 }
 
 
@@ -1479,80 +1370,45 @@ async function iniciarHorasExtras() {
 
 async function finalizarHorasExtras() {
 
-
     const boton =
         document.querySelector(
             ".btn-finalizar-horas-extras"
         );
 
 
-    // =====================================================
-    // DESACTIVAR BOTÓN
-    // =====================================================
-
     if (boton) {
-
 
         boton.disabled =
             true;
 
-
         boton.innerHTML =
-
             '<i class="bi bi-hourglass-split"></i> OBTENIENDO UBICACIÓN...';
-
     }
-
 
 
     try {
 
-
-        // =================================================
-        // OBTENER GPS
-        // =================================================
-
         const ubicacion =
             await obtenerUbicacionParaHorasExtras();
 
-
-
-        // =================================================
-        // COMPROBAR URL
-        // =================================================
 
         if (
             !window.ATTENDIX ||
             !window.ATTENDIX.finalizarHorasExtrasUrl
         ) {
 
-
             throw new Error(
                 "No se encontró la URL para finalizar horas extras."
             );
-
         }
 
-
-
-        // =================================================
-        // CAMBIAR TEXTO
-        // =================================================
 
         if (boton) {
 
-
             boton.innerHTML =
-
                 '<i class="bi bi-hourglass-split"></i> FINALIZANDO...';
-
         }
 
-
-
-        // =================================================
-        // ENVIAR AL SERVIDOR
-        // =================================================
 
         const response =
             await fetch(
@@ -1589,20 +1445,13 @@ async function finalizarHorasExtras() {
                                 ubicacion.precision,
 
                             ubicacion:
-
                                 `${ubicacion.latitud}, ${ubicacion.longitud}`
 
                         })
 
                 }
-
             );
 
-
-
-        // =================================================
-        // LEER RESPUESTA
-        // =================================================
 
         let data;
 
@@ -1617,20 +1466,13 @@ async function finalizarHorasExtras() {
         catch {
 
             data = {};
-
         }
 
-
-
-        // =================================================
-        // COMPROBAR RESPUESTA
-        // =================================================
 
         if (
             !response.ok ||
             !data.exito
         ) {
-
 
             throw new Error(
 
@@ -1639,22 +1481,14 @@ async function finalizarHorasExtras() {
                 "No se pudieron finalizar las horas extras."
 
             );
-
         }
 
 
-
-        // =================================================
-        // RECARGAR
-        // =================================================
-
         window.location.reload();
-
 
     }
 
     catch (error) {
-
 
         console.error(
             "Error finalizando horas extras:",
@@ -1667,26 +1501,15 @@ async function finalizarHorasExtras() {
         );
 
 
-
-        // =================================================
-        // RESTAURAR BOTÓN
-        // =================================================
-
         if (boton) {
-
 
             boton.disabled =
                 false;
 
-
             boton.innerHTML =
-
                 '<i class="bi bi-stop-circle-fill"></i> FINALIZAR HORAS EXTRAS';
-
         }
-
     }
-
 }
 
 
@@ -1699,7 +1522,6 @@ document.addEventListener(
     "submit",
     function(event) {
 
-
         const formulario =
             event.target;
 
@@ -1709,7 +1531,6 @@ document.addEventListener(
             "form-finalizar-descanso"
         ) {
 
-
             const boton =
                 formulario.querySelector(
                     "button"
@@ -1718,17 +1539,12 @@ document.addEventListener(
 
             if (boton) {
 
-
                 boton.disabled =
                     true;
 
-
                 boton.innerHTML =
-
                     '<i class="bi bi-hourglass-split"></i> FINALIZANDO...';
-
             }
-
         }
 
     }
