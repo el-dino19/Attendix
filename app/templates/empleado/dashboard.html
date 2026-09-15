@@ -99,6 +99,7 @@
           class="btn btn-danger"
           data-bs-toggle="modal"
           data-bs-target="#confirmarLogoutModal"
+          title="Cerrar sesión"
         >
           <i class="bi bi-box-arrow-left"></i>
         </a>
@@ -187,13 +188,9 @@
         <div>
 
           <div class="breadcrumb">
-
             Colaborador
-
             <span>/</span>
-
             Mi jornada
-
           </div>
 
           <h1>
@@ -304,6 +301,7 @@
                   type="button"
                   class="toast-close"
                   onclick="this.parentElement.remove()"
+                  aria-label="Cerrar mensaje"
                 >
                   <i class="bi bi-x"></i>
                 </button>
@@ -341,20 +339,15 @@
               </span>
 
               <h2>
-
                 <i class="bi bi-calendar-check"></i>
-
                 Jornada
-
               </h2>
 
             </div>
 
 
             <div class="card-header-icon blue">
-
               <i class="bi bi-clock-fill"></i>
-
             </div>
 
           </div>
@@ -362,15 +355,12 @@
 
           {% if jornada %}
 
-
             <!-- FECHA -->
 
             <div class="info-row">
 
               <div class="info-icon blue">
-
                 <i class="bi bi-calendar3"></i>
-
               </div>
 
               <div class="info-content">
@@ -393,9 +383,7 @@
             <div class="info-row">
 
               <div class="info-icon green">
-
                 <i class="bi bi-box-arrow-in-right"></i>
-
               </div>
 
               <div class="info-content">
@@ -418,9 +406,7 @@
             <div class="info-row">
 
               <div class="info-icon red">
-
                 <i class="bi bi-box-arrow-right"></i>
-
               </div>
 
               <div class="info-content">
@@ -453,9 +439,7 @@
             <div class="info-row">
 
               <div class="info-icon purple">
-
                 <i class="bi bi-activity"></i>
-
               </div>
 
               <div class="info-content">
@@ -468,21 +452,15 @@
                 {% if jornada.salida %}
 
                   <span class="status-badge finished">
-
                     <i class="bi bi-check-circle-fill"></i>
-
                     Jornada finalizada
-
                   </span>
 
                 {% else %}
 
                   <span class="status-badge active">
-
                     <i class="bi bi-circle-fill"></i>
-
                     Jornada activa
-
                   </span>
 
                 {% endif %}
@@ -534,15 +512,12 @@
 
           {% else %}
 
-
             <!-- SIN JORNADA -->
 
             <div class="empty-state">
 
               <div class="empty-icon">
-
                 <i class="bi bi-calendar-x"></i>
-
               </div>
 
               <h3>
@@ -555,22 +530,43 @@
 
             </div>
 
-
           {% endif %}
 
         </section>
-
 
 
         <!-- =================================================
              HORAS EXTRAS
         ================================================== -->
 
-        <section class="horas-extras-section">
+        <section class="app-card horas-extras-section">
+
+          <div class="card-header">
+
+            <div>
+
+              <span class="card-label">
+                CONTROL ADICIONAL
+              </span>
+
+              <h2>
+                <i class="bi bi-clock-history"></i>
+                Horas extras
+              </h2>
+
+            </div>
+
+
+            <div class="card-header-icon green">
+
+              <i class="bi bi-plus-circle-fill"></i>
+
+            </div>
+
+          </div>
 
 
           {% if hora_extra_activa %}
-
 
             <!-- =================================================
                  HORAS EXTRAS ACTIVAS
@@ -578,8 +574,7 @@
 
             <div class="horas-extras-active">
 
-
-              <div class="horas-extras-header">
+              <div class="horas-extras-status">
 
                 <div class="horas-extras-icon">
 
@@ -587,21 +582,19 @@
 
                 </div>
 
-
                 <div>
 
                   <span class="card-label">
-                    HORAS EXTRAS
+                    EN PROGRESO
                   </span>
 
                   <h3>
-                    Horas extras en progreso
+                    Horas extras activas
                   </h3>
 
                 </div>
 
               </div>
-
 
 
               <!-- CONTADOR -->
@@ -622,8 +615,7 @@
               </div>
 
 
-
-              <!-- UBICACIÓN HORAS EXTRAS -->
+              <!-- UBICACIÓN -->
 
               <div class="horas-extras-location">
 
@@ -631,17 +623,14 @@
 
                 <span>
 
-                  Ubicación:
-
                   {{ hora_extra_activa.ubicacion|default(
-                    'No registrada',
+                    'Ubicación no registrada',
                     true
                   ) }}
 
                 </span>
 
               </div>
-
 
 
               <!-- FINALIZAR -->
@@ -658,22 +647,18 @@
 
               </button>
 
-
             </div>
 
 
           {% else %}
 
-
             <!-- =================================================
-                 INICIAR HORAS EXTRAS
+                 HORAS EXTRAS DISPONIBLES
             ================================================== -->
 
             <div class="horas-extras-start">
 
-
-              <div class="horas-extras-start-info">
-
+              <div class="horas-extras-start-content">
 
                 <div class="horas-extras-icon green">
 
@@ -685,65 +670,42 @@
                 <div>
 
                   <span class="card-label">
-                    CONTROL ADICIONAL
+                    REGISTRO ADICIONAL
                   </span>
 
-
                   <h3>
-                    ¿Quieres registrar horas extras?
+                    Registrar horas extras
                   </h3>
 
 
                   {% if jornada and jornada.salida %}
 
                     <p>
-
-                      Jornada finalizada a las
-
+                      Tu jornada terminó a las
                       <strong>
                         {{ jornada.salida.strftime("%I:%M:%S %p") }}
                       </strong>.
-
                     </p>
-
 
                   {% elif jornada %}
 
                     <p>
                       Tienes una jornada activa.
-                      Puedes registrar horas extras cuando corresponda.
+                      Puedes registrar tiempo adicional cuando corresponda.
                     </p>
-
 
                   {% else %}
 
                     <p>
-                      No hay una jornada activa en este momento.
-                      Puedes iniciar horas extras.
+                      No tienes una jornada activa.
+                      Puedes registrar horas extras directamente.
                     </p>
 
                   {% endif %}
 
-
-                  <!-- UBICACIÓN -->
-
-                  <p class="text-muted small">
-
-                    <i class="bi bi-geo-alt-fill"></i>
-
-                    Ubicación de sesión:
-
-                    <strong id="ubicacion-actual">
-                      Obteniendo ubicación...
-                    </strong>
-
-                  </p>
-
-
                 </div>
 
               </div>
-
 
 
               <!-- BOTÓN -->
@@ -754,21 +716,17 @@
                 onclick="iniciarHorasExtras()"
               >
 
-                <i class="bi bi-clock-fill"></i>
+                <i class="bi bi-play-circle-fill"></i>
 
                 Iniciar horas extras
 
               </button>
 
-
             </div>
-
 
           {% endif %}
 
-
         </section>
-
 
 
         <!-- =================================================
@@ -776,7 +734,6 @@
         ================================================== -->
 
         <section class="app-card descansos-card">
-
 
           <div class="card-header">
 
@@ -787,11 +744,8 @@
               </span>
 
               <h2>
-
                 <i class="bi bi-cup-hot"></i>
-
                 Descansos
-
               </h2>
 
             </div>
@@ -806,19 +760,15 @@
           </div>
 
 
-
           {% if jornada %}
 
-
             {% if descanso_activo %}
-
 
               <!-- =================================================
                    DESCANSO ACTIVO
               ================================================== -->
 
               <div class="active-break">
-
 
                 <div class="break-status">
 
@@ -839,21 +789,16 @@
                       {% if descanso_activo.tipo == "break_manana" %}
 
                         <i class="bi bi-cup-hot"></i>
-
                         Break de mañana
-
 
                       {% elif descanso_activo.tipo == "lunch" %}
 
                         <i class="bi bi-egg-fried"></i>
-
                         Lunch
-
 
                       {% elif descanso_activo.tipo == "break_tarde" %}
 
                         <i class="bi bi-cup-hot"></i>
-
                         Break de tarde
 
                       {% endif %}
@@ -865,7 +810,6 @@
                 </div>
 
 
-
                 <!-- INICIO -->
 
                 <div class="break-start">
@@ -875,13 +819,10 @@
                   </span>
 
                   <strong>
-
                     {{ descanso_activo.inicio.strftime("%I:%M:%S %p") }}
-
                   </strong>
 
                 </div>
-
 
 
                 <!-- CONTADOR -->
@@ -910,7 +851,6 @@
                 </div>
 
 
-
                 <!-- FINALIZAR DESCANSO -->
 
                 <form
@@ -934,12 +874,10 @@
 
                 </form>
 
-
               </div>
 
 
             {% else %}
-
 
               <!-- =================================================
                    SELECCIONAR DESCANSO
@@ -947,11 +885,9 @@
 
               <div class="break-selection">
 
-
                 <p class="selection-text">
                   Selecciona el descanso que deseas iniciar.
                 </p>
-
 
 
                 <!-- BREAK MAÑANA -->
@@ -970,11 +906,8 @@
                   >
 
                     <div class="break-option-icon">
-
                       <i class="bi bi-cup-hot-fill"></i>
-
                     </div>
-
 
                     <div class="break-option-info">
 
@@ -988,13 +921,11 @@
 
                     </div>
 
-
                     <i class="bi bi-chevron-right"></i>
 
                   </button>
 
                 </form>
-
 
 
                 <!-- LUNCH -->
@@ -1013,11 +944,8 @@
                   >
 
                     <div class="break-option-icon">
-
                       <i class="bi bi-egg-fried"></i>
-
                     </div>
-
 
                     <div class="break-option-info">
 
@@ -1031,13 +959,11 @@
 
                     </div>
 
-
                     <i class="bi bi-chevron-right"></i>
 
                   </button>
 
                 </form>
-
 
 
                 <!-- BREAK TARDE -->
@@ -1056,11 +982,8 @@
                   >
 
                     <div class="break-option-icon">
-
                       <i class="bi bi-cup-hot-fill"></i>
-
                     </div>
-
 
                     <div class="break-option-info">
 
@@ -1074,40 +997,29 @@
 
                     </div>
 
-
                     <i class="bi bi-chevron-right"></i>
 
                   </button>
 
                 </form>
 
-
               </div>
-
 
             {% endif %}
 
-
           {% else %}
 
-
-            <!-- =================================================
-                 SIN JORNADA
-            ================================================== -->
+            <!-- SIN JORNADA -->
 
             <div class="empty-state">
 
               <div class="empty-icon">
-
                 <i class="bi bi-stopwatch"></i>
-
               </div>
-
 
               <h3>
                 Descansos no disponibles
               </h3>
-
 
               <p>
                 Debes tener una jornada activa para utilizar los descansos.
@@ -1115,15 +1027,11 @@
 
             </div>
 
-
           {% endif %}
-
 
         </section>
 
-
       </div>
-
 
 
       <!-- =====================================================
@@ -1131,7 +1039,6 @@
       ====================================================== -->
 
       <section class="ubicacion-card">
-
 
         <div class="ubicacion-icon">
 
@@ -1142,16 +1049,13 @@
 
         <div class="ubicacion-info">
 
-
           <span class="card-label">
-            UBICACIÓN DE SESIÓN
+            SEGURIDAD
           </span>
 
-
           <h3>
-            Ubicación actual
+            Ubicación de sesión
           </h3>
-
 
           <p id="ubicacion-texto">
             Obteniendo ubicación...
@@ -1160,11 +1064,12 @@
 
           <div class="ubicacion-coordenadas">
 
-
             <span>
 
+              <i class="bi bi-compass"></i>
+
               <strong>
-                Latitud:
+                Latitud
               </strong>
 
               <span id="latitud">
@@ -1176,8 +1081,10 @@
 
             <span>
 
+              <i class="bi bi-compass"></i>
+
               <strong>
-                Longitud:
+                Longitud
               </strong>
 
               <span id="longitud">
@@ -1186,9 +1093,7 @@
 
             </span>
 
-
           </div>
-
 
         </div>
 
@@ -1201,9 +1106,7 @@
 
         </div>
 
-
       </section>
-
 
 
       <!-- =====================================================
@@ -1223,7 +1126,6 @@
 
             <div class="modal-body text-center p-4">
 
-
               <div class="confirm-icon danger">
 
                 <i class="bi bi-box-arrow-right"></i>
@@ -1237,9 +1139,7 @@
 
 
               <p class="confirm-text">
-
                 ¿Estás seguro de que deseas finalizar tu jornada?
-
               </p>
 
 
@@ -1253,7 +1153,6 @@
 
 
               <div class="confirm-buttons">
-
 
                 <button
                   type="button"
@@ -1282,9 +1181,7 @@
 
                 </form>
 
-
               </div>
-
 
             </div>
 
@@ -1293,7 +1190,6 @@
         </div>
 
       </div>
-
 
 
       <!-- =====================================================
@@ -1313,7 +1209,6 @@
 
             <div class="modal-body text-center p-4">
 
-
               <div class="confirm-icon warning">
 
                 <i class="bi bi-cup-hot-fill"></i>
@@ -1322,14 +1217,12 @@
 
 
               <h3 class="confirm-title">
-                Finalizar Descanso
+                Finalizar descanso
               </h3>
 
 
               <p class="confirm-text">
-
                 ¿Estás seguro de que deseas finalizar tu descanso?
-
               </p>
 
 
@@ -1343,7 +1236,6 @@
 
 
               <div class="confirm-buttons">
-
 
                 <button
                   type="button"
@@ -1372,9 +1264,7 @@
 
                 </form>
 
-
               </div>
-
 
             </div>
 
@@ -1385,13 +1275,11 @@
       </div>
 
 
-
       <!-- =====================================================
            INFORMACIÓN DEL SISTEMA
       ====================================================== -->
 
       <section class="system-info">
-
 
         <div class="system-info-icon">
 
@@ -1405,7 +1293,6 @@
           <strong>
             Registro de asistencia activo
           </strong>
-
 
           <p>
             Recuerda registrar correctamente tus entradas,
@@ -1423,20 +1310,19 @@
 
         </div>
 
-
       </section>
 
 
     </main>
 
 
-
     <!-- =====================================================
          BOOTSTRAP JS
     ====================================================== -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    ></script>
 
 
     <!-- =====================================================
@@ -1464,10 +1350,9 @@
     </script>
 
 
-
     <!-- =====================================================
          JAVASCRIPT DASHBOARD
-         IMPORTANTE: SOLO SE CARGA UNA VEZ
+         SE CARGA UNA SOLA VEZ
     ====================================================== -->
 
     <script
@@ -1477,7 +1362,5 @@
       ) }}"
     ></script>
 
-
   </body>
-
 </html>
