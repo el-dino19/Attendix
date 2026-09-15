@@ -4,6 +4,33 @@
 
 
 // =========================================================
+// CONFIGURACIÓN DE RUTAS FLASK
+// =========================================================
+//
+// Estas URLs son generadas directamente desde Flask.
+// Así evitamos depender de URLs escritas manualmente.
+//
+// IMPORTANTE:
+// Este bloque debe estar disponible ANTES de ejecutar
+// iniciarHorasExtras() o finalizarHorasExtras().
+//
+// =========================================================
+
+window.ATTENDIX = {
+
+    iniciarHorasExtrasUrl:
+        "/Attendix/horas-extras/iniciar",
+
+    finalizarHorasExtrasUrl:
+        "/Attendix/horas-extras/finalizar",
+
+    estadoHorasExtrasUrl:
+        "/Attendix/horas-extras/estado"
+
+};
+
+
+// =========================================================
 // INICIO DEL DASHBOARD
 // =========================================================
 
@@ -12,54 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // =====================================================
     // RELOJ DIGITAL
     // =====================================================
-
-    function actualizarReloj() {
-
-        const reloj = document.getElementById("reloj");
-        const fecha = document.getElementById("fecha-actual");
-
-        if (!reloj) {
-            return;
-        }
-
-        const ahora = new Date();
-
-        const opcionesHora = {
-            timeZone: "America/Bogota",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: true
-        };
-
-        const opcionesFecha = {
-            timeZone: "America/Bogota",
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric"
-        };
-
-        const horaColombia =
-            new Intl.DateTimeFormat(
-                "es-CO",
-                opcionesHora
-            ).format(ahora);
-
-        const fechaColombia =
-            new Intl.DateTimeFormat(
-                "es-CO",
-                opcionesFecha
-            ).format(ahora);
-
-        reloj.textContent = horaColombia;
-
-        if (fecha) {
-            fecha.textContent =
-                fechaColombia.charAt(0).toUpperCase() +
-                fechaColombia.slice(1);
-        }
-    }
 
     actualizarReloj();
 
@@ -88,7 +67,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             setTimeout(function () {
 
-                mensaje.remove();
+                if (mensaje) {
+                    mensaje.remove();
+                }
 
             }, 400);
 
@@ -142,23 +123,123 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+// =========================================================
+// RELOJ DIGITAL
+// =========================================================
+
+function actualizarReloj() {
+
+    const reloj =
+        document.getElementById(
+            "reloj"
+        );
+
+    const fecha =
+        document.getElementById(
+            "fecha-actual"
+        );
+
+
+    if (!reloj) {
+        return;
+    }
+
+
+    const ahora =
+        new Date();
+
+
+    const opcionesHora = {
+
+        timeZone:
+            "America/Bogota",
+
+        hour:
+            "2-digit",
+
+        minute:
+            "2-digit",
+
+        second:
+            "2-digit",
+
+        hour12:
+            true
+
+    };
+
+
+    const opcionesFecha = {
+
+        timeZone:
+            "America/Bogota",
+
+        weekday:
+            "long",
+
+        year:
+            "numeric",
+
+        month:
+            "long",
+
+        day:
+            "numeric"
+
+    };
+
+
+    const horaColombia =
+        new Intl.DateTimeFormat(
+            "es-CO",
+            opcionesHora
+        ).format(ahora);
+
+
+    const fechaColombia =
+        new Intl.DateTimeFormat(
+            "es-CO",
+            opcionesFecha
+        ).format(ahora);
+
+
+    reloj.textContent =
+        horaColombia;
+
+
+    if (fecha) {
+
+        fecha.textContent =
+            fechaColombia
+                .charAt(0)
+                .toUpperCase() +
+            fechaColombia.slice(1);
+
+    }
+
+}
+
 
 // =========================================================
 // CONTADOR DE DESCANSO
 // =========================================================
 
-function iniciarContadorDescanso(contador) {
+function iniciarContadorDescanso(
+    contador
+) {
 
     const mensaje =
         document.getElementById(
             "mensaje-contador"
         );
 
+
     const tipo =
         (
             contador.dataset.tipo ||
             ""
         ).trim();
+
 
     const horaInicio =
         (
@@ -190,6 +271,7 @@ function iniciarContadorDescanso(contador) {
         contador.textContent =
             "00:00";
 
+
         if (mensaje) {
 
             mensaje.textContent =
@@ -201,14 +283,22 @@ function iniciarContadorDescanso(contador) {
     }
 
 
-    function convertirHoraASegundos(hora) {
+    // -----------------------------------------------------
+    // Convertir HH:MM:SS a segundos
+    // -----------------------------------------------------
+
+    function convertirHoraASegundos(
+        hora
+    ) {
 
         const partes =
             hora.split(":");
 
+
         if (partes.length !== 3) {
             return null;
         }
+
 
         const horas =
             Number(partes[0]);
@@ -219,6 +309,7 @@ function iniciarContadorDescanso(contador) {
         const segundos =
             Number(partes[2]);
 
+
         if (
             Number.isNaN(horas) ||
             Number.isNaN(minutos) ||
@@ -226,13 +317,16 @@ function iniciarContadorDescanso(contador) {
         ) {
 
             return null;
+
         }
+
 
         return (
             horas * 3600 +
             minutos * 60 +
             segundos
         );
+
     }
 
 
@@ -247,6 +341,7 @@ function iniciarContadorDescanso(contador) {
         contador.textContent =
             "00:00";
 
+
         if (mensaje) {
 
             mensaje.textContent =
@@ -258,15 +353,21 @@ function iniciarContadorDescanso(contador) {
     }
 
 
+    // -----------------------------------------------------
+    // Hora actual Colombia
+    // -----------------------------------------------------
+
     function obtenerHoraActualSegundos() {
 
         const ahora =
             new Date();
 
+
         const partes =
             new Intl.DateTimeFormat(
                 "en-US",
                 {
+
                     timeZone:
                         "America/Bogota",
 
@@ -281,12 +382,15 @@ function iniciarContadorDescanso(contador) {
 
                     hour12:
                         false
+
                 }
             ).formatToParts(ahora);
+
 
         let horas = 0;
         let minutos = 0;
         let segundos = 0;
+
 
         partes.forEach(function (parte) {
 
@@ -296,7 +400,9 @@ function iniciarContadorDescanso(contador) {
                     Number(
                         parte.value
                     );
+
             }
+
 
             if (parte.type === "minute") {
 
@@ -304,7 +410,9 @@ function iniciarContadorDescanso(contador) {
                     Number(
                         parte.value
                     );
+
             }
+
 
             if (parte.type === "second") {
 
@@ -312,38 +420,58 @@ function iniciarContadorDescanso(contador) {
                     Number(
                         parte.value
                     );
+
             }
 
         });
+
 
         return (
             horas * 3600 +
             minutos * 60 +
             segundos
         );
+
     }
 
+
+    // -----------------------------------------------------
+    // Tiempo transcurrido
+    // -----------------------------------------------------
 
     function obtenerTiempoTranscurrido() {
 
         const actual =
             obtenerHoraActualSegundos();
 
+
         let diferencia =
             actual -
             inicioSegundos;
+
+
+        // Si cambia de día
 
         if (diferencia < 0) {
 
             diferencia +=
                 24 * 60 * 60;
+
         }
 
+
         return diferencia;
+
     }
 
 
-    function formatearTiempo(segundos) {
+    // -----------------------------------------------------
+    // Formatear MM:SS
+    // -----------------------------------------------------
+
+    function formatearTiempo(
+        segundos
+    ) {
 
         segundos =
             Math.max(
@@ -351,35 +479,64 @@ function iniciarContadorDescanso(contador) {
                 Math.floor(segundos)
             );
 
+
         const minutos =
             Math.floor(
                 segundos / 60
             );
 
+
         const segundosRestantes =
             segundos % 60;
 
+
         return (
-            String(minutos).padStart(2, "0") +
-            ":" +
-            String(segundosRestantes).padStart(2, "0")
+
+            String(
+                minutos
+            ).padStart(
+                2,
+                "0"
+            )
+
+            +
+
+            ":"
+
+            +
+
+            String(
+                segundosRestantes
+            ).padStart(
+                2,
+                "0"
+            )
+
         );
+
     }
 
+
+    // -----------------------------------------------------
+    // Actualizar contador
+    // -----------------------------------------------------
 
     function actualizarContador() {
 
         const transcurrido =
             obtenerTiempoTranscurrido();
 
+
         const restante =
             duracionTotal -
             transcurrido;
+
 
         if (restante <= 0) {
 
             contador.textContent =
                 "00:00";
+
 
             if (mensaje) {
 
@@ -388,13 +545,17 @@ function iniciarContadorDescanso(contador) {
 
             }
 
+
             return;
+
         }
+
 
         contador.textContent =
             formatearTiempo(
                 restante
             );
+
 
         if (mensaje) {
 
@@ -402,24 +563,28 @@ function iniciarContadorDescanso(contador) {
                 "Descanso en progreso";
 
         }
+
     }
 
 
     actualizarContador();
 
+
     setInterval(
         actualizarContador,
         1000
     );
-}
 
+}
 
 
 // =========================================================
 // CONTADOR DE HORAS EXTRAS
 // =========================================================
 
-function iniciarContadorHorasExtras(contador) {
+function iniciarContadorHorasExtras(
+    contador
+) {
 
     const inicio =
         (
@@ -427,12 +592,14 @@ function iniciarContadorHorasExtras(contador) {
             ""
         ).trim();
 
+
     if (!inicio) {
 
         contador.textContent =
             "00:00:00";
 
         return;
+
     }
 
 
@@ -440,27 +607,29 @@ function iniciarContadorHorasExtras(contador) {
         new Date(inicio);
 
 
+    // -----------------------------------------------------
+    // Compatibilidad con fechas sin T
+    // -----------------------------------------------------
+
     if (
-        isNaN(
+        Number.isNaN(
             fechaInicio.getTime()
         )
     ) {
 
-        const normalizada =
-            inicio.replace(
-                " ",
-                "T"
-            );
-
         fechaInicio =
             new Date(
-                normalizada
+                inicio.replace(
+                    " ",
+                    "T"
+                )
             );
+
     }
 
 
     if (
-        isNaN(
+        Number.isNaN(
             fechaInicio.getTime()
         )
     ) {
@@ -469,24 +638,36 @@ function iniciarContadorHorasExtras(contador) {
             "00:00:00";
 
         return;
+
     }
 
+
+    // -----------------------------------------------------
+    // Actualizar
+    // -----------------------------------------------------
 
     function actualizar() {
 
         const ahora =
             new Date();
 
+
         let diferencia =
             Math.floor(
+
                 (
                     ahora.getTime() -
                     fechaInicio.getTime()
+
                 ) / 1000
+
             );
 
+
         if (diferencia < 0) {
+
             diferencia = 0;
+
         }
 
 
@@ -495,6 +676,7 @@ function iniciarContadorHorasExtras(contador) {
                 diferencia / 3600
             );
 
+
         const minutos =
             Math.floor(
                 (
@@ -502,56 +684,62 @@ function iniciarContadorHorasExtras(contador) {
                 ) / 60
             );
 
+
         const segundos =
             diferencia % 60;
 
 
         contador.textContent =
 
-            String(horas).padStart(
+            String(
+                horas
+            ).padStart(
                 2,
                 "0"
-            ) +
+            )
 
-            ":" +
+            +
 
-            String(minutos).padStart(
+            ":"
+
+            +
+
+            String(
+                minutos
+            ).padStart(
                 2,
                 "0"
-            ) +
+            )
 
-            ":" +
+            +
 
-            String(segundos).padStart(
+            ":"
+
+            +
+
+            String(
+                segundos
+            ).padStart(
                 2,
                 "0"
             );
+
     }
 
 
     actualizar();
 
+
     setInterval(
         actualizar,
         1000
     );
-}
 
+}
 
 
 // =========================================================
 // OBTENER UBICACIÓN DEL USUARIO
-// =========================================================
-//
-// IMPORTANTE:
-//
-// Las coordenadas NO se muestran al usuario.
-//
-// Se utilizan internamente para:
-// - identificar aproximadamente la ubicación
-// - enviarlas al backend cuando sea necesario
-//
-// La interfaz muestra únicamente una dirección aproximada.
 // =========================================================
 
 function obtenerUbicacionUsuario() {
@@ -559,11 +747,6 @@ function obtenerUbicacionUsuario() {
     const ubicacionTexto =
         document.getElementById(
             "ubicacion-texto"
-        );
-
-    const ubicacionActual =
-        document.getElementById(
-            "ubicacion-actual"
         );
 
 
@@ -575,6 +758,7 @@ function obtenerUbicacionUsuario() {
         );
 
         return;
+
     }
 
 
@@ -582,6 +766,7 @@ function obtenerUbicacionUsuario() {
 
         ubicacionTexto.textContent =
             "Obteniendo ubicación aproximada...";
+
     }
 
 
@@ -592,11 +777,9 @@ function obtenerUbicacionUsuario() {
             const latitud =
                 position.coords.latitude;
 
+
             const longitud =
                 position.coords.longitude;
-
-            const precision =
-                position.coords.accuracy;
 
 
             try {
@@ -612,8 +795,9 @@ function obtenerUbicacionUsuario() {
                     direccion
                 );
 
+            }
 
-            } catch (error) {
+            catch (error) {
 
                 console.warn(
                     "No se pudo obtener la dirección:",
@@ -624,16 +808,20 @@ function obtenerUbicacionUsuario() {
                 mostrarDireccion(
                     "Ubicación disponible"
                 );
+
             }
 
         },
+
 
         function (error) {
 
             manejarErrorUbicacion(
                 error
             );
+
         },
+
 
         {
 
@@ -647,19 +835,14 @@ function obtenerUbicacionUsuario() {
                 60000
 
         }
-    );
-}
 
+    );
+
+}
 
 
 // =========================================================
 // OBTENER DIRECCIÓN APROXIMADA
-// =========================================================
-//
-// Se utiliza Nominatim/OpenStreetMap para convertir
-// las coordenadas GPS en una dirección legible.
-//
-// No se muestran las coordenadas en pantalla.
 // =========================================================
 
 async function obtenerDireccionAproximada(
@@ -669,13 +852,23 @@ async function obtenerDireccionAproximada(
 
     const url =
         "https://nominatim.openstreetmap.org/reverse" +
+
         "?format=json" +
+
         "&lat=" +
-        encodeURIComponent(latitud) +
+        encodeURIComponent(
+            latitud
+        ) +
+
         "&lon=" +
-        encodeURIComponent(longitud) +
+        encodeURIComponent(
+            longitud
+        ) +
+
         "&zoom=18" +
+
         "&addressdetails=1" +
+
         "&accept-language=es";
 
 
@@ -683,11 +876,17 @@ async function obtenerDireccionAproximada(
         await fetch(
             url,
             {
-                method: "GET",
+
+                method:
+                    "GET",
+
                 headers: {
+
                     "Accept":
                         "application/json"
+
                 }
+
             }
         );
 
@@ -697,6 +896,7 @@ async function obtenerDireccionAproximada(
         throw new Error(
             "No se pudo obtener la dirección."
         );
+
     }
 
 
@@ -712,17 +912,13 @@ async function obtenerDireccionAproximada(
         throw new Error(
             "No se encontró una dirección."
         );
+
     }
 
 
     const address =
         data.address;
 
-
-    /*
-     * Intentamos mostrar una dirección útil
-     * sin revelar coordenadas.
-     */
 
     const calle =
         address.road ||
@@ -768,12 +964,16 @@ async function obtenerDireccionAproximada(
                 `${calle} ${numero}`
             );
 
-        } else {
+        }
+
+        else {
 
             partes.push(
                 calle
             );
+
         }
+
     }
 
 
@@ -782,6 +982,7 @@ async function obtenerDireccionAproximada(
         partes.push(
             barrio
         );
+
     }
 
 
@@ -790,29 +991,25 @@ async function obtenerDireccionAproximada(
         partes.push(
             localidad
         );
+
     }
 
-
-    /*
-     * Si encontramos una dirección completa,
-     * la utilizamos.
-     */
 
     if (partes.length > 0) {
 
-        return partes.join(", ");
+        return partes.join(
+            ", "
+        );
+
     }
 
 
-    /*
-     * En caso de no encontrar calle,
-     * mostramos localidad/departamento.
-     */
-
     const alternativa = [
+
         barrio,
         localidad,
         departamento
+
     ]
         .filter(Boolean)
         .join(", ");
@@ -821,12 +1018,9 @@ async function obtenerDireccionAproximada(
     if (alternativa) {
 
         return alternativa;
+
     }
 
-
-    /*
-     * Último recurso.
-     */
 
     if (data.display_name) {
 
@@ -836,16 +1030,19 @@ async function obtenerDireccionAproximada(
                 .slice(0, 3)
                 .join(",");
 
+
         if (nombre.trim()) {
 
             return nombre.trim();
+
         }
+
     }
 
 
     return "Ubicación aproximada disponible";
-}
 
+}
 
 
 // =========================================================
@@ -872,6 +1069,7 @@ function mostrarDireccion(
 
         ubicacionTexto.textContent =
             direccion;
+
     }
 
 
@@ -879,14 +1077,9 @@ function mostrarDireccion(
 
         ubicacionActual.textContent =
             direccion;
+
     }
 
-
-    /*
-     * Ocultamos cualquier elemento antiguo
-     * de coordenadas que pudiera existir
-     * en el HTML.
-     */
 
     const coordenadas =
         document.querySelector(
@@ -898,13 +1091,14 @@ function mostrarDireccion(
 
         coordenadas.style.display =
             "none";
+
     }
+
 }
 
 
-
 // =========================================================
-// MENSAJES DE UBICACIÓN
+// MENSAJE DE UBICACIÓN
 // =========================================================
 
 function mostrarMensajeUbicacion(
@@ -928,6 +1122,7 @@ function mostrarMensajeUbicacion(
 
         ubicacionTexto.textContent =
             mensaje;
+
     }
 
 
@@ -935,6 +1130,7 @@ function mostrarMensajeUbicacion(
 
         ubicacionActual.textContent =
             mensaje;
+
     }
 
 
@@ -950,14 +1146,16 @@ function mostrarMensajeUbicacion(
 
             coordenadas.style.display =
                 "none";
+
         }
+
     }
+
 }
 
 
-
 // =========================================================
-// MANEJAR ERROR DE UBICACIÓN
+// ERROR DE UBICACIÓN
 // =========================================================
 
 function manejarErrorUbicacion(
@@ -975,7 +1173,9 @@ function manejarErrorUbicacion(
 
         mensaje =
             "Debes permitir el acceso a tu ubicación.";
+
     }
+
 
     else if (
         error.code ===
@@ -984,7 +1184,9 @@ function manejarErrorUbicacion(
 
         mensaje =
             "La ubicación no está disponible.";
+
     }
+
 
     else if (
         error.code ===
@@ -993,30 +1195,28 @@ function manejarErrorUbicacion(
 
         mensaje =
             "Se agotó el tiempo para obtener la ubicación.";
+
     }
 
 
     mostrarMensajeUbicacion(
         mensaje
     );
-}
 
+}
 
 
 // =========================================================
 // OBTENER UBICACIÓN COMO PROMESA
 // =========================================================
-//
-// Esta función se utiliza para registrar las horas extras.
-//
-// Las coordenadas se mantienen internamente.
-// NO se muestran en la interfaz.
-// =========================================================
 
 function obtenerUbicacion() {
 
     return new Promise(
-        function(resolve, reject) {
+        function (
+            resolve,
+            reject
+        ) {
 
             if (!navigator.geolocation) {
 
@@ -1027,12 +1227,13 @@ function obtenerUbicacion() {
                 );
 
                 return;
+
             }
 
 
             navigator.geolocation.getCurrentPosition(
 
-                function(position) {
+                function (position) {
 
                     resolve({
 
@@ -1049,7 +1250,8 @@ function obtenerUbicacion() {
 
                 },
 
-                function(error) {
+
+                function (error) {
 
                     let mensaje =
                         "No se pudo obtener tu ubicación.";
@@ -1062,7 +1264,9 @@ function obtenerUbicacion() {
 
                         mensaje =
                             "Debes permitir el acceso a tu ubicación para continuar.";
+
                     }
+
 
                     else if (
                         error.code ===
@@ -1071,7 +1275,9 @@ function obtenerUbicacion() {
 
                         mensaje =
                             "La ubicación no está disponible.";
+
                     }
+
 
                     else if (
                         error.code ===
@@ -1080,6 +1286,7 @@ function obtenerUbicacion() {
 
                         mensaje =
                             "Se agotó el tiempo para obtener la ubicación.";
+
                     }
 
 
@@ -1090,6 +1297,7 @@ function obtenerUbicacion() {
                     );
 
                 },
+
 
                 {
 
@@ -1103,22 +1311,42 @@ function obtenerUbicacion() {
                         60000
 
                 }
+
             );
 
         }
     );
+
 }
 
 
+// =========================================================
+// OBTENER UBICACIÓN PARA HORAS EXTRAS
+// =========================================================
+
+async function obtenerUbicacionParaHorasExtras() {
+
+    const ubicacion =
+        await obtenerUbicacion();
+
+
+    // Mostrar dirección en la interfaz.
+    //
+    // Las coordenadas siguen siendo privadas
+    // y únicamente se envían al backend.
+
+    mostrarUbicacion(
+        ubicacion
+    );
+
+
+    return ubicacion;
+
+}
+
 
 // =========================================================
-// MOSTRAR UBICACIÓN EN LA VISTA
-// =========================================================
-//
-// Esta función ya NO muestra coordenadas.
-//
-// Se mantiene por compatibilidad con otras partes
-// del dashboard.
+// MOSTRAR UBICACIÓN
 // =========================================================
 
 async function mostrarUbicacion(
@@ -1136,6 +1364,7 @@ async function mostrarUbicacion(
         );
 
         return;
+
     }
 
 
@@ -1143,8 +1372,10 @@ async function mostrarUbicacion(
 
         const direccion =
             await obtenerDireccionAproximada(
+
                 ubicacion.latitud,
                 ubicacion.longitud
+
             );
 
 
@@ -1153,6 +1384,7 @@ async function mostrarUbicacion(
         );
 
     }
+
 
     catch (error) {
 
@@ -1165,43 +1397,10 @@ async function mostrarUbicacion(
         mostrarDireccion(
             "Ubicación aproximada disponible"
         );
+
     }
+
 }
-
-
-
-// =========================================================
-// OBTENER UBICACIÓN PARA HORAS EXTRAS
-// =========================================================
-
-async function obtenerUbicacionParaHorasExtras() {
-
-    try {
-
-        const ubicacion =
-            await obtenerUbicacion();
-
-
-        /*
-         * Actualizamos visualmente la dirección,
-         * pero nunca mostramos las coordenadas.
-         */
-
-        mostrarUbicacion(
-            ubicacion
-        );
-
-
-        return ubicacion;
-
-    }
-
-    catch (error) {
-
-        throw error;
-    }
-}
-
 
 
 // =========================================================
@@ -1221,16 +1420,26 @@ async function iniciarHorasExtras() {
         boton.disabled =
             true;
 
+
         boton.innerHTML =
             '<i class="bi bi-hourglass-split"></i> OBTENIENDO UBICACIÓN...';
+
     }
 
 
     try {
 
+        // -------------------------------------------------
+        // OBTENER GPS
+        // -------------------------------------------------
+
         const ubicacion =
             await obtenerUbicacionParaHorasExtras();
 
+
+        // -------------------------------------------------
+        // VERIFICAR URL
+        // -------------------------------------------------
 
         if (
             !window.ATTENDIX ||
@@ -1240,6 +1449,7 @@ async function iniciarHorasExtras() {
             throw new Error(
                 "No se encontró la URL para iniciar horas extras."
             );
+
         }
 
 
@@ -1247,13 +1457,13 @@ async function iniciarHorasExtras() {
 
             boton.innerHTML =
                 '<i class="bi bi-hourglass-split"></i> REGISTRANDO...';
+
         }
 
 
-        /*
-         * Las coordenadas se envían al backend,
-         * pero nunca se muestran al usuario.
-         */
+        // -------------------------------------------------
+        // ENVIAR AL BACKEND
+        // -------------------------------------------------
 
         const response =
             await fetch(
@@ -1290,8 +1500,10 @@ async function iniciarHorasExtras() {
                                 ubicacion.precision,
 
                             /*
-                             * Se mantiene este campo por
-                             * compatibilidad con tu backend.
+                             * Por compatibilidad con tu servicio.
+                             *
+                             * El backend recibe las coordenadas
+                             * reales aquí.
                              */
 
                             ubicacion:
@@ -1300,10 +1512,11 @@ async function iniciarHorasExtras() {
                         })
 
                 }
+
             );
 
 
-        let data;
+        let data = {};
 
 
         try {
@@ -1313,9 +1526,12 @@ async function iniciarHorasExtras() {
 
         }
 
-        catch {
+        catch (error) {
 
-            data = {};
+            console.warn(
+                "La respuesta no contiene JSON válido."
+            );
+
         }
 
 
@@ -1327,16 +1543,21 @@ async function iniciarHorasExtras() {
             throw new Error(
 
                 data.mensaje ||
-
                 "No se pudieron iniciar las horas extras."
 
             );
+
         }
 
+
+        // -------------------------------------------------
+        // ÉXITO
+        // -------------------------------------------------
 
         window.location.reload();
 
     }
+
 
     catch (error) {
 
@@ -1347,7 +1568,8 @@ async function iniciarHorasExtras() {
 
 
         alert(
-            error.message
+            error.message ||
+            "No se pudieron iniciar las horas extras."
         );
 
 
@@ -1356,12 +1578,15 @@ async function iniciarHorasExtras() {
             boton.disabled =
                 false;
 
-            boton.innerHTML =
-                '<i class="bi bi-play-circle-fill"></i> INICIAR HORAS EXTRAS';
-        }
-    }
-}
 
+            boton.innerHTML =
+                '<i class="bi bi-play-circle-fill"></i> Iniciar horas extras';
+
+        }
+
+    }
+
+}
 
 
 // =========================================================
@@ -1381,16 +1606,26 @@ async function finalizarHorasExtras() {
         boton.disabled =
             true;
 
+
         boton.innerHTML =
             '<i class="bi bi-hourglass-split"></i> OBTENIENDO UBICACIÓN...';
+
     }
 
 
     try {
 
+        // -------------------------------------------------
+        // OBTENER GPS
+        // -------------------------------------------------
+
         const ubicacion =
             await obtenerUbicacionParaHorasExtras();
 
+
+        // -------------------------------------------------
+        // VERIFICAR URL
+        // -------------------------------------------------
 
         if (
             !window.ATTENDIX ||
@@ -1400,6 +1635,7 @@ async function finalizarHorasExtras() {
             throw new Error(
                 "No se encontró la URL para finalizar horas extras."
             );
+
         }
 
 
@@ -1407,8 +1643,13 @@ async function finalizarHorasExtras() {
 
             boton.innerHTML =
                 '<i class="bi bi-hourglass-split"></i> FINALIZANDO...';
+
         }
 
+
+        // -------------------------------------------------
+        // ENVIAR AL BACKEND
+        // -------------------------------------------------
 
         const response =
             await fetch(
@@ -1450,10 +1691,11 @@ async function finalizarHorasExtras() {
                         })
 
                 }
+
             );
 
 
-        let data;
+        let data = {};
 
 
         try {
@@ -1463,9 +1705,12 @@ async function finalizarHorasExtras() {
 
         }
 
-        catch {
+        catch (error) {
 
-            data = {};
+            console.warn(
+                "La respuesta no contiene JSON válido."
+            );
+
         }
 
 
@@ -1477,16 +1722,21 @@ async function finalizarHorasExtras() {
             throw new Error(
 
                 data.mensaje ||
-
                 "No se pudieron finalizar las horas extras."
 
             );
+
         }
 
+
+        // -------------------------------------------------
+        // ÉXITO
+        // -------------------------------------------------
 
         window.location.reload();
 
     }
+
 
     catch (error) {
 
@@ -1497,7 +1747,8 @@ async function finalizarHorasExtras() {
 
 
         alert(
-            error.message
+            error.message ||
+            "No se pudieron finalizar las horas extras."
         );
 
 
@@ -1506,12 +1757,15 @@ async function finalizarHorasExtras() {
             boton.disabled =
                 false;
 
-            boton.innerHTML =
-                '<i class="bi bi-stop-circle-fill"></i> FINALIZAR HORAS EXTRAS';
-        }
-    }
-}
 
+            boton.innerHTML =
+                '<i class="bi bi-stop-circle-fill"></i> Finalizar horas extras';
+
+        }
+
+    }
+
+}
 
 
 // =========================================================
@@ -1520,7 +1774,7 @@ async function finalizarHorasExtras() {
 
 document.addEventListener(
     "submit",
-    function(event) {
+    function (event) {
 
         const formulario =
             event.target;
@@ -1542,9 +1796,12 @@ document.addEventListener(
                 boton.disabled =
                     true;
 
+
                 boton.innerHTML =
                     '<i class="bi bi-hourglass-split"></i> FINALIZANDO...';
+
             }
+
         }
 
     }
