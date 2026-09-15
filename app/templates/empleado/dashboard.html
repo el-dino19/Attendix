@@ -369,15 +369,15 @@
         </section>
 
         <!-- =====================================================
-     HORAS EXTRAS
-====================================================== -->
+        HORAS EXTRAS
+        ====================================================== -->
 
         <section class="horas-extras-section">
-          {% if jornada and jornada.salida %} {% if hora_extra_activa %}
+          {% if hora_extra_activa %}
 
           <!-- =================================================
-             HORAS EXTRAS ACTIVAS
-        ================================================== -->
+              HORAS EXTRAS ACTIVAS
+         ================================================== -->
 
           <div class="horas-extras-active">
             <div class="horas-extras-header">
@@ -406,7 +406,10 @@
             <div class="horas-extras-location">
               <i class="bi bi-geo-alt-fill"></i>
 
-              <span> Ubicación registrada al iniciar </span>
+              <span>
+                Ubicación: {{ hora_extra_activa.ubicacion|default('No
+                registrada', true) }}
+              </span>
             </div>
 
             <button
@@ -423,8 +426,8 @@
           {% else %}
 
           <!-- =================================================
-             INICIAR HORAS EXTRAS
-        ================================================== -->
+              INICIAR HORAS EXTRAS (Disponible cuando no hay jornada activa o ya finalizó)
+         ================================================== -->
 
           <div class="horas-extras-start">
             <div class="horas-extras-start-info">
@@ -433,11 +436,24 @@
               </div>
 
               <div>
-                <span class="card-label"> JORNADA FINALIZADA </span>
+                <span class="card-label"> CONTROL ADICIONAL </span>
 
                 <h3>¿Quieres registrar horas extras?</h3>
 
-                <p>Inicia el tiempo adicional cuando estés listo.</p>
+                <p>
+                  {% if jornada and jornada.salida %} Jornada finalizada a las
+                  <strong>{{ jornada.salida.strftime("%I:%M:%S %p") }}</strong>.
+                  {% else %} No hay una jornada activa en este momento. {% endif
+                  %}
+                </p>
+
+                <p class="text-muted small">
+                  <i class="bi bi-geo-alt-fill"></i> Ubicación de sesión:
+                  <strong
+                    >{{ session.get('ubicacion', 'Ubicación no disponible')
+                    }}</strong
+                  >
+                </p>
               </div>
             </div>
 
@@ -452,7 +468,7 @@
             </button>
           </div>
 
-          {% endif %} {% endif %}
+          {% endif %}
         </section>
 
         <!-- =================================================
