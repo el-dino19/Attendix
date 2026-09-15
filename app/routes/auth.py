@@ -34,117 +34,195 @@ def health():
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
 
-    # ========================================
-    # PETICIÓN POST
-    # ========================================
-
     if request.method == "POST":
 
-        correo = request.form.get(
-            "correo",
-            ""
-        ).strip()
+        try:
 
-        password = request.form.get(
-            "password",
-            ""
-        )
+            # ==========================================
+            # DATOS DEL FORMULARIO
+            # ==========================================
 
-        # ========================================
-        # VALIDAR CAMPOS
-        # ========================================
+            correo = request.form.get(
+                "correo",
+                ""
+            ).strip().lower()
 
-        if not correo or not password:
-
-            flash(
-                "Debes ingresar correo y contraseña.",
-                "danger"
+            password = request.form.get(
+                "password",
+                ""
             )
 
-            return render_template(
-                "login.html"
+            print("========================================")
+            print("LOGIN")
+            print("Correo recibido:", correo)
+            print("========================================")
+
+
+            # ==========================================
+            # VALIDAR
+            # ==========================================
+
+            if not correo or not password:
+
+                flash(
+                    "Debes ingresar correo y contraseña.",
+                    "danger"
+                )
+
+                return render_template(
+                    "login.html"
+                )
+
+
+            # ==========================================
+            # AUTENTICAR
+            # ==========================================
+
+            print("Intentando autenticar usuario...")
+
+            usuario = autenticar_usuario(
+                correo,
+                password
             )
 
-        # ========================================
-        # AUTENTICAR USUARIO
-        # ========================================
-
-        usuario = autenticar_usuario(
-            correo,
-            password
-        )
-
-        # ========================================
-        # USUARIO NO EXISTE / CONTRASEÑA INCORRECTA
-        # ========================================
-
-        if usuario is None:
-
-            flash(
-                "Correo o contraseña incorrectos.",
-                "danger"
+            print(
+                "Resultado autenticación:",
+                usuario
             )
 
-            return render_template(
-                "login.html"
+
+            # ==========================================
+            # USUARIO NO EXISTE
+            # ==========================================
+
+            if usuario is None:
+
+                flash(
+                    "Correo o contraseña incorrectos.",
+                    "danger"
+                )
+
+                return render_template(
+                    "login.html"
+                )
+
+
+            print(
+                "Usuario encontrado:",
+                usuario.id,
+                usuario.nombre,
+                usuario.rol
             )
 
-        # ========================================
-        # VALIDAR ESTADO
-        # ========================================
 
-        if not usuario.activo:
+            # ==========================================
+            # VALIDAR ESTADO
+            # ==========================================
 
-            flash(
-                "Tu cuenta está desactivada. "
-                "Contacta con un administrador para recuperar el acceso.",
-                "warning"
+            if not usuario.activo:
+
+                flash(
+                    "Tu cuenta está desactivada.",
+                    "warning"
+                )
+
+                return render_template(
+                    "login.html"
+                )
+
+
+            # ==========================================
+            # CREAR SESIÓN
+            # ==========================================
+
+            print("Creando sesión...")
+
+            session.clear()
+
+            session["usuario_id"] = usuario.id
+            session["nombre"] = usuario.nombre
+            session["correo"] = usuario.correo
+            session["rol"] = usuario.rol
+
+
+            print(
+                "Sesión creada:",
+                dict(session)
             )
 
-            return render_template(
-                "login.html"
+
+            # ==========================================
+            # REGISTRAR ENTRADA
+            # ==========================================
+
+            print("Registrando entrada...")
+
+            registrar_entrada(
+                usuario.id
             )
 
-        # ========================================
-        # CREAR SESIÓN
-        # ========================================
+            print("Entrada registrada correctamente.")
 
-        session.clear()
 
-        session["usuario_id"] = usuario.id
-        session["nombre"] = usuario.nombre
-        session["correo"] = usuario.correo
-        session["rol"] = usuario.rol
+            # ==========================================
+            # REDIRECCIÓN
+            # ==========================================
 
-        # ========================================
-        # REGISTRAR ENTRADA
-        # ========================================
+            print(
+                "Rol del usuario:",
+                usuario.rol
+            )
 
-        registrar_entrada(
-            usuario.id
-        )
 
-        # ========================================
-        # REDIRECCIÓN SEGÚN ROL
-        # ========================================
+            if usuario.rol == "admin":
 
-        if usuario.rol == "admin":
+                print("Redirigiendo a admin...")
+
+                return redirect(
+                    url_for("admin.dashboard")
+                )
+
+
+            print("Redirigiendo a empleado...")
 
             return redirect(
-                url_for("admin.dashboard")
+                url_for("empleado.dashboard")
             )
 
-        return redirect(
-            url_for("empleado.dashboard")
-        )
 
-    # ========================================
-    # PETICIÓN GET
-    # ========================================
+        except Exception as e:
 
-    return render_template(
-        "login.html"
-    )
+            # ==========================================
+            # MOSTRAR ERROR REAL
+            # ==========================================
+
+            import traceback
+
+            print("")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("ERROR DURANTE LOGIN")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print(
+                "TIPO:",
+                type(e).__name__
+            )
+            print(
+                "ERROR:",
+                str(e)
+            )
+            print("TRACEBACK:")
+            traceback.print_exc()
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("")
+
+            flash(
+                "Ocurrió un error interno al iniciar sesión.",
+                "danger"
+            )
+
+            return render_template(
+                "login.html"
+            )
 
 
 @auth_bp.route("/logout")
