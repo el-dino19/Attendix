@@ -1,6 +1,9 @@
-from datetime import datetime
+
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
 from app.extensions import db
+
 from app.models.hora_extra import HoraExtra
 from app.models.jornada import Jornada
 
@@ -22,6 +25,40 @@ def obtener_hora_extra_activa(usuario_id):
         )
         .first()
     )
+
+
+# =========================================================
+# CONVERTIR UTC A HORA LOCAL
+# =========================================================
+
+def convertir_a_hora_local(fecha_utc, zona_horaria):
+
+    if fecha_utc is None:
+        return None
+
+    try:
+
+        # Si la fecha viene sin zona horaria,
+        # asumimos que está guardada en UTC.
+        if fecha_utc.tzinfo is None:
+            fecha_utc = fecha_utc.replace(
+                tzinfo=timezone.utc
+            )
+
+        zona = ZoneInfo(zona_horaria)
+
+        return fecha_utc.astimezone(zona)
+
+    except Exception:
+
+        # Si la zona horaria enviada no es válida,
+        # devolvemos la fecha en UTC.
+        if fecha_utc.tzinfo is None:
+            fecha_utc = fecha_utc.replace(
+                tzinfo=timezone.utc
+            )
+
+        return fecha_utc
 
 
 # =========================================================
@@ -68,7 +105,6 @@ def iniciar_horas_extras(
         .first()
     )
 
-
     if jornada is None:
 
         return (
@@ -93,6 +129,9 @@ def iniciar_horas_extras(
 
     # -----------------------------------------------------
     # CREAR HORA EXTRA
+    #
+    # IMPORTANTE:
+    # La base de datos guarda siempre UTC.
     # -----------------------------------------------------
 
     hora_extra = HoraExtra(
@@ -101,7 +140,7 @@ def iniciar_horas_extras(
 
         usuario_id=usuario_id,
 
-        inicio=datetime.utcnow(),
+        inicio=datetime.now(timezone.utc),
 
         fin=None,
 
@@ -115,11 +154,13 @@ def iniciar_horas_extras(
     )
 
 
+    # -----------------------------------------------------
+    # GUARDAR
+    # -----------------------------------------------------
+
     try:
 
-        db.session.add(
-            hora_extra
-        )
+        db.session.add(hora_extra)
 
         db.session.commit()
 
@@ -164,7 +205,6 @@ def finalizar_horas_extras(
         usuario_id
     )
 
-
     if hora_extra is None:
 
         return (
@@ -176,9 +216,11 @@ def finalizar_horas_extras(
 
     # -----------------------------------------------------
     # HORA DE FINALIZACIÓN
+    #
+    # También se guarda en UTC.
     # -----------------------------------------------------
 
-    hora_extra.fin = datetime.utcnow()
+    hora_extra.fin = datetime.now(timezone.utc)
 
 
     # -----------------------------------------------------
@@ -200,7 +242,6 @@ def finalizar_horas_extras(
         hora_extra.fin -
         hora_extra.inicio
     )
-
 
     hora_extra.minutos_totales = int(
         diferencia.total_seconds() / 60
@@ -242,3 +283,55 @@ def finalizar_horas_extras(
             "No se pudieron finalizar las horas extras.",
             None
         )
+
+
+# =========================================================
+# OBTENER HORAS EXTRAS CON HORA LOCAL
+# =========================================================
+
+def obtener_hora_extra_local(
+    hora_extra,
+    zona_horaria
+):
+
+    if hora_extra is None:
+        return None
+
+
+    inicio_local = convertir_a_hora_local(
+        hora_extra.inicio,
+        zona_horaria
+    )
+
+
+    fin_local = convertir_a_hora_local(
+        hora_extra.fin,
+        zona_horaria
+    )
+
+
+    return {
+        "id": hora_extra.id,
+
+        "inicio": (
+            inicio_local.isoformat()
+            if inicio_local
+            else None
+        ),
+
+        "fin": (
+            fin_local.isoformat()
+            if fin_local
+            else None
+        ),
+
+        "minutos_totales":
+            hora_extra.minutos_totales,
+
+        "ubicacion_inicio":
+            hora_extra.ubicacion_inicio,
+
+        "ubicacion_fin":
+            hora_extra.ubicacion_fin
+    }
+

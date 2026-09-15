@@ -18,7 +18,8 @@ from flask import (
 from app.services.horas_extras import (
     obtener_hora_extra_activa,
     iniciar_horas_extras as servicio_iniciar_horas_extras,
-    finalizar_horas_extras as servicio_finalizar_horas_extras
+    finalizar_horas_extras as servicio_finalizar_horas_extras,
+    convertir_a_hora_local
 )
 
 from app.services.historial import (
@@ -382,6 +383,7 @@ def finalizar_descanso_ruta():
     )
 
 
+
 # =========================================================
 # INICIAR HORAS EXTRAS
 # =========================================================
@@ -394,7 +396,6 @@ def iniciar_horas_extras_ruta():
 
     usuario_id = session["usuario_id"]
 
-
     # -----------------------------------------------------
     # OBTENER JSON
     # -----------------------------------------------------
@@ -402,7 +403,6 @@ def iniciar_horas_extras_ruta():
     datos = request.get_json(
         silent=True
     ) or {}
-
 
     latitud = datos.get(
         "latitud"
@@ -416,6 +416,11 @@ def iniciar_horas_extras_ruta():
         "ubicacion"
     )
 
+    # Zona horaria detectada automáticamente
+    # por el navegador.
+    zona_horaria = datos.get(
+        "zona_horaria"
+    )
 
     # -----------------------------------------------------
     # VALIDAR GPS
@@ -431,6 +436,18 @@ def iniciar_horas_extras_ruta():
             )
         }), 400
 
+    # -----------------------------------------------------
+    # VALIDAR ZONA HORARIA
+    # -----------------------------------------------------
+
+    if not zona_horaria:
+
+        return jsonify({
+            "exito": False,
+            "mensaje": (
+                "No se pudo determinar tu zona horaria."
+            )
+        }), 400
 
     # -----------------------------------------------------
     # INICIAR HORAS EXTRAS
@@ -445,7 +462,6 @@ def iniciar_horas_extras_ruta():
         )
     )
 
-
     if not exitoso:
 
         return jsonify({
@@ -453,6 +469,14 @@ def iniciar_horas_extras_ruta():
             "mensaje": mensaje
         }), 400
 
+    # -----------------------------------------------------
+    # CONVERTIR UTC A HORA LOCAL
+    # -----------------------------------------------------
+
+    inicio_local = convertir_a_hora_local(
+        hora_extra.inicio,
+        zona_horaria
+    )
 
     # -----------------------------------------------------
     # RESPUESTA
@@ -462,7 +486,15 @@ def iniciar_horas_extras_ruta():
         "exito": True,
         "mensaje": mensaje,
         "hora_extra_id": hora_extra.id,
-        "inicio": hora_extra.inicio.isoformat()
+
+        # Hora local del empleado
+        "inicio": inicio_local.isoformat(),
+
+        # Hora UTC original
+        "inicio_utc": hora_extra.inicio.isoformat(),
+
+        # Zona horaria detectada
+        "zona_horaria": zona_horaria
     })
 
 
@@ -478,7 +510,6 @@ def finalizar_horas_extras_ruta():
 
     usuario_id = session["usuario_id"]
 
-
     # -----------------------------------------------------
     # OBTENER JSON
     # -----------------------------------------------------
@@ -486,7 +517,6 @@ def finalizar_horas_extras_ruta():
     datos = request.get_json(
         silent=True
     ) or {}
-
 
     latitud = datos.get(
         "latitud"
@@ -500,6 +530,23 @@ def finalizar_horas_extras_ruta():
         "ubicacion"
     )
 
+    # Zona horaria detectada por el navegador
+    zona_horaria = datos.get(
+        "zona_horaria"
+    )
+
+    # -----------------------------------------------------
+    # VALIDAR ZONA HORARIA
+    # -----------------------------------------------------
+
+    if not zona_horaria:
+
+        return jsonify({
+            "exito": False,
+            "mensaje": (
+                "No se pudo determinar tu zona horaria."
+            )
+        }), 400
 
     # -----------------------------------------------------
     # FINALIZAR HORAS EXTRAS
@@ -514,7 +561,6 @@ def finalizar_horas_extras_ruta():
         )
     )
 
-
     if not exitoso:
 
         return jsonify({
@@ -522,6 +568,19 @@ def finalizar_horas_extras_ruta():
             "mensaje": mensaje
         }), 400
 
+    # -----------------------------------------------------
+    # CONVERTIR FECHAS A HORA LOCAL
+    # -----------------------------------------------------
+
+    inicio_local = convertir_a_hora_local(
+        hora_extra.inicio,
+        zona_horaria
+    )
+
+    fin_local = convertir_a_hora_local(
+        hora_extra.fin,
+        zona_horaria
+    )
 
     # -----------------------------------------------------
     # RESPUESTA
@@ -530,9 +589,27 @@ def finalizar_horas_extras_ruta():
     return jsonify({
         "exito": True,
         "mensaje": mensaje,
-        "minutos_totales": hora_extra.minutos_totales,
-        "inicio": hora_extra.inicio.isoformat(),
-        "fin": hora_extra.fin.isoformat()
+
+        "minutos_totales":
+            hora_extra.minutos_totales,
+
+        # Hora local
+        "inicio":
+            inicio_local.isoformat(),
+
+        "fin":
+            fin_local.isoformat(),
+
+        # Horas UTC originales
+        "inicio_utc":
+            hora_extra.inicio.isoformat(),
+
+        "fin_utc":
+            hora_extra.fin.isoformat(),
+
+        # Zona horaria
+        "zona_horaria":
+            zona_horaria
     })
 
 
@@ -548,6 +625,13 @@ def estado_horas_extras():
 
     usuario_id = session["usuario_id"]
 
+    # -----------------------------------------------------
+    # OBTENER ZONA HORARIA
+    # -----------------------------------------------------
+
+    zona_horaria = request.args.get(
+        "zona_horaria"
+    )
 
     # -----------------------------------------------------
     # OBTENER HORA EXTRA ACTIVA
@@ -556,7 +640,6 @@ def estado_horas_extras():
     hora_extra = obtener_hora_extra_activa(
         usuario_id
     )
-
 
     # -----------------------------------------------------
     # NO HAY HORAS EXTRAS
@@ -569,18 +652,57 @@ def estado_horas_extras():
             "activa": False
         })
 
+    # -----------------------------------------------------
+    # SI NO SE RECIBIÓ ZONA HORARIA
+    # -----------------------------------------------------
+
+    if not zona_horaria:
+
+        return jsonify({
+            "ok": True,
+            "activa": True,
+            "id": hora_extra.id,
+            "inicio": hora_extra.inicio.isoformat(),
+            "ubicacion_inicio":
+                hora_extra.ubicacion_inicio
+        })
 
     # -----------------------------------------------------
-    # HAY HORAS EXTRAS
+    # CONVERTIR A HORA LOCAL
+    # -----------------------------------------------------
+
+    inicio_local = convertir_a_hora_local(
+        hora_extra.inicio,
+        zona_horaria
+    )
+
+    # -----------------------------------------------------
+    # RESPUESTA
     # -----------------------------------------------------
 
     return jsonify({
         "ok": True,
         "activa": True,
-        "id": hora_extra.id,
-        "inicio": hora_extra.inicio.isoformat(),
-        "ubicacion_inicio": hora_extra.ubicacion_inicio
+
+        "id":
+            hora_extra.id,
+
+        # Hora local
+        "inicio":
+            inicio_local.isoformat(),
+
+        # Hora UTC original
+        "inicio_utc":
+            hora_extra.inicio.isoformat(),
+
+        # Zona horaria detectada
+        "zona_horaria":
+            zona_horaria,
+
+        "ubicacion_inicio":
+            hora_extra.ubicacion_inicio
     })
+
 
 
 # =========================================================
