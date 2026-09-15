@@ -5,7 +5,20 @@ from flask import (
     redirect,
     url_for,
     flash,
-    abort
+    abort,
+    request,
+    jsonify
+)
+
+
+# =========================================================
+# SERVICIOS
+# =========================================================
+
+from app.services.horas_extras import (
+    obtener_hora_extra_activa,
+    iniciar_horas_extras,
+    finalizar_horas_extras
 )
 
 from app.services.historial import (
@@ -24,6 +37,10 @@ from app.services.descansos import (
 )
 
 
+# =========================================================
+# BLUEPRINT
+# =========================================================
+
 empleado_bp = Blueprint(
     "empleado",
     __name__,
@@ -32,15 +49,15 @@ empleado_bp = Blueprint(
 
 
 # =========================================================
-# PROTECCION DE TODAS LAS RUTAS DE EMPLEADO
+# PROTECCIÓN DE TODAS LAS RUTAS DE EMPLEADO
 # =========================================================
 
 @empleado_bp.before_request
 def proteger_empleado():
 
-    # ==========================================
-    # VERIFICAR QUE HAYA INICIADO SESION
-    # ==========================================
+    # -----------------------------------------------------
+    # VERIFICAR SESIÓN
+    # -----------------------------------------------------
 
     if "usuario_id" not in session:
 
@@ -49,9 +66,9 @@ def proteger_empleado():
         )
 
 
-    # ==========================================
-    # VERIFICAR QUE SEA EMPLEADO
-    # ==========================================
+    # -----------------------------------------------------
+    # VERIFICAR ROL
+    # -----------------------------------------------------
 
     if session.get("rol") != "empleado":
 
@@ -65,12 +82,24 @@ def proteger_empleado():
 @empleado_bp.route("/dashboard")
 def dashboard():
 
+    usuario_id = session["usuario_id"]
+
+
+    # -----------------------------------------------------
+    # OBTENER JORNADA ABIERTA
+    # -----------------------------------------------------
+
     jornada = obtener_jornada_abierta(
-        session["usuario_id"]
+        usuario_id
     )
 
 
+    # -----------------------------------------------------
+    # DESCANSO ACTIVO
+    # -----------------------------------------------------
+
     descanso_activo = None
+
 
     if jornada:
 
@@ -79,29 +108,56 @@ def dashboard():
         )
 
 
+    # -----------------------------------------------------
+    # HORAS EXTRAS ACTIVAS
+    # -----------------------------------------------------
+
+    hora_extra_activa = obtener_hora_extra_activa(
+        usuario_id
+    )
+
+
+    # -----------------------------------------------------
+    # RENDER
+    # -----------------------------------------------------
+
     return render_template(
         "empleado/dashboard.html",
+
         jornada=jornada,
-        descanso_activo=descanso_activo
+
+        descanso_activo=descanso_activo,
+
+        hora_extra_activa=hora_extra_activa
     )
 
 
 # =========================================================
-# SALIDA
+# FINALIZAR JORNADA
 # =========================================================
 
-@empleado_bp.route("/salida", methods=["POST"])
+@empleado_bp.route(
+    "/salida",
+    methods=["POST"]
+)
 def salida():
 
-    jornada = registrar_salida(
-        session["usuario_id"]
+    usuario_id = session["usuario_id"]
+
+
+    # -----------------------------------------------------
+    # VERIFICAR HORAS EXTRAS ACTIVAS
+    # -----------------------------------------------------
+
+    hora_extra_activa = obtener_hora_extra_activa(
+        usuario_id
     )
 
 
-    if jornada is None:
+    if hora_extra_activa:
 
         flash(
-            "No tienes una jornada abierta.",
+            "Debes finalizar las horas extras antes de realizar otra acción.",
             "error"
         )
 
@@ -110,8 +166,75 @@ def salida():
         )
 
 
+    # -----------------------------------------------------
+    # OBTENER JORNADA ABIERTA
+    # -----------------------------------------------------
+
+    jornada = obtener_jornada_abierta(
+        usuario_id
+    )
+
+
+    if jornada is None:
+
+        flash(
+            "No tienes una jornada activa.",
+            "error"
+        )
+
+        return redirect(
+            url_for("empleado.dashboard")
+        )
+
+
+    # -----------------------------------------------------
+    # VERIFICAR DESCANSO ACTIVO
+    # -----------------------------------------------------
+
+    descanso_activo = obtener_descanso_activo(
+        jornada.id
+    )
+
+
+    if descanso_activo:
+
+        flash(
+            "Debes finalizar tu descanso antes de terminar la jornada.",
+            "error"
+        )
+
+        return redirect(
+            url_for("empleado.dashboard")
+        )
+
+
+    # -----------------------------------------------------
+    # REGISTRAR SALIDA
+    # -----------------------------------------------------
+
+    jornada = registrar_salida(
+        usuario_id
+    )
+
+
+    if jornada is None:
+
+        flash(
+            "No fue posible finalizar la jornada.",
+            "error"
+        )
+
+        return redirect(
+            url_for("empleado.dashboard")
+        )
+
+
+    # -----------------------------------------------------
+    # MENSAJE
+    # -----------------------------------------------------
+
     flash(
-        "Jornada finalizada correctamente.",
+        "Jornada finalizada correctamente. Ahora puedes iniciar horas extras.",
         "success"
     )
 
@@ -131,8 +254,38 @@ def salida():
 )
 def iniciar_descanso_ruta(tipo):
 
+    usuario_id = session["usuario_id"]
+
+
+    # -----------------------------------------------------
+    # VALIDAR TIPO
+    # -----------------------------------------------------
+
+    tipos_validos = [
+        "break_manana",
+        "lunch",
+        "break_tarde"
+    ]
+
+
+    if tipo not in tipos_validos:
+
+        flash(
+            "Tipo de descanso no válido.",
+            "error"
+        )
+
+        return redirect(
+            url_for("empleado.dashboard")
+        )
+
+
+    # -----------------------------------------------------
+    # INICIAR DESCANSO
+    # -----------------------------------------------------
+
     exitoso, mensaje, descanso = iniciar_descanso(
-        session["usuario_id"],
+        usuario_id,
         tipo
     )
 
@@ -167,8 +320,15 @@ def iniciar_descanso_ruta(tipo):
 )
 def finalizar_descanso_ruta():
 
+    usuario_id = session["usuario_id"]
+
+
+    # -----------------------------------------------------
+    # FINALIZAR
+    # -----------------------------------------------------
+
     exitoso, mensaje, descanso = finalizar_descanso(
-        session["usuario_id"]
+        usuario_id
     )
 
 
@@ -193,10 +353,470 @@ def finalizar_descanso_ruta():
 
 
 # =========================================================
+# INICIAR HORAS EXTRAS
+# =========================================================
+
+@empleado_bp.route(
+    "/horas-extras/iniciar",
+    methods=["POST"]
+)
+def iniciar_horas_extras_ruta():
+
+    usuario_id = session["usuario_id"]
+
+
+    # -----------------------------------------------------
+    # OBTENER DATOS
+    # -----------------------------------------------------
+
+    datos = request.get_json(
+        silent=True
+    ) or {}
+
+
+    latitud = datos.get(
+        "latitud"
+    )
+
+
+    longitud = datos.get(
+        "longitud"
+    )
+
+
+    ubicacion = datos.get(
+        "ubicacion"
+    )
+
+
+    # -----------------------------------------------------
+    # VALIDAR GPS
+    # -----------------------------------------------------
+
+    if latitud is None or longitud is None:
+
+        return jsonify({
+
+            "ok": False,
+
+            "mensaje":
+                "No se pudo obtener tu ubicación. "
+                "Debes permitir el acceso a la ubicación."
+        }), 400
+
+
+    # -----------------------------------------------------
+    # CONVERTIR COORDENADAS
+    # -----------------------------------------------------
+
+    try:
+
+        latitud = float(
+            latitud
+        )
+
+        longitud = float(
+            longitud
+        )
+
+    except (
+        TypeError,
+        ValueError
+    ):
+
+        return jsonify({
+
+            "ok": False,
+
+            "mensaje":
+                "Las coordenadas de ubicación no son válidas."
+        }), 400
+
+
+    # -----------------------------------------------------
+    # VALIDAR RANGO DE LATITUD
+    # -----------------------------------------------------
+
+    if not -90 <= latitud <= 90:
+
+        return jsonify({
+
+            "ok": False,
+
+            "mensaje":
+                "La latitud recibida no es válida."
+        }), 400
+
+
+    # -----------------------------------------------------
+    # VALIDAR RANGO DE LONGITUD
+    # -----------------------------------------------------
+
+    if not -180 <= longitud <= 180:
+
+        return jsonify({
+
+            "ok": False,
+
+            "mensaje":
+                "La longitud recibida no es válida."
+        }), 400
+
+
+    # -----------------------------------------------------
+    # VERIFICAR SI YA HAY HORAS EXTRAS ACTIVAS
+    # -----------------------------------------------------
+
+    hora_extra_existente = obtener_hora_extra_activa(
+        usuario_id
+    )
+
+
+    if hora_extra_existente:
+
+        return jsonify({
+
+            "ok": False,
+
+            "mensaje":
+                "Ya tienes unas horas extras activas."
+        }), 400
+
+
+    # -----------------------------------------------------
+    # VERIFICAR JORNADA
+    #
+    # IMPORTANTE:
+    #
+    # obtener_jornada_abierta() debe devolver None
+    # cuando la jornada ya está finalizada.
+    #
+    # Aquí no usamos una jornada abierta porque las
+    # horas extras empiezan DESPUÉS de la salida.
+    # -----------------------------------------------------
+
+    from app.models.jornada import Jornada
+
+
+    jornada = (
+        Jornada.query
+        .filter(
+            Jornada.usuario_id == usuario_id
+        )
+        .order_by(
+            Jornada.id.desc()
+        )
+        .first()
+    )
+
+
+    if jornada is None:
+
+        return jsonify({
+
+            "ok": False,
+
+            "mensaje":
+                "No tienes una jornada registrada."
+        }), 400
+
+
+    # -----------------------------------------------------
+    # LA JORNADA DEBE ESTAR FINALIZADA
+    # -----------------------------------------------------
+
+    if jornada.salida is None:
+
+        return jsonify({
+
+            "ok": False,
+
+            "mensaje":
+                "Primero debes finalizar tu jornada antes de iniciar horas extras."
+        }), 400
+
+
+    # -----------------------------------------------------
+    # INICIAR HORAS EXTRAS
+    # -----------------------------------------------------
+
+    exitoso, mensaje, hora_extra = iniciar_horas_extras(
+
+        usuario_id,
+
+        latitud,
+
+        longitud,
+
+        ubicacion
+    )
+
+
+    if not exitoso:
+
+        return jsonify({
+
+            "ok": False,
+
+            "mensaje": mensaje
+        }), 400
+
+
+    # -----------------------------------------------------
+    # RESPUESTA
+    # -----------------------------------------------------
+
+    return jsonify({
+
+        "ok": True,
+
+        "mensaje": mensaje,
+
+        "hora_extra_id":
+            hora_extra.id,
+
+        "inicio":
+            hora_extra.inicio.isoformat()
+    })
+
+
+# =========================================================
+# FINALIZAR HORAS EXTRAS
+# =========================================================
+
+@empleado_bp.route(
+    "/horas-extras/finalizar",
+    methods=["POST"]
+)
+def finalizar_horas_extras_ruta():
+
+    usuario_id = session["usuario_id"]
+
+
+    # -----------------------------------------------------
+    # OBTENER DATOS
+    # -----------------------------------------------------
+
+    datos = request.get_json(
+        silent=True
+    ) or {}
+
+
+    latitud = datos.get(
+        "latitud"
+    )
+
+
+    longitud = datos.get(
+        "longitud"
+    )
+
+
+    ubicacion = datos.get(
+        "ubicacion"
+    )
+
+
+    # -----------------------------------------------------
+    # VALIDAR GPS
+    # -----------------------------------------------------
+
+    if latitud is None or longitud is None:
+
+        return jsonify({
+
+            "ok": False,
+
+            "mensaje":
+                "No se pudo obtener tu ubicación para finalizar las horas extras."
+        }), 400
+
+
+    # -----------------------------------------------------
+    # CONVERTIR COORDENADAS
+    # -----------------------------------------------------
+
+    try:
+
+        latitud = float(
+            latitud
+        )
+
+        longitud = float(
+            longitud
+        )
+
+    except (
+        TypeError,
+        ValueError
+    ):
+
+        return jsonify({
+
+            "ok": False,
+
+            "mensaje":
+                "Las coordenadas de ubicación no son válidas."
+        }), 400
+
+
+    # -----------------------------------------------------
+    # VALIDAR RANGO
+    # -----------------------------------------------------
+
+    if not -90 <= latitud <= 90:
+
+        return jsonify({
+
+            "ok": False,
+
+            "mensaje":
+                "La latitud recibida no es válida."
+        }), 400
+
+
+    if not -180 <= longitud <= 180:
+
+        return jsonify({
+
+            "ok": False,
+
+            "mensaje":
+                "La longitud recibida no es válida."
+        }), 400
+
+
+    # -----------------------------------------------------
+    # VERIFICAR HORA EXTRA ACTIVA
+    # -----------------------------------------------------
+
+    hora_extra_activa = obtener_hora_extra_activa(
+        usuario_id
+    )
+
+
+    if hora_extra_activa is None:
+
+        return jsonify({
+
+            "ok": False,
+
+            "mensaje":
+                "No tienes horas extras activas."
+        }), 400
+
+
+    # -----------------------------------------------------
+    # FINALIZAR HORAS EXTRAS
+    # -----------------------------------------------------
+
+    exitoso, mensaje, hora_extra = finalizar_horas_extras(
+
+        usuario_id,
+
+        latitud,
+
+        longitud,
+
+        ubicacion
+    )
+
+
+    if not exitoso:
+
+        return jsonify({
+
+            "ok": False,
+
+            "mensaje": mensaje
+        }), 400
+
+
+    # -----------------------------------------------------
+    # RESPUESTA
+    # -----------------------------------------------------
+
+    return jsonify({
+
+        "ok": True,
+
+        "mensaje": mensaje,
+
+        "minutos_totales":
+            hora_extra.minutos_totales,
+
+        "inicio":
+            hora_extra.inicio.isoformat(),
+
+        "fin":
+            hora_extra.fin.isoformat()
+    })
+
+
+# =========================================================
+# ESTADO DE HORAS EXTRAS
+# =========================================================
+
+@empleado_bp.route(
+    "/horas-extras/estado",
+    methods=["GET"]
+)
+def estado_horas_extras():
+
+    usuario_id = session["usuario_id"]
+
+
+    # -----------------------------------------------------
+    # OBTENER ACTIVA
+    # -----------------------------------------------------
+
+    hora_extra = obtener_hora_extra_activa(
+        usuario_id
+    )
+
+
+    # -----------------------------------------------------
+    # NO EXISTE
+    # -----------------------------------------------------
+
+    if hora_extra is None:
+
+        return jsonify({
+
+            "ok": True,
+
+            "activa": False
+        })
+
+
+    # -----------------------------------------------------
+    # EXISTE
+    # -----------------------------------------------------
+
+    return jsonify({
+
+        "ok": True,
+
+        "activa": True,
+
+        "id":
+            hora_extra.id,
+
+        "inicio":
+            hora_extra.inicio.isoformat(),
+
+        "ubicacion_inicio":
+            hora_extra.ubicacion_inicio
+    })
+
+
+# =========================================================
 # HISTORIAL
 # =========================================================
 
-@empleado_bp.route("/historial")
+@empleado_bp.route(
+    "/historial"
+)
 def historial():
 
     historial = obtener_historial_usuario(
@@ -206,5 +826,6 @@ def historial():
 
     return render_template(
         "empleado/historial.html",
+
         historial=historial
     )
