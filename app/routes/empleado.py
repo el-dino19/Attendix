@@ -74,6 +74,8 @@ def dashboard():
         usuario_id
     )
 
+    # Zona horaria del navegador.
+    # Se obtiene posteriormente mediante JavaScript.
     return render_template(
         "empleado/dashboard.html",
         jornada=jornada,

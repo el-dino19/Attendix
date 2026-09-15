@@ -15,32 +15,35 @@ def obtener_utc_actual():
 
 # ASEGURAR UTC
 
+def obtener_utc_actual():
+    return datetime.now(timezone.utc)
+
+
 def asegurar_utc(fecha):
     if fecha is None:
         return None
 
     if fecha.tzinfo is None:
-        return fecha.replace(
-            tzinfo=timezone.utc
-        )
+        # La BD contiene UTC pero sin información de zona.
+        return fecha.replace(tzinfo=timezone.utc)
 
-    return fecha.astimezone(
-        timezone.utc
-    )
+    return fecha.astimezone(timezone.utc)
 
-
-# CONVERTIR UTC A HORA LOCAL
 
 def convertir_a_hora_local(fecha, zona_horaria):
     if fecha is None:
         return None
+
+    if not zona_horaria:
+        raise ValueError(
+            "La zona horaria es obligatoria."
+        )
 
     fecha_utc = asegurar_utc(fecha)
 
     return fecha_utc.astimezone(
         ZoneInfo(zona_horaria)
     )
-
 
 
 # OBTENER HORA EXTRA ACTIVA
