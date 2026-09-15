@@ -119,9 +119,38 @@
             Controla tu asistencia y tus descansos de forma sencilla.
           </p>
         </div>
-        <div class="status-online">
-          <span class="pulse-dot"></span>
-          Sistema disponible
+        
+        <!-- Estado, Ubicación y Botón de Horas Extras Superior -->
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+          <!-- Ubicación Integrada -->
+          <div class="d-flex align-items-center text-muted small bg-white px-3 py-2 rounded-pill shadow-sm">
+            <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+            <span id="ubicacion-texto">Ubicación: Verificando...</span>
+          </div>
+
+          <!-- Botón de Horas Extras Rápido -->
+          {% if hora_extra_activa %}
+          <button
+            type="button"
+            class="btn btn-sm btn-success rounded-pill px-3 shadow-sm"
+            onclick="finalizarHorasExtras()"
+          >
+            <i class="bi bi-stop-circle-fill me-1"></i> Finalizar Horas Extras (<strong id="contador-horas-extras" data-inicio="{{ hora_extra_activa.inicio.isoformat() }}">00:00:00</strong>)
+          </button>
+          {% else %}
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-success rounded-pill px-3 shadow-sm"
+            onclick="iniciarHorasExtras()"
+          >
+            <i class="bi bi-play-circle-fill me-1"></i> Iniciar Horas Extras
+          </button>
+          {% endif %}
+
+          <div class="status-online">
+            <span class="pulse-dot"></span>
+            Sistema disponible
+          </div>
         </div>
       </section>
 
@@ -351,111 +380,6 @@
           {% endif %}
         </section>
       </div>
-
-      <!-- Horas Extras -->
-      {% if hora_extra_activa %}
-      <section class="app-card horas-extras-section mt-4">
-        <div class="card-header">
-          <div>
-            <span class="card-label">CONTROL ADICIONAL</span>
-            <h2><i class="bi bi-clock-history"></i> Horas extras</h2>
-          </div>
-          <div class="card-header-icon green">
-            <i class="bi bi-plus-circle-fill"></i>
-          </div>
-        </div>
-        <div class="horas-extras-active">
-          <div class="horas-extras-status">
-            <div class="horas-extras-icon green">
-              <i class="bi bi-clock-fill"></i>
-            </div>
-            <div>
-              <span class="card-label">EN PROGRESO</span>
-              <h3>Horas extras activas</h3>
-            </div>
-          </div>
-          <div class="horas-extras-time">
-            <span>Tiempo trabajado</span>
-            <strong
-              id="contador-horas-extras"
-              data-inicio="{{ hora_extra_activa.inicio.isoformat() }}"
-              >00:00:00</strong
-            >
-          </div>
-          <div class="horas-extras-location">
-            <i class="bi bi-geo-alt-fill"></i>
-            <span
-              >{{ hora_extra_activa.ubicacion|default('Ubicación no registrada',
-              true) }}</span
-            >
-          </div>
-          <button
-            type="button"
-            class="btn-finalizar-horas-extras"
-            onclick="finalizarHorasExtras()"
-          >
-            <i class="bi bi-stop-circle-fill"></i> Finalizar horas extras
-          </button>
-        </div>
-      </section>
-      {% elif not jornada or jornada.salida %}
-      <section class="app-card horas-extras-section mt-4">
-        <div class="card-header">
-          <div>
-            <span class="card-label">CONTROL ADICIONAL</span>
-            <h2><i class="bi bi-clock-history"></i> Horas extras</h2>
-          </div>
-          <div class="card-header-icon green">
-            <i class="bi bi-plus-circle-fill"></i>
-          </div>
-        </div>
-        <div class="horas-extras-start">
-          <div class="horas-extras-start-content">
-            <div class="horas-extras-icon green">
-              <i class="bi bi-clock-history"></i>
-            </div>
-            <div>
-              <span class="card-label">REGISTRO ADICIONAL</span>
-              <h3>Registrar horas extras</h3>
-              {% if jornada and jornada.salida %}
-              <p>
-                Tu jornada terminó a las
-                <strong>{{ jornada.salida.strftime("%I:%M:%S %p") }}</strong>.
-                Puedes registrar tiempo adicional.
-              </p>
-              {% else %}
-              <p>
-                No tienes una jornada activa. Puedes registrar horas extras
-                directamente.
-              </p>
-              {% endif %}
-            </div>
-          </div>
-          <button
-            type="button"
-            class="btn-iniciar-horas-extras"
-            onclick="iniciarHorasExtras()"
-          >
-            <i class="bi bi-play-circle-fill"></i> Iniciar horas extras
-          </button>
-        </div>
-      </section>
-      {% endif %}
-
-      <!-- Ubicación / GPS -->
-      <section class="ubicacion-card mt-4">
-        <div class="ubicacion-icon"><i class="bi bi-geo-alt-fill"></i></div>
-        <div class="ubicacion-info">
-          <span class="card-label">SEGURIDAD</span>
-          <h3>Ubicación de sesión</h3>
-          <p id="ubicacion-texto">Obteniendo ubicación aproximada...</p>
-          <div class="ubicacion-status">
-            <i id="ubicacion-status-icon" class="bi bi-hourglass-split"></i>
-            <span id="ubicacion-status-text">Verificando ubicación</span>
-          </div>
-        </div>
-        <div class="system-online gps-status"><span></span> GPS</div>
-      </section>
 
       <!-- Información del Sistema -->
       <section class="system-info mt-4">
