@@ -3,6 +3,7 @@ from datetime import datetime
 
 
 class HoraExtra(db.Model):
+
     __tablename__ = "horas_extras"
 
     id = db.Column(
@@ -13,13 +14,20 @@ class HoraExtra(db.Model):
 
     jornada_id = db.Column(
         db.BigInteger,
-        db.ForeignKey("jornadas.id", ondelete="CASCADE"),
+        db.ForeignKey(
+            "jornadas.id",
+            ondelete="CASCADE",
+            onupdate="CASCADE"
+        ),
         nullable=False
     )
 
     usuario_id = db.Column(
         db.Integer,
-        db.ForeignKey("usuarios.id"),
+        db.ForeignKey(
+            "usuarios.id",
+            onupdate="CASCADE"
+        ),
         nullable=False
     )
 
@@ -91,12 +99,13 @@ class HoraExtra(db.Model):
         onupdate=datetime.utcnow
     )
 
-    jornada = db.relationship(
-        "Jornada",
-        back_populates="horas_extras"
-    )
 
     usuario = db.relationship(
         "Usuario",
+        back_populates="horas_extras"
+    )
+
+    jornada = db.relationship(
+        "Jornada",
         back_populates="horas_extras"
     )

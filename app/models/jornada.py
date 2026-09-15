@@ -56,7 +56,8 @@ class Jornada(db.Model):
     )
 
     horas_extras = db.relationship(
-        "HoraExtra",
-        back_populates="jornada",
-        cascade="all, delete-orphan"
-    )
+    "HoraExtra",
+    back_populates="jornada",
+    cascade="all, delete-orphan"
+)
+
