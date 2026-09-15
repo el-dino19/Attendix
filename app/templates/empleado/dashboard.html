@@ -120,37 +120,35 @@
           </p>
         </div>
         
-        <!-- Estado, Ubicación y Botón de Horas Extras Superior -->
+        <!-- Ubicación en color oscuro y Botón Superior de Horas Extras -->
         <div class="d-flex align-items-center gap-3 flex-wrap">
-          <!-- Ubicación Integrada -->
-          <div class="d-flex align-items-center text-muted small bg-white px-3 py-2 rounded-pill shadow-sm">
+          <!-- Ubicación (Color Oscuro) -->
+          <div class="d-flex align-items-center text-dark small bg-white px-3 py-2 rounded-pill shadow-sm border">
             <i class="bi bi-geo-alt-fill text-danger me-1"></i>
             <span id="ubicacion-texto">Ubicación: Verificando...</span>
           </div>
 
-          <!-- Botón de Horas Extras Rápido -->
+          <!-- Botón de Horas Extras (Trigger Modal o Finalizar) -->
           {% if hora_extra_activa %}
           <button
             type="button"
-            class="btn btn-sm btn-success rounded-pill px-3 shadow-sm"
+            class="btn btn-sm btn-success rounded-pill px-3 shadow-sm d-flex align-items-center gap-1"
             onclick="finalizarHorasExtras()"
           >
-            <i class="bi bi-stop-circle-fill me-1"></i> Finalizar Horas Extras (<strong id="contador-horas-extras" data-inicio="{{ hora_extra_activa.inicio.isoformat() }}">00:00:00</strong>)
+            <i class="bi bi-stop-circle-fill"></i> 
+            <span>Finalizar Horas Extras (<strong id="contador-horas-extras" data-inicio="{{ hora_extra_activa.inicio.isoformat() }}">00:00:00</strong>)</span>
           </button>
           {% else %}
           <button
             type="button"
-            class="btn btn-sm btn-outline-success rounded-pill px-3 shadow-sm"
-            onclick="iniciarHorasExtras()"
+            class="btn btn-sm btn-outline-success rounded-pill px-3 shadow-sm d-flex align-items-center gap-1"
+            data-bs-toggle="modal"
+            data-bs-target="#confirmarIniciarHorasExtrasModal"
           >
-            <i class="bi bi-play-circle-fill me-1"></i> Iniciar Horas Extras
+            <i class="bi bi-play-circle-fill"></i> 
+            <span>Iniciar Horas Extras</span>
           </button>
           {% endif %}
-
-          <div class="status-online">
-            <span class="pulse-dot"></span>
-            Sistema disponible
-          </div>
         </div>
       </section>
 
@@ -165,6 +163,40 @@
           <span id="fecha-actual" class="fecha-actual"></span>
         </div>
       </section>
+
+      <!-- Tarjeta de Horas Extras Activas (Si aplica) -->
+      {% if hora_extra_activa %}
+      <section class="app-card horas-extras-section mb-4 border-success">
+        <div class="card-header">
+          <div>
+            <span class="card-label text-success">CONTROL ADICIONAL</span>
+            <h2><i class="bi bi-clock-history text-success"></i> Horas extras en progreso</h2>
+          </div>
+          <div class="card-header-icon green">
+            <i class="bi bi-plus-circle-fill"></i>
+          </div>
+        </div>
+        <div class="horas-extras-active p-3">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+              <span class="text-muted d-block small">Hora de inicio</span>
+              <strong>{{ hora_extra_activa.inicio.strftime("%I:%M:%S %p") }}</strong>
+            </div>
+            <div>
+              <span class="text-muted d-block small"><i class="bi bi-geo-alt-fill text-danger"></i> Ubicación</span>
+              <span>{{ hora_extra_activa.ubicacion|default('Ubicación registrada', true) }}</span>
+            </div>
+            <button
+              type="button"
+              class="btn btn-danger btn-sm px-3"
+              onclick="finalizarHorasExtras()"
+            >
+              <i class="bi bi-stop-circle-fill"></i> Finalizar horas extras
+            </button>
+          </div>
+        </div>
+      </section>
+      {% endif %}
 
       <!-- Grid Principal (Jornada y Descansos) -->
       <div class="dashboard-grid">
@@ -428,6 +460,43 @@
               <a href="{{ url_for('auth.logout') }}" class="btn confirm-logout">
                 <i class="bi bi-box-arrow-left"></i> Cerrar sesión
               </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Iniciar Horas Extras -->
+    <div
+      class="modal fade"
+      id="confirmarIniciarHorasExtrasModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content confirm-modal">
+          <div class="modal-body text-center p-4">
+            <div class="confirm-icon text-success bg-success-subtle rounded-circle p-3 d-inline-flex mb-3">
+              <i class="bi bi-play-circle-fill fs-3"></i>
+            </div>
+            <h3 class="confirm-title">Iniciar horas extras</h3>
+            <p class="confirm-text">
+              ¿Estás seguro de que deseas comenzar tu tiempo de horas extras?
+            </p>
+            <p class="confirm-warning">
+              <i class="bi bi-info-circle"></i> Se registrará tu hora actual y tu ubicación actual.
+            </p>
+            <div class="confirm-buttons d-flex justify-content-center gap-2 mt-4">
+              <button
+                type="button"
+                class="btn confirm-cancel"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button type="button" class="btn btn-success" onclick="iniciarHorasExtras()">
+                <i class="bi bi-check-lg"></i> Sí, Iniciar
+              </button>
             </div>
           </div>
         </div>
