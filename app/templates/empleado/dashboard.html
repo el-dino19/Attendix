@@ -67,8 +67,7 @@
 
       <!-- USUARIO -->
 
-      <div class="header-user">
-        <!-- =====================================================
+      <!-- =====================================================
      UBICACIÓN DEL USUARIO
 ====================================================== -->
 
@@ -79,9 +78,13 @@
 
           <div class="location-info">
             <span>Ubicación</span>
-            <strong id="ubicacion-texto">Obteniendo ubicación...</strong>
+
+            <strong id="ubicacion-texto">
+              Obteniendo ubicación...
+            </strong>
           </div>
         </div>
+
         <div class="user-avatar">{{ session["nombre"][0]|upper }}</div>
 
         <div class="user-info">
@@ -937,32 +940,56 @@
 ====================================================== -->
 
     <script>
-      function obtenerUbicacion() {
+      async function obtenerUbicacion() {
         const elemento = document.getElementById("ubicacion-texto");
 
         if (!elemento) {
           return;
         }
 
-        // Verificar compatibilidad del navegador
         if (!navigator.geolocation) {
           elemento.textContent = "No disponible";
 
           return;
         }
 
-        elemento.textContent = "Solicitando permiso...";
+        elemento.textContent = "Obteniendo ubicación...";
 
         navigator.geolocation.getCurrentPosition(
-          function (position) {
+          async function (position) {
             const latitud = position.coords.latitude;
             const longitud = position.coords.longitude;
 
-            elemento.textContent = `${latitud.toFixed(5)}, ${longitud.toFixed(5)}`;
+            try {
+              /*
+               * Convertir coordenadas en dirección
+               */
 
-            console.log("Ubicación del usuario:");
-            console.log("Latitud:", latitud);
-            console.log("Longitud:", longitud);
+              const respuesta = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitud}&lon=${longitud}&zoom=18&addressdetails=1`,
+                {
+                  headers: {
+                    Accept: "application/json",
+                  },
+                },
+              );
+
+              if (!respuesta.ok) {
+                throw new Error("No se pudo obtener la dirección");
+              }
+
+              const datos = await respuesta.json();
+
+              if (datos.display_name) {
+                elemento.textContent = datos.display_name;
+              } else {
+                elemento.textContent = `${latitud.toFixed(5)}, ${longitud.toFixed(5)}`;
+              }
+            } catch (error) {
+              console.error("Error obteniendo dirección:", error);
+
+              elemento.textContent = `${latitud.toFixed(5)}, ${longitud.toFixed(5)}`;
+            }
           },
 
           function (error) {
@@ -989,7 +1016,7 @@
 
           {
             enableHighAccuracy: true,
-            timeout: 10000,
+            timeout: 15000,
             maximumAge: 300000,
           },
         );
