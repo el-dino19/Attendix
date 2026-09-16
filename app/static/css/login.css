@@ -1238,3 +1238,52 @@ body {
         font-size: 14px;
     }
 }
+
+/* =====================================================
+   MENSAJE DE UBICACIÓN - TEMA OSCURO
+===================================================== */
+
+.login-location-status {
+    display: none;
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 12px 15px;
+
+    background: #172033;
+    color: #e2e8f0;
+
+    border: 1px solid #334155;
+    border-radius: 10px;
+
+    font-size: 13px;
+    line-height: 1.5;
+
+    text-align: center;
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+/* ERROR */
+
+.login-location-status.error {
+    background: #24161a;
+    color: #fecaca;
+    border-color: #7f1d1d;
+}
+
+/* INFORMACIÓN */
+
+.login-location-status.info {
+    background: #172033;
+    color: #cbd5e1;
+    border-color: #334155;
+}
+
+/* ÉXITO */
+
+.login-location-status.success {
+    background: #12251d;
+    color: #bbf7d0;
+    border-color: #166534;
+}
