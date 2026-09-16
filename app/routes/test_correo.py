@@ -15,7 +15,7 @@ def test_correo():
 
     enviar_recordatorio(
         "Prueba Attendix",
-        "attendix.notificacion@gmail.com"
+        "jeinerramirez1910@gmail.com"
     )
 
     return jsonify({
