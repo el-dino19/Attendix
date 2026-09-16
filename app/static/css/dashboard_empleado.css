@@ -1942,89 +1942,79 @@ main .reloj-card {
 }
 
 /* =====================================================
-   UBICACIÓN
-====================================================== */
+   UBICACIÓN EN HEADER
+===================================================== */
 
 .header-location {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
-    padding: 8px 14px;
-    margin-right: 12px;
 
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    max-width: 420px;
+    min-width: 180px;
+
+    padding: 8px 12px;
 
     border-radius: 12px;
 
-    color: white;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
 
-    min-width: 170px;
+    box-sizing: border-box;
 }
 
 .location-icon {
     width: 34px;
     height: 34px;
 
+    min-width: 34px;
+
     display: flex;
     align-items: center;
     justify-content: center;
 
-    border-radius: 9px;
+    border-radius: 10px;
 
-    background: rgba(59, 130, 246, 0.18);
-    color: #60a5fa;
-
-    font-size: 17px;
+    background: #dbeafe;
+    color: #2563eb;
 }
 
 .location-info {
+    min-width: 0;
+    flex: 1;
+
     display: flex;
     flex-direction: column;
-
-    min-width: 0;
 }
 
 .location-info span {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.7px;
+    font-size: 11px;
+    font-weight: 600;
 
-    color: rgba(255, 255, 255, 0.55);
+    color: #64748b;
+
+    margin-bottom: 2px;
 }
 
 .location-info strong {
     font-size: 12px;
     font-weight: 600;
 
-    color: white;
+    color: #1e293b;
 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.4;
 
-    max-width: 130px;
+    white-space: normal;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
-
-/* =====================================================
-   RESPONSIVE
-====================================================== */
-
-@media (max-width: 900px) {
+@media (max-width: 768px) {
 
     .header-location {
-        min-width: auto;
-        padding: 7px;
-        margin-right: 5px;
+        max-width: 100%;
+        width: 100%;
     }
 
-    .location-info {
-        display: none;
-    }
-
-    .location-icon {
-        width: 36px;
-        height: 36px;
-    }
 }
