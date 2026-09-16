@@ -1071,9 +1071,13 @@
 
             <strong>
 
-              {{ hora_extra.hora_inicio.strftime(
-              "%I:%M:%S %p"
-              ) }}
+              {% if hora_extra.hora_inicio is defined and hora_extra.hora_inicio %}
+                {{ hora_extra.hora_inicio.strftime("%I:%M:%S %p") }}
+              {% elif hora_extra.entrada is defined and hora_extra.entrada %}
+                {{ hora_extra.entrada.strftime("%I:%M:%S %p") }}
+              {% else %}
+                --
+              {% endif %}
 
             </strong>
 
@@ -1161,9 +1165,13 @@
 
             <strong>
 
-              {{ hora_extra.hora_inicio.strftime(
-              "%I:%M:%S %p"
-              ) }}
+              {% if hora_extra.hora_inicio is defined and hora_extra.hora_inicio %}
+                {{ hora_extra.hora_inicio.strftime("%I:%M:%S %p") }}
+              {% elif hora_extra.entrada is defined and hora_extra.entrada %}
+                {{ hora_extra.entrada.strftime("%I:%M:%S %p") }}
+              {% else %}
+                --
+              {% endif %}
 
             </strong>
 
