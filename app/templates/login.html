@@ -48,16 +48,12 @@
         ================================================== -->
 
         <div class="login-left">
-          <!-- LOGO -->
-
           <div class="left-logo">
             <img
               src="{{ url_for('static', filename='img/Logo_Asistencia.png') }}"
               alt="Logo Attendix"
             />
           </div>
-
-          <!-- CONTENIDO -->
 
           <div class="left-content">
             <h2>
@@ -70,8 +66,6 @@
               de forma rápida, sencilla y segura.
             </p>
           </div>
-
-          <!-- FOOTER IZQUIERDO -->
 
           <div class="left-footer">
             <i class="bi bi-check-circle-fill"></i>
@@ -106,8 +100,6 @@
             <div
               class="login-alert {% if categoria == 'success' %} login-alert-success {% elif categoria == 'danger' %} login-alert-danger {% elif categoria == 'warning' %} login-alert-warning {% else %} login-alert-info {% endif %}"
             >
-              <!-- ICONO -->
-
               <div class="login-alert-icon">
                 {% if categoria == "success" %}
 
@@ -128,8 +120,6 @@
                 {% endif %}
               </div>
 
-              <!-- MENSAJE -->
-
               <div class="login-alert-content">
                 <strong>
                   {% if categoria == "success" %} Correcto {% elif categoria ==
@@ -139,8 +129,6 @@
 
                 <span> {{ mensaje }} </span>
               </div>
-
-              <!-- CERRAR -->
 
               <button
                 type="button"
@@ -167,9 +155,7 @@
             class="login-form"
             id="loginForm"
           >
-            <!-- =================================================
-                 DATOS DE UBICACIÓN
-            ================================================== -->
+            <!-- DATOS OCULTOS -->
 
             <input type="hidden" name="zona_horaria" id="zona_horaria" />
 
@@ -229,8 +215,6 @@
                   required
                 />
 
-                <!-- MOSTRAR CONTRASEÑA -->
-
                 <button
                   type="button"
                   class="password-toggle"
@@ -243,7 +227,7 @@
             </div>
 
             <!-- =================================================
-                 ESTADO DE UBICACIÓN
+                 ESTADO
             ================================================== -->
 
             <div
@@ -270,7 +254,7 @@
           </form>
 
           <!-- =================================================
-               ESTADO
+               ESTADO SISTEMA
           ================================================== -->
 
           <div class="login-footer">
@@ -352,27 +336,17 @@
           Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
 
         // =================================================
-        // MOSTRAR ESTADO
+        // FUNCIÓN PARA MOSTRAR ERROR
         // =================================================
 
-        function mostrarEstado(mensaje, tipo = "info") {
+        function mostrarError(mensaje) {
           estado.style.display = "block";
 
+          estado.style.background = "#fee2e2";
+
+          estado.style.color = "#b91c1c";
+
           estado.textContent = mensaje;
-
-          if (tipo === "error") {
-            estado.style.background = "#fee2e2";
-
-            estado.style.color = "#b91c1c";
-          } else if (tipo === "success") {
-            estado.style.background = "#dcfce7";
-
-            estado.style.color = "#15803d";
-          } else {
-            estado.style.background = "#dbeafe";
-
-            estado.style.color = "#1d4ed8";
-          }
         }
 
         // =================================================
@@ -382,10 +356,19 @@
         function obtenerUbicacion() {
           return new Promise(function (resolve, reject) {
             if (!navigator.geolocation) {
-              reject(new Error("Tu navegador no soporta geolocalización."));
+              reject(new Error("Tu navegador no soporta la ubicación."));
 
               return;
             }
+
+            /*
+             * IMPORTANTE:
+             *
+             * Esta llamada provoca que el navegador
+             * muestre su propio mensaje de permiso.
+             *
+             * No mostramos ningún mensaje propio.
+             */
 
             navigator.geolocation.getCurrentPosition(
               function (position) {
@@ -408,11 +391,13 @@
 
                 if (error.code === error.PERMISSION_DENIED) {
                   mensaje =
-                    "Debes permitir el acceso a tu ubicación para registrar la jornada.";
+                    "Debes permitir el acceso a tu ubicación para registrar tu jornada.";
                 } else if (error.code === error.POSITION_UNAVAILABLE) {
-                  mensaje = "Tu ubicación no está disponible.";
+                  mensaje =
+                    "Tu ubicación no está disponible. Verifica el GPS o la configuración de ubicación de tu dispositivo.";
                 } else if (error.code === error.TIMEOUT) {
-                  mensaje = "Se agotó el tiempo para obtener tu ubicación.";
+                  mensaje =
+                    "No se pudo obtener tu ubicación a tiempo. Intenta nuevamente.";
                 }
 
                 reject(new Error(mensaje));
@@ -436,11 +421,6 @@
         async function obtenerDireccion(lat, lon) {
           const respuesta = await fetch(
             `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=18&addressdetails=1`,
-            {
-              headers: {
-                Accept: "application/json",
-              },
-            },
           );
 
           if (!respuesta.ok) {
@@ -449,35 +429,37 @@
 
           const datos = await respuesta.json();
 
-          const direccionCompleta = datos.display_name || "";
-
-          if (!direccionCompleta) {
-            throw new Error("No se encontró una dirección.");
-          }
-
-          return direccionCompleta;
+          return datos.display_name || "";
         }
 
         // =================================================
-        // ENVIAR LOGIN
+        // ENVÍO DEL FORMULARIO
         // =================================================
 
         formulario.addEventListener("submit", async function (event) {
-          // Evitar envío normal
+          /*
+           * Detenemos temporalmente el envío.
+           */
+
           event.preventDefault();
 
-          // Evitar doble clic
+          /*
+           * Evitamos doble clic.
+           */
+
           boton.disabled = true;
 
-          textoBoton.textContent = "Obteniendo ubicación...";
-
-          iconoBoton.className = "bi bi-geo-alt";
-
-          mostrarEstado("Solicitando permiso de ubicación...", "info");
+          /*
+           * NO mostramos ningún mensaje
+           * de solicitud de permiso.
+           *
+           * El navegador se encargará
+           * de mostrar su propio aviso.
+           */
 
           try {
             // ==========================================
-            // OBTENER GPS
+            // OBTENER UBICACIÓN
             // ==========================================
 
             const ubicacion = await obtenerUbicacion();
@@ -486,49 +468,43 @@
             // OBTENER DIRECCIÓN
             // ==========================================
 
-            mostrarEstado("Ubicación obtenida. Buscando dirección...", "info");
-
             try {
               const direccionObtenida = await obtenerDireccion(
                 ubicacion.lat,
                 ubicacion.lon,
               );
 
-              direccion.value = direccionObtenida;
+              direccion.value = direccionObtenida || "Dirección no disponible";
             } catch (error) {
               console.warn("No se pudo obtener la dirección:", error);
 
-              // Guardamos coordenadas aunque
-              // falle la dirección.
+              /*
+               * Las coordenadas sí existen,
+               * por lo tanto podemos continuar.
+               */
 
               direccion.value = "Dirección no disponible";
             }
 
             // ==========================================
-            // MOSTRAR ÉXITO
+            // ENVIAR FORMULARIO
             // ==========================================
-
-            mostrarEstado("Ubicación obtenida correctamente.", "success");
 
             textoBoton.textContent = "Iniciando sesión...";
 
             iconoBoton.className = "bi bi-arrow-right";
 
-            // ==========================================
-            // ENVIAR FORMULARIO
-            // ==========================================
-
             formulario.submit();
           } catch (error) {
-            console.error("Error de ubicación:", error);
+            console.error("Error obteniendo ubicación:", error);
 
-            mostrarEstado(error.message, "error");
+            mostrarError(error.message);
+
+            boton.disabled = false;
 
             textoBoton.textContent = "Iniciar sesión";
 
             iconoBoton.className = "bi bi-arrow-right";
-
-            boton.disabled = false;
           }
         });
       });
