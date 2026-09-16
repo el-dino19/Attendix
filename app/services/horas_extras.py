@@ -22,17 +22,17 @@ def obtener_hora_actual(zona_horaria="UTC"):
 # =========================================================
 # OBTENER HORA EXTRA ABIERTA
 # =========================================================
-
 def obtener_hora_extra_abierta(usuario_id):
 
     hora_extra = HoraExtra.query.filter(
         HoraExtra.usuario_id == usuario_id,
-        HoraExtra.salida.is_(None)
+        HoraExtra.fin.is_(None)
     ).order_by(
-        HoraExtra.entrada.desc()
+        HoraExtra.inicio.desc()
     ).first()
 
     return hora_extra
+
 
 
 # =========================================================
@@ -102,9 +102,8 @@ def finalizar_hora_extra(
         return None, "No tienes una hora extra activa."
 
 
-    hora_extra.salida = obtener_hora_actual(
-        zona_horaria
-    )
+    hora_extra.fin = obtener_hora_actual(zona_horaria)
+
 
 
     db.session.commit()
