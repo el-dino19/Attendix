@@ -1954,9 +1954,9 @@ main .reloj-card {
 
     padding: 9px 14px;
 
-    background: #172033;
+    background: #06171d;
 
-    border: 1px solid #2d3a50;
+    border: 1px solid rgba(0, 212, 216, 0.18);
 
     border-radius: 14px;
 

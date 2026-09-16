@@ -121,7 +121,10 @@
                 Cancelar
               </button>
 
-              <a href="{{ url_for('auth.logout') }}" class="btn btn-danger confirm-logout">
+              <a
+                href="{{ url_for('auth.logout') }}"
+                class="btn btn-danger confirm-logout"
+              >
                 <i class="bi bi-box-arrow-left"></i>
                 Cerrar sesión
               </a>
@@ -332,6 +335,22 @@
                 </div>
               </div>
 
+              <div class="location-box">
+                <div class="location-icon">
+                  <i class="bi bi-geo-alt-fill"></i>
+                </div>
+
+                <div class="location-content">
+                  <span>Ubicación registrada</span>
+
+                  <strong>
+                    {% if registro.jornada.direccion %} {{
+                    registro.jornada.direccion }} {% else %} Dirección no
+                    disponible {% endif %}
+                  </strong>
+                </div>
+              </div>
+
               <!-- =================================
                              DESCANSOS
                         ================================== -->
@@ -456,24 +475,18 @@
     ></script>
 
     <script>
-    setInterval(async function () {
-
+      setInterval(async function () {
         try {
+          const response = await fetch("{{ url_for('auth.check_session') }}", {
+            method: "GET",
+            credentials: "same-origin",
+            cache: "no-store",
+          });
 
-            const response = await fetch(
-                "{{ url_for('auth.check_session') }}",
-                {
-                    method: "GET",
-                    credentials: "same-origin",
-                    cache: "no-store"
-                }
-            );
+          if (!response.ok) {
+            const modal = document.createElement("div");
 
-            if (!response.ok) {
-
-                const modal = document.createElement("div");
-
-                modal.innerHTML = `
+            modal.innerHTML = `
                     <div style="
                         position: fixed;
                         inset: 0;
@@ -543,21 +556,12 @@
                     </div>
                 `;
 
-                document.body.appendChild(modal);
-
-            }
-
+            document.body.appendChild(modal);
+          }
         } catch (error) {
-
-            console.error(
-                "Error comprobando la sesión:",
-                error
-            );
-
+          console.error("Error comprobando la sesión:", error);
         }
-
-    }, 5000);
-</script>
-
+      }, 5000);
+    </script>
   </body>
 </html>
