@@ -267,6 +267,7 @@ body {
 
 .btn-logout:hover {
     color: #ffffff;
+
     background: var(--danger);
 
     transform: translateY(-1px);
@@ -391,17 +392,23 @@ body {
 
 .summary-icon.blue {
     color: var(--primary);
-    background: rgba(0, 212, 216, .10);
+
+    background:
+        rgba(0, 212, 216, .10);
 }
 
 .summary-icon.green {
     color: var(--success);
-    background: rgba(34, 211, 166, .10);
+
+    background:
+        rgba(34, 211, 166, .10);
 }
 
 .summary-icon.cyan {
     color: var(--secondary);
-    background: rgba(25, 167, 206, .10);
+
+    background:
+        rgba(25, 167, 206, .10);
 }
 
 .summary-card span {
@@ -480,7 +487,8 @@ body {
 .history-card {
     display: grid;
 
-    grid-template-columns: 90px minmax(0, 1fr);
+    grid-template-columns:
+        90px minmax(0, 1fr);
 
     overflow: hidden;
 
@@ -568,6 +576,7 @@ body {
 
 .history-content {
     padding: 25px;
+
     min-width: 0;
 }
 
@@ -761,7 +770,8 @@ body {
     top: 50%;
     left: 50%;
 
-    transform: translate(-50%, -50%);
+    transform:
+        translate(-50%, -50%);
 
     border-radius: 50%;
 
@@ -769,6 +779,219 @@ body {
 
     box-shadow:
         0 0 10px rgba(0, 212, 216, .5);
+}
+
+
+/* =====================================================
+   UBICACIÓN DE LA JORNADA
+===================================================== */
+
+.location-card {
+    width: 100%;
+
+    min-width: 0;
+
+    margin-top: 20px;
+
+    padding: 14px 16px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    background:
+        linear-gradient(145deg,
+            rgba(0, 212, 216, .055),
+            rgba(25, 167, 206, .025));
+
+    border:
+        1px solid rgba(0, 212, 216, .15);
+
+    border-radius: 13px;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .02);
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.location-card:hover {
+    background:
+        linear-gradient(145deg,
+            rgba(0, 212, 216, .085),
+            rgba(25, 167, 206, .04));
+
+    border-color:
+        rgba(0, 212, 216, .28);
+
+    transform: translateY(-1px);
+}
+
+
+/* =====================================================
+   ICONO UBICACIÓN
+===================================================== */
+
+.location-icon {
+    width: 42px;
+    height: 42px;
+
+    min-width: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    color: var(--primary);
+
+    background:
+        rgba(0, 212, 216, .10);
+
+    border:
+        1px solid rgba(0, 212, 216, .15);
+
+    font-size: 19px;
+
+    box-shadow:
+        0 0 15px rgba(0, 212, 216, .05);
+}
+
+
+/* =====================================================
+   CONTENIDO UBICACIÓN
+===================================================== */
+
+.location-content {
+    min-width: 0;
+
+    flex: 1;
+
+    overflow: hidden;
+}
+
+.location-label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--text-muted);
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+/*
+   DIRECCIÓN RECORTADA
+
+   Si la dirección es demasiado larga:
+   Ejemplo:
+
+   "Carrera 80 # 45-20, Barrio ..., Cali..."
+
+*/
+
+.location-address {
+    display: block;
+
+    width: 100%;
+
+    max-width: 100%;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    color: #ffffff;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    line-height: 1.4;
+
+    cursor: default;
+}
+
+
+/* Dirección no disponible */
+
+.location-address.empty {
+    color: var(--text-muted);
+
+    font-weight: 500;
+}
+
+
+/* =====================================================
+   COORDENADAS
+===================================================== */
+
+.location-coordinates {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-top: 5px;
+
+    color: #6f8d96;
+
+    font-size: 9px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.location-coordinates i {
+    color: var(--secondary);
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   ICONO DERECHO
+===================================================== */
+
+.location-pin {
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 30px;
+    height: 30px;
+
+    border-radius: 8px;
+
+    color: var(--primary);
+
+    background:
+        rgba(0, 212, 216, .06);
+
+    font-size: 14px;
 }
 
 
@@ -823,6 +1046,7 @@ body {
     height: 25px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -887,6 +1111,7 @@ body {
     flex-shrink: 0;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -997,7 +1222,6 @@ body {
     flex-direction: column;
 
     align-items: center;
-
     justify-content: center;
 
     text-align: center;
@@ -1022,6 +1246,7 @@ body {
     height: 65px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -1086,6 +1311,7 @@ body {
 
 .empty-button:hover {
     background: var(--primary);
+
     color: #031217;
 }
 
@@ -1093,11 +1319,6 @@ body {
 /* =====================================================
    MODAL LOGOUT
 ===================================================== */
-
-/*
-   Bootstrap puede poner el fondo claro por defecto.
-   Estas reglas fuerzan el estilo oscuro del Dashboard.
-*/
 
 .modal-content.confirm-modal {
     background:
@@ -1125,7 +1346,9 @@ body {
 }
 
 
-/* ICONO MODAL */
+/* =====================================================
+   ICONO MODAL
+===================================================== */
 
 .confirm-icon {
     width: 75px;
@@ -1134,6 +1357,7 @@ body {
     margin: 0 auto 20px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -1156,7 +1380,9 @@ body {
 }
 
 
-/* TITULO */
+/* =====================================================
+   MODAL TEXTO
+===================================================== */
 
 .confirm-title {
     margin: 0 0 10px;
@@ -1168,9 +1394,6 @@ body {
     font-weight: 800;
 }
 
-
-/* TEXTO */
-
 .confirm-text {
     margin: 0 0 12px;
 
@@ -1178,9 +1401,6 @@ body {
 
     font-size: 15px;
 }
-
-
-/* AVISO */
 
 .confirm-warning {
     display: flex;
@@ -1202,7 +1422,9 @@ body {
 }
 
 
-/* BOTONES */
+/* =====================================================
+   BOTONES MODAL
+===================================================== */
 
 .confirm-buttons {
     display: flex;
@@ -1211,14 +1433,6 @@ body {
 
     gap: 12px;
 }
-
-
-/*
-   IMPORTANTE:
-   Estos botones NO necesitan CSS personalizado.
-   El botón de cancelar usa Bootstrap.
-   El de cerrar sesión usa .btn-danger de Bootstrap.
-*/
 
 .confirm-buttons .btn {
     min-width: 130px;
@@ -1229,9 +1443,6 @@ body {
 
     font-weight: 600;
 }
-
-
-/* CANCELAR */
 
 .confirm-cancel {
     color: #c9d7db !important;
@@ -1262,9 +1473,9 @@ body {
     }
 
     .history-card {
-        grid-template-columns: 75px minmax(0, 1fr);
+        grid-template-columns:
+            75px minmax(0, 1fr);
     }
-
 }
 
 
@@ -1326,6 +1537,7 @@ body {
 
     .time-row {
         grid-template-columns: 1fr;
+
         gap: 8px;
     }
 
@@ -1335,14 +1547,47 @@ body {
 
     .break-item {
         flex-direction: column;
+
         align-items: flex-start;
     }
 
     .break-time {
         width: 100%;
+
         justify-content: flex-end;
     }
 
+    /* UBICACIÓN EN MÓVIL */
+
+    .location-card {
+        padding: 13px;
+
+        gap: 10px;
+    }
+
+    .location-icon {
+        width: 38px;
+        height: 38px;
+
+        min-width: 38px;
+
+        font-size: 17px;
+    }
+
+    .location-address {
+        font-size: 12px;
+    }
+
+    .location-coordinates {
+        font-size: 8px;
+    }
+
+    .location-pin {
+        width: 28px;
+        height: 28px;
+
+        font-size: 13px;
+    }
 }
 
 
@@ -1350,6 +1595,7 @@ body {
 
     .summary-card {
         min-height: 90px;
+
         padding: 15px;
     }
 
@@ -1369,6 +1615,9 @@ body {
         width: 100%;
     }
 
+    .location-card {
+        margin-top: 15px;
+    }
 }
 
 
@@ -1387,144 +1636,7 @@ body {
         height: 38px;
     }
 
-}
-
-/* =====================================================
-         UBICACIÓN DE LA JORNADA
-      ====================================================== */
-
-.location-card {
-    margin-top: 20px;
-    padding: 15px 17px;
-
-    display: flex;
-    align-items: center;
-    gap: 14px;
-
-    background: #f8fafc;
-
-    border: 1px solid #e2e8f0;
-
-    border-radius: 14px;
-
-    transition: all 0.2s ease;
-}
-
-.location-card:hover {
-    background: #f1f5f9;
-
-    border-color: #cbd5e1;
-}
-
-.location-icon {
-    width: 42px;
-    height: 42px;
-
-    min-width: 42px;
-
-    border-radius: 12px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: #e0f2fe;
-
-    color: #0284c7;
-
-    font-size: 20px;
-}
-
-.location-content {
-    min-width: 0;
-
-    flex: 1;
-}
-
-.location-label {
-    display: block;
-
-    margin-bottom: 3px;
-
-    color: #64748b;
-
-    font-size: 11px;
-
-    font-weight: 700;
-
-    letter-spacing: 0.5px;
-
-    text-transform: uppercase;
-}
-
-.location-address {
-    display: block;
-
-    max-width: 100%;
-
-    overflow: hidden;
-
-    white-space: nowrap;
-
-    text-overflow: ellipsis;
-
-    color: #1e293b;
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-    line-height: 1.4;
-}
-
-.location-address.empty {
-    color: #94a3b8;
-
-    font-weight: 500;
-}
-
-.location-pin {
-    color: #0284c7;
-
-    font-size: 16px;
-
-    flex-shrink: 0;
-}
-
-/* =====================================================
-         INFORMACIÓN DE COORDENADAS
-      ====================================================== */
-
-.location-coordinates {
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    margin-top: 4px;
-
-    color: #94a3b8;
-
-    font-size: 11px;
-}
-
-/* =====================================================
-         RESPONSIVE
-      ====================================================== */
-
-@media (max-width: 576px) {
-    .location-card {
-        padding: 13px;
-    }
-
-    .location-icon {
-        width: 38px;
-        height: 38px;
-        min-width: 38px;
-    }
-
     .location-address {
-        font-size: 13px;
+        font-size: 11px;
     }
 }
