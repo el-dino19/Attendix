@@ -2,75 +2,78 @@ from datetime import datetime
 
 from app.extensions import db
 
+
 class HoraExtra(db.Model):
-    tablename = "horas_extras"
 
-id = db.Column(
-    db.BigInteger,
-    primary_key=True
-)
+    __tablename__ = "horas_extras"
 
-usuario_id = db.Column(
-    db.Integer,
-    db.ForeignKey("usuarios.id"),
-    nullable=False
-)
+    id = db.Column(
+        db.BigInteger,
+        primary_key=True,
+        autoincrement=True
+    )
 
-jornada_id = db.Column(
-    db.BigInteger,
-    db.ForeignKey("jornadas.id"),
-    nullable=True
-)
+    usuario_id = db.Column(
+        db.Integer,
+        db.ForeignKey("usuarios.id"),
+        nullable=False
+    )
 
-fecha = db.Column(
-    db.Date,
-    nullable=False
-)
+    jornada_id = db.Column(
+        db.BigInteger,
+        db.ForeignKey("jornadas.id"),
+        nullable=True
+    )
 
-inicio = db.Column(
-    db.Time,
-    nullable=False
-)
+    fecha = db.Column(
+        db.Date,
+        nullable=False
+    )
 
-fin = db.Column(
-    db.Time,
-    nullable=True
-)
+    inicio = db.Column(
+        db.Time,
+        nullable=False
+    )
 
-latitud = db.Column(
-    db.Float,
-    nullable=True
-)
+    fin = db.Column(
+        db.Time,
+        nullable=True
+    )
 
-longitud = db.Column(
-    db.Float,
-    nullable=True
-)
+    latitud = db.Column(
+        db.Float,
+        nullable=True
+    )
 
-direccion = db.Column(
-    db.String(500),
-    nullable=True
-)
+    longitud = db.Column(
+        db.Float,
+        nullable=True
+    )
 
-created_at = db.Column(
-    db.DateTime,
-    nullable=False,
-    default=datetime.utcnow
-)
+    direccion = db.Column(
+        db.String(500),
+        nullable=True
+    )
 
-updated_at = db.Column(
-    db.DateTime,
-    nullable=False,
-    default=datetime.utcnow,
-    onupdate=datetime.utcnow
-)
+    created_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow
+    )
 
-usuario = db.relationship(
-    "Usuario",
-    back_populates="horas_extras"
-)
+    updated_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow
+    )
 
-jornada = db.relationship(
-    "Jornada",
-    back_populates="horas_extras"
-)
+    usuario = db.relationship(
+        "Usuario",
+        back_populates="horas_extras"
+    )
+
+    jornada = db.relationship(
+        "Jornada",
+        back_populates="horas_extras"
+    )
