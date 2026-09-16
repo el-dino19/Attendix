@@ -221,7 +221,34 @@ body {
 
 /* HEADER BUTTONS */
 
-.btn-header,
+.btn-header
+{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 9px 13px;
+
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    color: var(--primary);
+
+    border: 1px solid rgba(0, 212, 216, .25);
+
+    background: rgba(0, 212, 216, .06);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition: all .2s ease;
+}
+
+.btn-header:hover {
+    background: var(--primary);
+    color: #031217;
+}
 .btn-logout {
     width: 42px;
     height: 42px;
