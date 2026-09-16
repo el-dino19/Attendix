@@ -987,6 +987,46 @@
 
                             </div>
 
+                                                        <!-- =================================================
+                                UBICACIÓN DEL REGISTRO
+                            ================================================== -->
+
+                            <div class="location-card">
+
+                                <div class="location-icon">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                </div>
+
+                                <div class="location-content">
+
+                                    <span class="location-label">
+                                        Ubicación del registro
+                                    </span>
+
+                                    {% if jornada.direccion %}
+
+                                        <span
+                                            class="location-address"
+                                            title="{{ jornada.ubicacion }}"
+                                        >
+                                            {{ jornada.direccion }}
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="location-address empty">
+                                            Ubicación no registrada
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                                
+
+                            </div>
+
+
 
 
                             <!-- LINEA -->
