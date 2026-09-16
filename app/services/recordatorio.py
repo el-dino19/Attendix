@@ -6,6 +6,7 @@ from app.services.correo import enviar_recordatorio
 
 
 def revisar_jornadas():
+
     ahora = datetime.now()
 
     jornadas = Jornada.query.filter(
