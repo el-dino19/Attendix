@@ -1,9 +1,8 @@
 from app.extensions import db
 from datetime import datetime
 
-
-class Jornada(db.Model):
-    __tablename__ = "jornadas"
+class HoraExtra(db.Model):
+    __tablename__ = "horas_extras"
 
     id = db.Column(
         db.BigInteger,
@@ -16,14 +15,25 @@ class Jornada(db.Model):
         nullable=False
     )
 
+    jornada_id = db.Column(
+        db.BigInteger,
+        db.ForeignKey("jornadas.id"),
+        nullable=False
+    )
+
     fecha = db.Column(
         db.Date,
         nullable=False
     )
 
-    entrada = db.Column(
+    inicio = db.Column(
         db.Time,
         nullable=False
+    )
+
+    fin = db.Column(
+        db.Time,
+        nullable=True
     )
 
     latitud = db.Column(
@@ -38,11 +48,6 @@ class Jornada(db.Model):
 
     direccion = db.Column(
         db.String(500),
-        nullable=True
-    )
-
-    salida = db.Column(
-        db.Time,
         nullable=True
     )
 
@@ -61,20 +66,10 @@ class Jornada(db.Model):
 
     usuario = db.relationship(
         "Usuario",
-        back_populates="jornadas"
+        back_populates="horas_extras"
     )
 
-    descansos = db.relationship(
-        "Descanso",
-        back_populates="jornada",
-        cascade="all, delete-orphan"
+    jornada = db.relationship(
+        "Jornada",
+        back_populates="horas_extras"
     )
-    
-    horas_extras = db.relationship(
-        "HoraExtra",
-        back_populates="jornada",
-        cascade="all, delete-orphan"
-    )
-
-
-

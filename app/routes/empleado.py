@@ -8,6 +8,13 @@ from flask import (
     abort
 )
 
+from app.services.horas_extras import (
+    obtener_hora_extra_abierta,
+    iniciar_hora_extra,
+    finalizar_hora_extra
+)
+
+
 from app.services.historial import (
     obtener_historial_usuario
 )
@@ -68,7 +75,7 @@ def dashboard():
     usuario_id = session["usuario_id"]
 
     # ==========================================
-    # OBTENER JORNADA ABIERTA
+    # JORNADA NORMAL
     # ==========================================
 
     jornada = obtener_jornada_abierta(
@@ -76,7 +83,7 @@ def dashboard():
     )
 
     # ==========================================
-    # OBTENER DESCANSO ACTIVO
+    # DESCANSO ACTIVO
     # ==========================================
 
     descanso_activo = None
@@ -88,7 +95,15 @@ def dashboard():
         )
 
     # ==========================================
-    # OBTENER DIRECCIÓN DE LA JORNADA
+    # HORA EXTRA ACTIVA
+    # ==========================================
+
+    hora_extra = obtener_hora_extra_abierta(
+        usuario_id
+    )
+
+    # ==========================================
+    # DIRECCIÓN
     # ==========================================
 
     direccion_corta = None
@@ -97,16 +112,22 @@ def dashboard():
 
         direccion_corta = jornada.direccion
 
+    elif hora_extra and hora_extra.direccion:
+
+        direccion_corta = hora_extra.direccion
+
     # ==========================================
-    # MOSTRAR DASHBOARD
+    # DASHBOARD
     # ==========================================
 
     return render_template(
         "empleado/dashboard.html",
         jornada=jornada,
         descanso_activo=descanso_activo,
+        hora_extra=hora_extra,
         direccion_corta=direccion_corta
     )
+
 
 
 # =========================================================
@@ -228,4 +249,72 @@ def historial():
     return render_template(
         "empleado/historial.html",
         historial=historial
+    )
+
+
+# =========================================================
+# INICIAR HORAS EXTRAS
+# =========================================================
+
+@empleado_bp.route(
+    "/horas-extra/iniciar",
+    methods=["POST"]
+)
+def iniciar_horas_extra():
+
+    exitoso, mensaje, hora_extra = iniciar_hora_extra(
+        session["usuario_id"],
+        session.get("zona_horaria", "UTC")
+    )
+
+    if exitoso:
+
+        flash(
+            mensaje,
+            "success"
+        )
+
+    else:
+
+        flash(
+            mensaje,
+            "error"
+        )
+
+    return redirect(
+        url_for("empleado.dashboard")
+    )
+
+
+# =========================================================
+# FINALIZAR HORAS EXTRAS
+# =========================================================
+
+@empleado_bp.route(
+    "/horas-extra/finalizar",
+    methods=["POST"]
+)
+def finalizar_horas_extra():
+
+    exitoso, mensaje, hora_extra = finalizar_hora_extra(
+        session["usuario_id"],
+        session.get("zona_horaria", "UTC")
+    )
+
+    if exitoso:
+
+        flash(
+            mensaje,
+            "success"
+        )
+
+    else:
+
+        flash(
+            mensaje,
+            "error"
+        )
+
+    return redirect(
+        url_for("empleado.dashboard")
     )
