@@ -2,20 +2,14 @@
 // DASHBOARD EMPLEADO - ATTENDIX
 // =========================================================
 
-
 // =========================================================
 // CONFIGURACIÓN DE RUTAS FLASK
 // =========================================================
 
 window.ATTENDIX = {
-    iniciarHorasExtrasUrl:
-        "/Attendix/horas-extras/iniciar",
-
-    finalizarHorasExtrasUrl:
-        "/Attendix/horas-extras/finalizar",
-
-    estadoHorasExtrasUrl:
-        "/Attendix/horas-extras/estado"
+    iniciarHorasExtrasUrl: "/Attendix/horas-extras/iniciar",
+    finalizarHorasExtrasUrl: "/Attendix/horas-extras/finalizar",
+    estadoHorasExtrasUrl: "/Attendix/horas-extras/estado"
 };
 
 
@@ -26,21 +20,18 @@ window.ATTENDIX = {
 function obtenerZonaHoraria() {
     try {
         const zonaHoraria =
-            Intl.DateTimeFormat()
-                .resolvedOptions()
-                .timeZone;
+            Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-        if (zonaHoraria) {
-            return zonaHoraria;
-        }
+        return zonaHoraria || null;
+
     } catch (error) {
         console.warn(
             "No se pudo detectar la zona horaria:",
             error
         );
-    }
 
-    return null;
+        return null;
+    }
 }
 
 
@@ -57,100 +48,87 @@ function obtenerFechaISOActual() {
 // INICIO DEL DASHBOARD
 // =========================================================
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-        // =====================================================
-        // RELOJ DIGITAL
-        // =====================================================
+    // -----------------------------------------------------
+    // RELOJ DIGITAL
+    // -----------------------------------------------------
 
-        actualizarReloj();
+    actualizarReloj();
 
-        setInterval(
-            actualizarReloj,
-            1000
+    setInterval(
+        actualizarReloj,
+        1000
+    );
+
+
+    // -----------------------------------------------------
+    // MENSAJES FLASH
+    // -----------------------------------------------------
+
+    const mensajes =
+        document.querySelectorAll(".custom-toast");
+
+    mensajes.forEach(function (mensaje) {
+
+        setTimeout(function () {
+
+            mensaje.classList.add("toast-hide");
+
+            setTimeout(function () {
+
+                if (mensaje) {
+                    mensaje.remove();
+                }
+
+            }, 400);
+
+        }, 4000);
+
+    });
+
+
+    // -----------------------------------------------------
+    // CONTADOR DE DESCANSO
+    // -----------------------------------------------------
+
+    const contadorDescanso =
+        document.getElementById("contador");
+
+    if (contadorDescanso) {
+
+        iniciarContadorDescanso(
+            contadorDescanso
         );
 
-
-        // =====================================================
-        // MENSAJES FLASH
-        // =====================================================
-
-        const mensajes =
-            document.querySelectorAll(
-                ".custom-toast"
-            );
-
-        mensajes.forEach(
-            function (mensaje) {
-
-                setTimeout(
-                    function () {
-
-                        mensaje.classList.add(
-                            "toast-hide"
-                        );
-
-                        setTimeout(
-                            function () {
-
-                                if (mensaje) {
-                                    mensaje.remove();
-                                }
-
-                            },
-                            400
-                        );
-
-                    },
-                    4000
-                );
-            }
-        );
-
-
-        // =====================================================
-        // CONTADOR DE DESCANSO
-        // =====================================================
-
-        const contador =
-            document.getElementById(
-                "contador"
-            );
-
-        if (contador) {
-
-            iniciarContadorDescanso(
-                contador
-            );
-        }
-
-
-        // =====================================================
-        // CONTADOR DE HORAS EXTRAS
-        // =====================================================
-
-        const contadorHorasExtras =
-            document.getElementById(
-                "contador-horas-extras"
-            );
-
-        if (contadorHorasExtras) {
-
-            iniciarContadorHorasExtras(
-                contadorHorasExtras
-            );
-        }
-
-
-        // =====================================================
-        // UBICACIÓN
-        // =====================================================
-
-        obtenerUbicacionUsuario();
     }
-);
+
+
+    // -----------------------------------------------------
+    // CONTADOR DE HORAS EXTRAS
+    // -----------------------------------------------------
+
+    const contadorHorasExtras =
+        document.getElementById(
+            "contador-horas-extras"
+        );
+
+    if (contadorHorasExtras) {
+
+        iniciarContadorHorasExtras(
+            contadorHorasExtras
+        );
+
+    }
+
+
+    // -----------------------------------------------------
+    // UBICACIÓN
+    // -----------------------------------------------------
+
+    obtenerUbicacionUsuario();
+
+});
 
 
 // =========================================================
@@ -160,69 +138,58 @@ document.addEventListener(
 function actualizarReloj() {
 
     const reloj =
-        document.getElementById(
-            "reloj"
-        );
+        document.getElementById("reloj");
 
     const fecha =
-        document.getElementById(
-            "fecha-actual"
-        );
+        document.getElementById("fecha-actual");
 
     if (!reloj) {
         return;
     }
 
-
-    const ahora =
-        new Date();
-
+    const ahora = new Date();
 
     const zonaHoraria =
         obtenerZonaHoraria();
 
 
+    // -----------------------------------------------------
+    // HORA
+    // -----------------------------------------------------
+
     const opcionesHora = {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
-        hour12: true
+        hour12: true,
+        timeZone: zonaHoraria || undefined
     };
 
+
+    // -----------------------------------------------------
+    // FECHA
+    // -----------------------------------------------------
 
     const opcionesFecha = {
         weekday: "long",
         year: "numeric",
         month: "long",
-        day: "numeric"
+        day: "numeric",
+        timeZone: zonaHoraria || undefined
     };
 
-
-    // =====================================================
-    // HORA LOCAL REAL DEL DISPOSITIVO
-    // =====================================================
 
     const horaLocal =
         new Intl.DateTimeFormat(
             undefined,
-            {
-                ...opcionesHora,
-
-                timeZone:
-                    zonaHoraria || undefined
-            }
+            opcionesHora
         ).format(ahora);
 
 
     const fechaLocal =
         new Intl.DateTimeFormat(
             undefined,
-            {
-                ...opcionesFecha,
-
-                timeZone:
-                    zonaHoraria || undefined
-            }
+            opcionesFecha
         ).format(ahora);
 
 
@@ -233,11 +200,11 @@ function actualizarReloj() {
     if (fecha) {
 
         fecha.textContent =
-            fechaLocal
-                .charAt(0)
-                .toUpperCase() +
+            fechaLocal.charAt(0).toUpperCase() +
             fechaLocal.slice(1);
+
     }
+
 }
 
 
@@ -245,9 +212,7 @@ function actualizarReloj() {
 // CONTADOR DE DESCANSO
 // =========================================================
 
-function iniciarContadorDescanso(
-    contador
-) {
+function iniciarContadorDescanso(contador) {
 
     const mensaje =
         document.getElementById(
@@ -257,17 +222,19 @@ function iniciarContadorDescanso(
 
     const tipo =
         (
-            contador.dataset.tipo ||
-            ""
+            contador.dataset.tipo || ""
         ).trim();
 
 
     const horaInicio =
         (
-            contador.dataset.inicio ||
-            ""
+            contador.dataset.inicio || ""
         ).trim();
 
+
+    // -----------------------------------------------------
+    // DURACIÓN DE CADA DESCANSO
+    // -----------------------------------------------------
 
     const duraciones = {
 
@@ -279,6 +246,7 @@ function iniciarContadorDescanso(
 
         break_tarde:
             15 * 60
+
     };
 
 
@@ -295,19 +263,18 @@ function iniciarContadorDescanso(
 
             mensaje.textContent =
                 "Tipo de descanso no válido.";
+
         }
 
         return;
     }
 
 
-    // =====================================================
+    // -----------------------------------------------------
     // CONVERTIR HH:MM:SS A SEGUNDOS
-    // =====================================================
+    // -----------------------------------------------------
 
-    function convertirHoraASegundos(
-        hora
-    ) {
+    function convertirHoraASegundos(hora) {
 
         const partes =
             hora.split(":");
@@ -329,9 +296,9 @@ function iniciarContadorDescanso(
 
 
         if (
-            Number.isNaN(horas) ||
-            Number.isNaN(minutos) ||
-            Number.isNaN(segundos)
+            !Number.isFinite(horas) ||
+            !Number.isFinite(minutos) ||
+            !Number.isFinite(segundos)
         ) {
             return null;
         }
@@ -342,6 +309,7 @@ function iniciarContadorDescanso(
             minutos * 60 +
             segundos
         );
+
     }
 
 
@@ -360,21 +328,20 @@ function iniciarContadorDescanso(
 
             mensaje.textContent =
                 "No se pudo calcular el tiempo.";
+
         }
 
         return;
     }
 
 
-    // =====================================================
-    // HORA ACTUAL LOCAL
-    // =====================================================
+    // -----------------------------------------------------
+    // OBTENER HORA ACTUAL LOCAL
+    // -----------------------------------------------------
 
     function obtenerHoraActualSegundos() {
 
-        const ahora =
-            new Date();
-
+        const ahora = new Date();
 
         const zonaHoraria =
             obtenerZonaHoraria();
@@ -399,9 +366,7 @@ function iniciarContadorDescanso(
                     hour12:
                         false
                 }
-            ).formatToParts(
-                ahora
-            );
+            ).formatToParts(ahora);
 
 
         let horas = 0;
@@ -409,45 +374,21 @@ function iniciarContadorDescanso(
         let segundos = 0;
 
 
-        partes.forEach(
-            function (parte) {
+        partes.forEach(function (parte) {
 
-                if (
-                    parte.type ===
-                    "hour"
-                ) {
-
-                    horas =
-                        Number(
-                            parte.value
-                        );
-                }
-
-
-                if (
-                    parte.type ===
-                    "minute"
-                ) {
-
-                    minutos =
-                        Number(
-                            parte.value
-                        );
-                }
-
-
-                if (
-                    parte.type ===
-                    "second"
-                ) {
-
-                    segundos =
-                        Number(
-                            parte.value
-                        );
-                }
+            if (parte.type === "hour") {
+                horas = Number(parte.value);
             }
-        );
+
+            if (parte.type === "minute") {
+                minutos = Number(parte.value);
+            }
+
+            if (parte.type === "second") {
+                segundos = Number(parte.value);
+            }
+
+        });
 
 
         return (
@@ -455,12 +396,13 @@ function iniciarContadorDescanso(
             minutos * 60 +
             segundos
         );
+
     }
 
 
-    // =====================================================
+    // -----------------------------------------------------
     // TIEMPO TRANSCURRIDO
-    // =====================================================
+    // -----------------------------------------------------
 
     function obtenerTiempoTranscurrido() {
 
@@ -469,28 +411,28 @@ function iniciarContadorDescanso(
 
 
         let diferencia =
-            actual -
-            inicioSegundos;
+            actual - inicioSegundos;
 
 
+        // Cambio de día
         if (diferencia < 0) {
 
             diferencia +=
                 24 * 60 * 60;
+
         }
 
 
         return diferencia;
+
     }
 
 
-    // =====================================================
+    // -----------------------------------------------------
     // FORMATEAR MM:SS
-    // =====================================================
+    // -----------------------------------------------------
 
-    function formatearTiempo(
-        segundos
-    ) {
+    function formatearTiempo(segundos) {
 
         segundos =
             Math.max(
@@ -510,28 +452,17 @@ function iniciarContadorDescanso(
 
 
         return (
-            String(
-                minutos
-            ).padStart(
-                2,
-                "0"
-            )
-            +
-            ":"
-            +
-            String(
-                segundosRestantes
-            ).padStart(
-                2,
-                "0"
-            )
+            String(minutos).padStart(2, "0") +
+            ":" +
+            String(segundosRestantes).padStart(2, "0")
         );
+
     }
 
 
-    // =====================================================
+    // -----------------------------------------------------
     // ACTUALIZAR CONTADOR
-    // =====================================================
+    // -----------------------------------------------------
 
     function actualizarContador() {
 
@@ -540,8 +471,7 @@ function iniciarContadorDescanso(
 
 
         const restante =
-            duracionTotal -
-            transcurrido;
+            duracionTotal - transcurrido;
 
 
         if (restante <= 0) {
@@ -554,6 +484,7 @@ function iniciarContadorDescanso(
 
                 mensaje.textContent =
                     "El tiempo del descanso ha terminado. Pulsa finalizar para registrar la hora.";
+
             }
 
             return;
@@ -561,16 +492,16 @@ function iniciarContadorDescanso(
 
 
         contador.textContent =
-            formatearTiempo(
-                restante
-            );
+            formatearTiempo(restante);
 
 
         if (mensaje) {
 
             mensaje.textContent =
                 "Descanso en progreso";
+
         }
+
     }
 
 
@@ -581,6 +512,7 @@ function iniciarContadorDescanso(
         actualizarContador,
         1000
     );
+
 }
 
 
@@ -588,14 +520,11 @@ function iniciarContadorDescanso(
 // CONTADOR DE HORAS EXTRAS
 // =========================================================
 
-function iniciarContadorHorasExtras(
-    contador
-) {
+function iniciarContadorHorasExtras(contador) {
 
     const inicio =
         (
-            contador.dataset.inicio ||
-            ""
+            contador.dataset.inicio || ""
         ).trim();
 
 
@@ -608,20 +537,15 @@ function iniciarContadorHorasExtras(
     }
 
 
-    // =====================================================
-    // IMPORTANTE
+    // -----------------------------------------------------
+    // LA FECHA DEBE SER ISO 8601
     //
-    // La fecha debe venir desde Flask como:
-    //
+    // Ejemplo:
     // 2026-09-15T18:00:00+00:00
     //
     // o:
-    //
     // 2026-09-15T18:00:00Z
-    //
-    // JavaScript convierte automáticamente esa fecha
-    // UTC al instante correcto.
-    // =====================================================
+    // -----------------------------------------------------
 
     const fechaInicio =
         new Date(inicio);
@@ -664,9 +588,9 @@ function iniciarContadorHorasExtras(
     );
 
 
-    // =====================================================
+    // -----------------------------------------------------
     // ACTUALIZAR CONTADOR
-    // =====================================================
+    // -----------------------------------------------------
 
     function actualizar() {
 
@@ -696,9 +620,7 @@ function iniciarContadorHorasExtras(
 
         const minutos =
             Math.floor(
-                (
-                    diferencia % 3600
-                ) / 60
+                (diferencia % 3600) / 60
             );
 
 
@@ -707,30 +629,12 @@ function iniciarContadorHorasExtras(
 
 
         contador.textContent =
-            String(
-                horas
-            ).padStart(
-                2,
-                "0"
-            )
-            +
-            ":"
-            +
-            String(
-                minutos
-            ).padStart(
-                2,
-                "0"
-            )
-            +
-            ":"
-            +
-            String(
-                segundos
-            ).padStart(
-                2,
-                "0"
-            );
+            String(horas).padStart(2, "0") +
+            ":" +
+            String(minutos).padStart(2, "0") +
+            ":" +
+            String(segundos).padStart(2, "0");
+
     }
 
 
@@ -741,6 +645,7 @@ function iniciarContadorHorasExtras(
         actualizar,
         1000
     );
+
 }
 
 
@@ -771,6 +676,7 @@ function obtenerUbicacionUsuario() {
 
         ubicacionTexto.textContent =
             "Obteniendo ubicación aproximada...";
+
     }
 
 
@@ -780,7 +686,6 @@ function obtenerUbicacionUsuario() {
 
             const latitud =
                 position.coords.latitude;
-
 
             const longitud =
                 position.coords.longitude;
@@ -810,7 +715,9 @@ function obtenerUbicacionUsuario() {
                 mostrarDireccion(
                     "Ubicación disponible"
                 );
+
             }
+
         },
 
 
@@ -819,20 +726,18 @@ function obtenerUbicacionUsuario() {
             manejarErrorUbicacion(
                 error
             );
+
         },
 
 
         {
-            enableHighAccuracy:
-                true,
-
-            timeout:
-                10000,
-
-            maximumAge:
-                60000
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 60000
         }
+
     );
+
 }
 
 
@@ -849,13 +754,9 @@ async function obtenerDireccionAproximada(
         "https://nominatim.openstreetmap.org/reverse" +
         "?format=json" +
         "&lat=" +
-        encodeURIComponent(
-            latitud
-        ) +
+        encodeURIComponent(latitud) +
         "&lon=" +
-        encodeURIComponent(
-            longitud
-        ) +
+        encodeURIComponent(longitud) +
         "&zoom=18" +
         "&addressdetails=1" +
         "&accept-language=es";
@@ -865,12 +766,9 @@ async function obtenerDireccionAproximada(
         await fetch(
             url,
             {
-                method:
-                    "GET",
-
+                method: "GET",
                 headers: {
-                    "Accept":
-                        "application/json"
+                    "Accept": "application/json"
                 }
             }
         );
@@ -881,6 +779,7 @@ async function obtenerDireccionAproximada(
         throw new Error(
             "No se pudo obtener la dirección."
         );
+
     }
 
 
@@ -896,6 +795,7 @@ async function obtenerDireccionAproximada(
         throw new Error(
             "No se encontró una dirección."
         );
+
     }
 
 
@@ -952,7 +852,9 @@ async function obtenerDireccionAproximada(
             partes.push(
                 calle
             );
+
         }
+
     }
 
 
@@ -961,6 +863,7 @@ async function obtenerDireccionAproximada(
         partes.push(
             barrio
         );
+
     }
 
 
@@ -969,24 +872,25 @@ async function obtenerDireccionAproximada(
         partes.push(
             localidad
         );
+
     }
 
 
     if (partes.length > 0) {
 
-        return partes.join(
-            ", "
-        );
+        return partes.join(", ");
+
     }
 
 
-    const alternativa = [
-        barrio,
-        localidad,
-        departamento
-    ]
-        .filter(Boolean)
-        .join(", ");
+    const alternativa =
+        [
+            barrio,
+            localidad,
+            departamento
+        ]
+            .filter(Boolean)
+            .join(", ");
 
 
     if (alternativa) {
@@ -1004,13 +908,14 @@ async function obtenerDireccionAproximada(
 
 
         if (nombre.trim()) {
-
             return nombre.trim();
         }
+
     }
 
 
     return "Ubicación aproximada disponible";
+
 }
 
 
@@ -1018,9 +923,7 @@ async function obtenerDireccionAproximada(
 // MOSTRAR DIRECCIÓN
 // =========================================================
 
-function mostrarDireccion(
-    direccion
-) {
+function mostrarDireccion(direccion) {
 
     const ubicacionTexto =
         document.getElementById(
@@ -1038,6 +941,7 @@ function mostrarDireccion(
 
         ubicacionTexto.textContent =
             direccion;
+
     }
 
 
@@ -1045,6 +949,7 @@ function mostrarDireccion(
 
         ubicacionActual.textContent =
             direccion;
+
     }
 
 
@@ -1058,7 +963,9 @@ function mostrarDireccion(
 
         coordenadas.style.display =
             "none";
+
     }
+
 }
 
 
@@ -1087,6 +994,7 @@ function mostrarMensajeUbicacion(
 
         ubicacionTexto.textContent =
             mensaje;
+
     }
 
 
@@ -1094,6 +1002,7 @@ function mostrarMensajeUbicacion(
 
         ubicacionActual.textContent =
             mensaje;
+
     }
 
 
@@ -1109,8 +1018,11 @@ function mostrarMensajeUbicacion(
 
             coordenadas.style.display =
                 "none";
+
         }
+
     }
+
 }
 
 
@@ -1118,9 +1030,7 @@ function mostrarMensajeUbicacion(
 // ERROR DE UBICACIÓN
 // =========================================================
 
-function manejarErrorUbicacion(
-    error
-) {
+function manejarErrorUbicacion(error) {
 
     let mensaje =
         "No se pudo obtener tu ubicación.";
@@ -1149,12 +1059,14 @@ function manejarErrorUbicacion(
 
         mensaje =
             "Se agotó el tiempo para obtener la ubicación.";
+
     }
 
 
     mostrarMensajeUbicacion(
         mensaje
     );
+
 }
 
 
@@ -1165,10 +1077,7 @@ function manejarErrorUbicacion(
 function obtenerUbicacion() {
 
     return new Promise(
-        function (
-            resolve,
-            reject
-        ) {
+        function (resolve, reject) {
 
             if (!navigator.geolocation) {
 
@@ -1196,7 +1105,9 @@ function obtenerUbicacion() {
 
                         precision:
                             position.coords.accuracy
+
                     });
+
                 },
 
 
@@ -1229,6 +1140,7 @@ function obtenerUbicacion() {
 
                         mensaje =
                             "Se agotó el tiempo para obtener la ubicación.";
+
                     }
 
 
@@ -1237,22 +1149,21 @@ function obtenerUbicacion() {
                             mensaje
                         )
                     );
+
                 },
 
 
                 {
-                    enableHighAccuracy:
-                        true,
-
-                    timeout:
-                        10000,
-
-                    maximumAge:
-                        60000
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 60000
                 }
+
             );
+
         }
     );
+
 }
 
 
@@ -1272,6 +1183,7 @@ async function obtenerUbicacionParaHorasExtras() {
 
 
     return ubicacion;
+
 }
 
 
@@ -1279,9 +1191,7 @@ async function obtenerUbicacionParaHorasExtras() {
 // MOSTRAR UBICACIÓN
 // =========================================================
 
-async function mostrarUbicacion(
-    ubicacion
-) {
+async function mostrarUbicacion(ubicacion) {
 
     if (
         !ubicacion ||
@@ -1321,7 +1231,9 @@ async function mostrarUbicacion(
         mostrarDireccion(
             "Ubicación aproximada disponible"
         );
+
     }
+
 }
 
 
@@ -1339,28 +1251,27 @@ async function iniciarHorasExtras() {
 
     if (boton) {
 
-        boton.disabled =
-            true;
-
+        boton.disabled = true;
 
         boton.innerHTML =
             '<i class="bi bi-hourglass-split"></i> OBTENIENDO UBICACIÓN...';
+
     }
 
 
     try {
 
-        // =================================================
+        // -------------------------------------------------
         // OBTENER GPS
-        // =================================================
+        // -------------------------------------------------
 
         const ubicacion =
             await obtenerUbicacionParaHorasExtras();
 
 
-        // =================================================
+        // -------------------------------------------------
         // OBTENER ZONA HORARIA
-        // =================================================
+        // -------------------------------------------------
 
         const zonaHoraria =
             obtenerZonaHoraria();
@@ -1371,12 +1282,13 @@ async function iniciarHorasExtras() {
             throw new Error(
                 "No se pudo determinar la zona horaria del dispositivo."
             );
+
         }
 
 
-        // =================================================
+        // -------------------------------------------------
         // VERIFICAR URL
-        // =================================================
+        // -------------------------------------------------
 
         if (
             !window.ATTENDIX ||
@@ -1386,6 +1298,7 @@ async function iniciarHorasExtras() {
             throw new Error(
                 "No se encontró la URL para iniciar horas extras."
             );
+
         }
 
 
@@ -1393,22 +1306,21 @@ async function iniciarHorasExtras() {
 
             boton.innerHTML =
                 '<i class="bi bi-hourglass-split"></i> REGISTRANDO...';
+
         }
 
 
-        // =================================================
+        // -------------------------------------------------
         // ENVIAR AL BACKEND
-        // =================================================
+        // -------------------------------------------------
 
         const response =
             await fetch(
                 window.ATTENDIX.iniciarHorasExtrasUrl,
                 {
-                    method:
-                        "POST",
+                    method: "POST",
 
                     headers: {
-
                         "Content-Type":
                             "application/json",
 
@@ -1416,30 +1328,35 @@ async function iniciarHorasExtras() {
                             "application/json"
                     },
 
-                    body:
-                        JSON.stringify({
+                    body: JSON.stringify({
 
-                            latitud:
-                                ubicacion.latitud,
+                        latitud:
+                            ubicacion.latitud,
 
-                            longitud:
-                                ubicacion.longitud,
+                        longitud:
+                            ubicacion.longitud,
 
-                            precision:
-                                ubicacion.precision,
+                        precision:
+                            ubicacion.precision,
 
-                            ubicacion:
-                                `${ubicacion.latitud}, ${ubicacion.longitud}`,
+                        ubicacion:
+                            `${ubicacion.latitud}, ${ubicacion.longitud}`,
 
-                            zona_horaria:
-                                zonaHoraria,
+                        zona_horaria:
+                            zonaHoraria,
 
-                            fecha_cliente:
-                                obtenerFechaISOActual()
-                        })
+                        fecha_cliente:
+                            obtenerFechaISOActual()
+
+                    })
+
                 }
             );
 
+
+        // -------------------------------------------------
+        // LEER RESPUESTA
+        // -------------------------------------------------
 
         let data = {};
 
@@ -1454,8 +1371,13 @@ async function iniciarHorasExtras() {
             console.warn(
                 "La respuesta no contiene JSON válido."
             );
+
         }
 
+
+        // -------------------------------------------------
+        // VALIDAR RESPUESTA
+        // -------------------------------------------------
 
         if (
             !response.ok ||
@@ -1466,12 +1388,13 @@ async function iniciarHorasExtras() {
                 data.mensaje ||
                 "No se pudieron iniciar las horas extras."
             );
+
         }
 
 
-        // =================================================
-        // MOSTRAR INFORMACIÓN RECIBIDA
-        // =================================================
+        // -------------------------------------------------
+        // INFORMACIÓN RECIBIDA
+        // -------------------------------------------------
 
         console.log(
             "Horas extras iniciadas."
@@ -1493,9 +1416,9 @@ async function iniciarHorasExtras() {
         );
 
 
-        // =================================================
-        // ÉXITO
-        // =================================================
+        // -------------------------------------------------
+        // RECARGAR DASHBOARD
+        // -------------------------------------------------
 
         window.location.reload();
 
@@ -1518,11 +1441,13 @@ async function iniciarHorasExtras() {
             boton.disabled =
                 false;
 
-
             boton.innerHTML =
                 '<i class="bi bi-play-circle-fill"></i> Iniciar horas extras';
+
         }
+
     }
+
 }
 
 
@@ -1540,28 +1465,27 @@ async function finalizarHorasExtras() {
 
     if (boton) {
 
-        boton.disabled =
-            true;
-
+        boton.disabled = true;
 
         boton.innerHTML =
             '<i class="bi bi-hourglass-split"></i> OBTENIENDO UBICACIÓN...';
+
     }
 
 
     try {
 
-        // =================================================
+        // -------------------------------------------------
         // OBTENER GPS
-        // =================================================
+        // -------------------------------------------------
 
         const ubicacion =
             await obtenerUbicacionParaHorasExtras();
 
 
-        // =================================================
+        // -------------------------------------------------
         // OBTENER ZONA HORARIA
-        // =================================================
+        // -------------------------------------------------
 
         const zonaHoraria =
             obtenerZonaHoraria();
@@ -1572,12 +1496,13 @@ async function finalizarHorasExtras() {
             throw new Error(
                 "No se pudo determinar la zona horaria del dispositivo."
             );
+
         }
 
 
-        // =================================================
+        // -------------------------------------------------
         // VERIFICAR URL
-        // =================================================
+        // -------------------------------------------------
 
         if (
             !window.ATTENDIX ||
@@ -1587,6 +1512,7 @@ async function finalizarHorasExtras() {
             throw new Error(
                 "No se encontró la URL para finalizar horas extras."
             );
+
         }
 
 
@@ -1594,22 +1520,21 @@ async function finalizarHorasExtras() {
 
             boton.innerHTML =
                 '<i class="bi bi-hourglass-split"></i> FINALIZANDO...';
+
         }
 
 
-        // =================================================
+        // -------------------------------------------------
         // ENVIAR AL BACKEND
-        // =================================================
+        // -------------------------------------------------
 
         const response =
             await fetch(
                 window.ATTENDIX.finalizarHorasExtrasUrl,
                 {
-                    method:
-                        "POST",
+                    method: "POST",
 
                     headers: {
-
                         "Content-Type":
                             "application/json",
 
@@ -1617,30 +1542,35 @@ async function finalizarHorasExtras() {
                             "application/json"
                     },
 
-                    body:
-                        JSON.stringify({
+                    body: JSON.stringify({
 
-                            latitud:
-                                ubicacion.latitud,
+                        latitud:
+                            ubicacion.latitud,
 
-                            longitud:
-                                ubicacion.longitud,
+                        longitud:
+                            ubicacion.longitud,
 
-                            precision:
-                                ubicacion.precision,
+                        precision:
+                            ubicacion.precision,
 
-                            ubicacion:
-                                `${ubicacion.latitud}, ${ubicacion.longitud}`,
+                        ubicacion:
+                            `${ubicacion.latitud}, ${ubicacion.longitud}`,
 
-                            zona_horaria:
-                                zonaHoraria,
+                        zona_horaria:
+                            zonaHoraria,
 
-                            fecha_cliente:
-                                obtenerFechaISOActual()
-                        })
+                        fecha_cliente:
+                            obtenerFechaISOActual()
+
+                    })
+
                 }
             );
 
+
+        // -------------------------------------------------
+        // LEER RESPUESTA
+        // -------------------------------------------------
 
         let data = {};
 
@@ -1655,8 +1585,13 @@ async function finalizarHorasExtras() {
             console.warn(
                 "La respuesta no contiene JSON válido."
             );
+
         }
 
+
+        // -------------------------------------------------
+        // VALIDAR RESPUESTA
+        // -------------------------------------------------
 
         if (
             !response.ok ||
@@ -1667,12 +1602,13 @@ async function finalizarHorasExtras() {
                 data.mensaje ||
                 "No se pudieron finalizar las horas extras."
             );
+
         }
 
 
-        // =================================================
-        // MOSTRAR INFORMACIÓN RECIBIDA
-        // =================================================
+        // -------------------------------------------------
+        // INFORMACIÓN RECIBIDA
+        // -------------------------------------------------
 
         console.log(
             "Horas extras finalizadas."
@@ -1686,6 +1622,11 @@ async function finalizarHorasExtras() {
         console.log(
             "Fin local:",
             data.fin
+        );
+
+        console.log(
+            "Minutos totales:",
+            data.minutos_totales
         );
 
         console.log(
@@ -1704,9 +1645,9 @@ async function finalizarHorasExtras() {
         );
 
 
-        // =================================================
-        // ÉXITO
-        // =================================================
+        // -------------------------------------------------
+        // RECARGAR DASHBOARD
+        // -------------------------------------------------
 
         window.location.reload();
 
@@ -1729,11 +1670,13 @@ async function finalizarHorasExtras() {
             boton.disabled =
                 false;
 
-
             boton.innerHTML =
                 '<i class="bi bi-stop-circle-fill"></i> Finalizar horas extras';
+
         }
+
     }
+
 }
 
 
@@ -1768,7 +1711,10 @@ document.addEventListener(
 
                 boton.innerHTML =
                     '<i class="bi bi-hourglass-split"></i> FINALIZANDO...';
+
             }
+
         }
+
     }
 );
