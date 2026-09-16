@@ -5,16 +5,7 @@ from flask import (
     redirect,
     url_for,
     flash,
-    abort,
-    request,
-    jsonify
-)
-
-from app.services.horas_extras import (
-    obtener_hora_extra_activa,
-    iniciar_horas_extras as servicio_iniciar_horas_extras,
-    finalizar_horas_extras as servicio_finalizar_horas_extras,
-    convertir_a_hora_local
+    abort
 )
 
 from app.services.historial import (
@@ -33,10 +24,6 @@ from app.services.descansos import (
 )
 
 
-# ============================================================
-# BLUEPRINT
-# ============================================================
-
 empleado_bp = Blueprint(
     "empleado",
     __name__,
@@ -44,167 +31,99 @@ empleado_bp = Blueprint(
 )
 
 
-# ============================================================
-# PROTECCIÓN DE TODAS LAS RUTAS
-# ============================================================
+# =========================================================
+# PROTECCION DE TODAS LAS RUTAS DE EMPLEADO
+# =========================================================
 
 @empleado_bp.before_request
 def proteger_empleado():
 
+    # ==========================================
+    # VERIFICAR QUE HAYA INICIADO SESION
+    # ==========================================
+
     if "usuario_id" not in session:
+
         return redirect(
             url_for("auth.login")
         )
 
+
+    # ==========================================
+    # VERIFICAR QUE SEA EMPLEADO
+    # ==========================================
+
     if session.get("rol") != "empleado":
+
         abort(403)
 
 
-# ============================================================
+# =========================================================
 # DASHBOARD
-# ============================================================
+# =========================================================
 
 @empleado_bp.route("/dashboard")
 def dashboard():
 
-    usuario_id = session["usuario_id"]
-
-    # --------------------------------------------
-    # Jornada activa
-    # --------------------------------------------
-
     jornada = obtener_jornada_abierta(
-        usuario_id
+        session["usuario_id"]
     )
 
-    # --------------------------------------------
-    # Descanso activo
-    # --------------------------------------------
 
     descanso_activo = None
 
     if jornada:
+
         descanso_activo = obtener_descanso_activo(
             jornada.id
         )
 
-    # --------------------------------------------
-    # Horas extras activas
-    # --------------------------------------------
-
-    hora_extra_activa = obtener_hora_extra_activa(
-        usuario_id
-    )
 
     return render_template(
         "empleado/dashboard.html",
         jornada=jornada,
-        descanso_activo=descanso_activo,
-        hora_extra_activa=hora_extra_activa
+        descanso_activo=descanso_activo
     )
 
 
-# ============================================================
-# FINALIZAR JORNADA
-# ============================================================
+# =========================================================
+# SALIDA
+# =========================================================
 
-@empleado_bp.route(
-    "/salida",
-    methods=["POST"]
-)
+@empleado_bp.route("/salida", methods=["POST"])
 def salida():
 
-    usuario_id = session["usuario_id"]
-
-    jornada = obtener_jornada_abierta(
-        usuario_id
-    )
-
-    # --------------------------------------------
-    # Verificar jornada
-    # --------------------------------------------
-
-    if jornada is None:
-
-        flash(
-            "No tienes una jornada activa.",
-            "error"
-        )
-
-        return redirect(
-            url_for("empleado.dashboard")
-        )
-
-    # --------------------------------------------
-    # No permitir salida durante descanso
-    # --------------------------------------------
-
-    descanso_activo = obtener_descanso_activo(
-        jornada.id
-    )
-
-    if descanso_activo:
-
-        flash(
-            "Debes finalizar tu descanso antes de terminar la jornada.",
-            "error"
-        )
-
-        return redirect(
-            url_for("empleado.dashboard")
-        )
-
-    # --------------------------------------------
-    # No permitir salida con horas extras activas
-    # --------------------------------------------
-
-    hora_extra_activa = obtener_hora_extra_activa(
-        usuario_id
-    )
-
-    if hora_extra_activa:
-
-        flash(
-            "Debes finalizar las horas extras antes de finalizar la jornada.",
-            "error"
-        )
-
-        return redirect(
-            url_for("empleado.dashboard")
-        )
-
-    # --------------------------------------------
-    # Registrar salida
-    # --------------------------------------------
-
     jornada = registrar_salida(
-        usuario_id
+        session["usuario_id"]
     )
+
 
     if jornada is None:
 
         flash(
-            "No fue posible finalizar la jornada.",
+            "No tienes una jornada abierta.",
             "error"
         )
 
         return redirect(
             url_for("empleado.dashboard")
         )
+
 
     flash(
         "Jornada finalizada correctamente.",
         "success"
     )
 
+
     return redirect(
         url_for("empleado.dashboard")
     )
 
 
-# ============================================================
+# =========================================================
 # INICIAR DESCANSO
-# ============================================================
+# =========================================================
 
 @empleado_bp.route(
     "/descanso/<tipo>/iniciar",
@@ -212,89 +131,35 @@ def salida():
 )
 def iniciar_descanso_ruta(tipo):
 
-    usuario_id = session["usuario_id"]
-
-    tipos_validos = [
-        "break_manana",
-        "lunch",
-        "break_tarde"
-    ]
-
-    # --------------------------------------------
-    # Validar tipo
-    # --------------------------------------------
-
-    if tipo not in tipos_validos:
-
-        flash(
-            "Tipo de descanso no válido.",
-            "error"
-        )
-
-        return redirect(
-            url_for("empleado.dashboard")
-        )
-
-    # --------------------------------------------
-    # Verificar jornada
-    # --------------------------------------------
-
-    jornada = obtener_jornada_abierta(
-        usuario_id
-    )
-
-    if jornada is None:
-
-        flash(
-            "Debes tener una jornada activa para iniciar un descanso.",
-            "error"
-        )
-
-        return redirect(
-            url_for("empleado.dashboard")
-        )
-
-    # --------------------------------------------
-    # Verificar horas extras
-    # --------------------------------------------
-
-    hora_extra_activa = obtener_hora_extra_activa(
-        usuario_id
-    )
-
-    if hora_extra_activa:
-
-        flash(
-            "No puedes iniciar un descanso mientras tienes horas extras activas.",
-            "error"
-        )
-
-        return redirect(
-            url_for("empleado.dashboard")
-        )
-
-    # --------------------------------------------
-    # Iniciar descanso
-    # --------------------------------------------
-
     exitoso, mensaje, descanso = iniciar_descanso(
-        usuario_id,
+        session["usuario_id"],
         tipo
     )
 
-    flash(
-        mensaje,
-        "success" if exitoso else "error"
-    )
+
+    if exitoso:
+
+        flash(
+            mensaje,
+            "success"
+        )
+
+    else:
+
+        flash(
+            mensaje,
+            "error"
+        )
+
 
     return redirect(
         url_for("empleado.dashboard")
     )
 
 
-# ============================================================
+# =========================================================
 # FINALIZAR DESCANSO
-# ============================================================
+# =========================================================
 
 @empleado_bp.route(
     "/descanso/finalizar",
@@ -302,284 +167,44 @@ def iniciar_descanso_ruta(tipo):
 )
 def finalizar_descanso_ruta():
 
-    usuario_id = session["usuario_id"]
-
     exitoso, mensaje, descanso = finalizar_descanso(
-        usuario_id
+        session["usuario_id"]
     )
 
-    flash(
-        mensaje,
-        "success" if exitoso else "error"
-    )
+
+    if exitoso:
+
+        flash(
+            mensaje,
+            "success"
+        )
+
+    else:
+
+        flash(
+            mensaje,
+            "error"
+        )
+
 
     return redirect(
         url_for("empleado.dashboard")
     )
 
 
-# ============================================================
-# INICIAR HORAS EXTRAS
-# ============================================================
-
-@empleado_bp.route(
-    "/horas-extras/iniciar",
-    methods=["POST"]
-)
-def iniciar_horas_extras_ruta():
-
-    usuario_id = session["usuario_id"]
-
-    datos = request.get_json(
-        silent=True
-    ) or {}
-
-    latitud = datos.get("latitud")
-    longitud = datos.get("longitud")
-    ubicacion = datos.get("ubicacion")
-    zona_horaria = datos.get("zona_horaria")
-
-    # --------------------------------------------
-    # Validar ubicación
-    # --------------------------------------------
-
-    if latitud is None or longitud is None:
-
-        return jsonify({
-            "exito": False,
-            "mensaje": (
-                "No se pudo obtener tu ubicación. "
-                "Debes permitir el acceso a la ubicación."
-            )
-        }), 400
-
-    # --------------------------------------------
-    # Validar zona horaria
-    # --------------------------------------------
-
-    if not zona_horaria:
-
-        return jsonify({
-            "exito": False,
-            "mensaje": (
-                "No se pudo determinar tu zona horaria."
-            )
-        }), 400
-
-    # --------------------------------------------
-    # Iniciar horas extras
-    # --------------------------------------------
-
-    exitoso, mensaje, hora_extra = (
-        servicio_iniciar_horas_extras(
-            usuario_id,
-            latitud,
-            longitud,
-            ubicacion
-        )
-    )
-
-    if not exitoso:
-
-        return jsonify({
-            "exito": False,
-            "mensaje": mensaje
-        }), 400
-
-    # --------------------------------------------
-    # Convertir hora UTC -> hora local
-    # --------------------------------------------
-
-    inicio_local = convertir_a_hora_local(
-        hora_extra.inicio,
-        zona_horaria
-    )
-
-    return jsonify({
-        "exito": True,
-        "mensaje": mensaje,
-        "hora_extra_id": hora_extra.id,
-
-        "inicio": inicio_local.isoformat(),
-
-        "inicio_utc": hora_extra.inicio.isoformat(),
-
-        "zona_horaria": zona_horaria
-    })
-
-
-# ============================================================
-# FINALIZAR HORAS EXTRAS
-# ============================================================
-
-@empleado_bp.route(
-    "/horas-extras/finalizar",
-    methods=["POST"]
-)
-def finalizar_horas_extras_ruta():
-
-    usuario_id = session["usuario_id"]
-
-    datos = request.get_json(
-        silent=True
-    ) or {}
-
-    latitud = datos.get("latitud")
-    longitud = datos.get("longitud")
-    ubicacion = datos.get("ubicacion")
-    zona_horaria = datos.get("zona_horaria")
-
-    # --------------------------------------------
-    # Validar zona horaria
-    # --------------------------------------------
-
-    if not zona_horaria:
-
-        return jsonify({
-            "exito": False,
-            "mensaje": (
-                "No se pudo determinar tu zona horaria."
-            )
-        }), 400
-
-    # --------------------------------------------
-    # Finalizar horas extras
-    # --------------------------------------------
-
-    exitoso, mensaje, hora_extra = (
-        servicio_finalizar_horas_extras(
-            usuario_id,
-            latitud,
-            longitud,
-            ubicacion
-        )
-    )
-
-    if not exitoso:
-
-        return jsonify({
-            "exito": False,
-            "mensaje": mensaje
-        }), 400
-
-    # --------------------------------------------
-    # Convertir UTC -> hora local
-    # --------------------------------------------
-
-    inicio_local = convertir_a_hora_local(
-        hora_extra.inicio,
-        zona_horaria
-    )
-
-    fin_local = convertir_a_hora_local(
-        hora_extra.fin,
-        zona_horaria
-    )
-
-    return jsonify({
-        "exito": True,
-        "mensaje": mensaje,
-
-        "minutos_totales": hora_extra.minutos_totales,
-
-        "inicio": inicio_local.isoformat(),
-
-        "fin": fin_local.isoformat(),
-
-        "inicio_utc": hora_extra.inicio.isoformat(),
-
-        "fin_utc": hora_extra.fin.isoformat(),
-
-        "zona_horaria": zona_horaria
-    })
-
-
-# ============================================================
-# ESTADO DE HORAS EXTRAS
-# ============================================================
-
-@empleado_bp.route(
-    "/horas-extras/estado",
-    methods=["GET"]
-)
-def estado_horas_extras():
-
-    usuario_id = session["usuario_id"]
-
-    zona_horaria = request.args.get(
-        "zona_horaria"
-    )
-
-    hora_extra = obtener_hora_extra_activa(
-        usuario_id
-    )
-
-    # --------------------------------------------
-    # No existe hora extra activa
-    # --------------------------------------------
-
-    if hora_extra is None:
-
-        return jsonify({
-            "ok": True,
-            "activa": False
-        })
-
-    # --------------------------------------------
-    # Sin zona horaria
-    # --------------------------------------------
-
-    if not zona_horaria:
-
-        return jsonify({
-            "ok": True,
-            "activa": True,
-            "id": hora_extra.id,
-            "inicio": hora_extra.inicio.isoformat(),
-            "ubicacion_inicio": hora_extra.ubicacion_inicio
-        })
-
-    # --------------------------------------------
-    # Convertir hora a zona local
-    # --------------------------------------------
-
-    inicio_local = convertir_a_hora_local(
-        hora_extra.inicio,
-        zona_horaria
-    )
-
-    return jsonify({
-        "ok": True,
-        "activa": True,
-
-        "id": hora_extra.id,
-
-        "inicio": inicio_local.isoformat(),
-
-        "inicio_utc": hora_extra.inicio.isoformat(),
-
-        "zona_horaria": zona_horaria,
-
-        "ubicacion_inicio": hora_extra.ubicacion_inicio
-    })
-
-
-# ============================================================
+# =========================================================
 # HISTORIAL
-# ============================================================
+# =========================================================
 
-@empleado_bp.route(
-    "/historial"
-)
+@empleado_bp.route("/historial")
 def historial():
 
-    usuario_id = session["usuario_id"]
-
-    historial_data = obtener_historial_usuario(
-        usuario_id
+    historial = obtener_historial_usuario(
+        session["usuario_id"]
     )
+
 
     return render_template(
         "empleado/historial.html",
-        historial=historial_data
+        historial=historial
     )

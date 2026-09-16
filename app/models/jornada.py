@@ -22,9 +22,9 @@ class Jornada(db.Model):
     )
 
     entrada = db.Column(
-        db.Time,
-        nullable=False
-    )
+    db.Time,
+    nullable=False
+)
 
     salida = db.Column(
         db.Time,
@@ -54,10 +54,3 @@ class Jornada(db.Model):
         back_populates="jornada",
         cascade="all, delete-orphan"
     )
-
-    horas_extras = db.relationship(
-    "HoraExtra",
-    back_populates="jornada",
-    cascade="all, delete-orphan"
-)
-

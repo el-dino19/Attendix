@@ -55,8 +55,3 @@ class Usuario(db.Model):
         "Jornada",
         back_populates="usuario"
     )
-    
-    horas_extras = db.relationship(
-    "HoraExtra",
-    back_populates="usuario"
-)
