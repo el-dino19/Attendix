@@ -6,34 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Mi historial | Attendix</title>
+
+    <!-- FAVICON -->
     <link
       rel="icon"
       type="image/png"
       sizes="512x512"
-      href="{{ url_for(
-        'static',
-        filename='img/Logo_Asistencia.png'
-    ) }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for(
-            'static',
-            filename='css/historial.css'
-        ) }}"
+      href="{{ url_for('static', filename='img/Logo_Asistencia.png') }}"
     />
 
+    <!-- BOOTSTRAP ICONS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
       rel="stylesheet"
     />
 
+    <!-- BOOTSTRAP -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
     />
+
+    <!-- CSS HISTORIAL -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/historial.css') }}"
+    />
+
+    
   </head>
 
   <body>
@@ -84,8 +86,8 @@
     </header>
 
     <!-- =====================================================
-     MODAL CERRAR SESIÓN
-====================================================== -->
+         MODAL CERRAR SESIÓN
+    ====================================================== -->
 
     <div
       class="modal fade"
@@ -109,6 +111,7 @@
 
             <p class="confirm-warning">
               <i class="bi bi-shield-check"></i>
+
               Tu sesión se cerrará de forma segura.
             </p>
 
@@ -126,6 +129,7 @@
                 class="btn btn-danger confirm-logout"
               >
                 <i class="bi bi-box-arrow-left"></i>
+
                 Cerrar sesión
               </a>
             </div>
@@ -140,8 +144,8 @@
 
     <main class="page-container">
       <!-- =================================================
-             CABECERA DE PÁGINA
-        ================================================== -->
+           CABECERA
+      ================================================== -->
 
       <section class="page-header">
         <div>
@@ -158,8 +162,8 @@
       </section>
 
       <!-- =================================================
-             RESUMEN
-        ================================================== -->
+           RESUMEN
+      ================================================== -->
 
       <section class="summary-grid">
         <div class="summary-card">
@@ -168,9 +172,9 @@
           </div>
 
           <div>
-            <span>Jornadas registradas</span>
+            <span> Jornadas registradas </span>
 
-            <strong>{{ historial|length }}</strong>
+            <strong> {{ historial|length }} </strong>
           </div>
         </div>
 
@@ -180,7 +184,7 @@
           </div>
 
           <div>
-            <span>Jornadas finalizadas</span>
+            <span> Jornadas finalizadas </span>
 
             <strong>
               {{ historial | selectattr("jornada.salida") | list | length }}
@@ -194,16 +198,16 @@
           </div>
 
           <div>
-            <span>Control horario</span>
+            <span> Control horario </span>
 
-            <strong>Activo</strong>
+            <strong> Activo </strong>
           </div>
         </div>
       </section>
 
       <!-- =================================================
-             HISTORIAL
-        ================================================== -->
+           HISTORIAL
+      ================================================== -->
 
       <section class="history-section">
         <div class="section-title">
@@ -224,9 +228,9 @@
           {% for registro in historial %}
 
           <article class="history-card">
-            <!-- =====================================
-                         FECHA
-                    ====================================== -->
+            <!-- =========================================
+                 FECHA
+            ========================================== -->
 
             <div class="date-column">
               <span class="date-day">
@@ -237,7 +241,7 @@
                 {% set meses = { 'Jan': 'ENE', 'Feb': 'FEB', 'Mar': 'MAR',
                 'Apr': 'ABR', 'May': 'MAY', 'Jun': 'JUN', 'Jul': 'JUL', 'Aug':
                 'AGO', 'Sep': 'SEP', 'Oct': 'OCT', 'Nov': 'NOV', 'Dec': 'DIC' }
-                %} {{ meses[registro.jornada.fecha.strftime("%b")] }}
+                %} {{ meses[ registro.jornada.fecha.strftime("%b") ] }}
               </span>
 
               <span class="date-year">
@@ -245,9 +249,9 @@
               </span>
             </div>
 
-            <!-- =====================================
-                         CONTENIDO
-                    ====================================== -->
+            <!-- =========================================
+                 CONTENIDO
+            ========================================== -->
 
             <div class="history-content">
               <!-- CABECERA -->
@@ -266,10 +270,10 @@
                     'March': 'marzo', 'April': 'abril', 'May': 'mayo', 'June':
                     'junio', 'July': 'julio', 'August': 'agosto', 'September':
                     'septiembre', 'October': 'octubre', 'November': 'noviembre',
-                    'December': 'diciembre' } %} {{
-                    dias[registro.jornada.fecha.strftime('%A')] }}, {{
-                    registro.jornada.fecha.strftime('%d') }} de {{
-                    meses[registro.jornada.fecha.strftime('%B')] }} de {{
+                    'December': 'diciembre' } %} {{ dias[
+                    registro.jornada.fecha.strftime('%A') ] }}, {{
+                    registro.jornada.fecha.strftime('%d') }} de {{ meses[
+                    registro.jornada.fecha.strftime('%B') ] }} de {{
                     registro.jornada.fecha.strftime('%Y') }}
                   </span>
                 </div>
@@ -293,9 +297,9 @@
                 {% endif %}
               </div>
 
-              <!-- =================================
-                             HORARIOS
-                        ================================== -->
+              <!-- =========================================
+                   HORARIOS
+              ========================================== -->
 
               <div class="time-row">
                 <div class="time-box">
@@ -304,7 +308,7 @@
                   </div>
 
                   <div>
-                    <span>Entrada</span>
+                    <span> Entrada </span>
 
                     <strong>
                       {% if registro.jornada.entrada %} {{
@@ -324,7 +328,7 @@
                   </div>
 
                   <div>
-                    <span>Salida</span>
+                    <span> Salida </span>
 
                     <strong>
                       {% if registro.jornada.salida %} {{
@@ -335,32 +339,59 @@
                 </div>
               </div>
 
-              <div class="location-box">
+              <!-- =========================================
+                   UBICACIÓN DE LA JORNADA
+              ========================================== -->
+
+              <div class="location-card">
                 <div class="location-icon">
                   <i class="bi bi-geo-alt-fill"></i>
                 </div>
 
                 <div class="location-content">
-                  <span>Ubicación registrada</span>
+                  <span class="location-label"> Ubicación registrada </span>
 
-                  <strong>
-                    {% if registro.jornada.direccion %} {{
-                    registro.jornada.direccion }} {% else %} Dirección no
-                    disponible {% endif %}
-                  </strong>
+                  {% if registro.jornada.direccion %}
+
+                  <span
+                    class="location-address"
+                    title="{{ registro.jornada.direccion }}"
+                  >
+                    {{ registro.jornada.direccion }}
+                  </span>
+
+                  {% if registro.jornada.latitud and registro.jornada.longitud
+                  %}
+
+                  <div class="location-coordinates">
+                    <i class="bi bi-crosshair"></i>
+
+                    {{ "%.5f"|format( registro.jornada.latitud ) }}, {{
+                    "%.5f"|format( registro.jornada.longitud ) }}
+                  </div>
+
+                  {% endif %} {% else %}
+
+                  <span class="location-address empty">
+                    Ubicación no registrada
+                  </span>
+
+                  {% endif %}
                 </div>
+
+                <i class="bi bi-chevron-right location-pin"></i>
               </div>
 
-              <!-- =================================
-                             DESCANSOS
-                        ================================== -->
+              <!-- =========================================
+                   DESCANSOS
+              ========================================== -->
 
               <div class="break-section">
                 <div class="break-header">
                   <div>
                     <i class="bi bi-cup-hot-fill"></i>
 
-                    <strong>Descansos</strong>
+                    <strong> Descansos </strong>
                   </div>
 
                   <span> {{ registro.descansos|length }} </span>
@@ -399,7 +430,7 @@
 
                     <div class="break-time">
                       <div>
-                        <span>Inicio</span>
+                        <span> Inicio </span>
 
                         <strong>
                           {% if descanso.inicio %} {{ descanso.inicio.strftime(
@@ -410,13 +441,13 @@
                       <i class="bi bi-arrow-right"></i>
 
                       <div>
-                        <span>Fin</span>
+                        <span> Fin </span>
 
                         <strong>
                           {% if descanso.fin %} {{ descanso.fin.strftime(
                           "%I:%M:%S %p" ) }} {% else %}
 
-                          <em>En curso</em>
+                          <em> En curso </em>
 
                           {% endif %}
                         </strong>
@@ -445,9 +476,9 @@
 
         {% else %}
 
-        <!-- =================================================
-                 SIN HISTORIAL
-            ================================================== -->
+        <!-- =============================================
+             SIN HISTORIAL
+        ============================================== -->
 
         <div class="empty-state">
           <div class="empty-icon">
@@ -468,11 +499,20 @@
         {% endif %}
       </section>
     </main>
+
+    <!-- =====================================================
+         BOOTSTRAP JS
+    ====================================================== -->
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
+
+    <!-- =====================================================
+         COMPROBAR SESIÓN
+    ====================================================== -->
 
     <script>
       setInterval(async function () {
@@ -487,74 +527,87 @@
             const modal = document.createElement("div");
 
             modal.innerHTML = `
+
+                <div style="
+                  position: fixed;
+                  inset: 0;
+                  background: rgba(15, 23, 42, .65);
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  z-index: 99999;
+                ">
+
+                  <div style="
+                    background: white;
+                    width: min(420px, 90%);
+                    border-radius: 20px;
+                    padding: 32px;
+                    text-align: center;
+                    box-shadow: 0 20px 50px rgba(0,0,0,.2);
+                  ">
+
                     <div style="
-                        position: fixed;
-                        inset: 0;
-                        background: rgba(15, 23, 42, .65);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        z-index: 99999;
+                      width: 65px;
+                      height: 65px;
+                      margin: 0 auto 20px;
+                      border-radius: 50%;
+                      background: #fee2e2;
+                      color: #dc2626;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      font-size: 28px;
                     ">
 
-                        <div style="
-                            background: white;
-                            width: min(420px, 90%);
-                            border-radius: 20px;
-                            padding: 32px;
-                            text-align: center;
-                            box-shadow: 0 20px 50px rgba(0,0,0,.2);
-                        ">
-
-                            <div style="
-                                width: 65px;
-                                height: 65px;
-                                margin: 0 auto 20px;
-                                border-radius: 50%;
-                                background: #fee2e2;
-                                color: #dc2626;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                font-size: 28px;
-                            ">
-                                <i class="bi bi-person-x-fill"></i>
-                            </div>
-
-                            <h3 style="
-                                margin-bottom: 10px;
-                                color: #1e293b;
-                            ">
-                                Cuenta desactivada
-                            </h3>
-
-                            <p style="
-                                color: #64748b;
-                                margin-bottom: 25px;
-                            ">
-                                Tu cuenta ha sido desactivada por un administrador.
-                                Tu sesión se cerrará.
-                            </p>
-
-                            <button
-                                onclick="window.location.href='{{ url_for('auth.login') }}'"
-                                style="
-                                    border: 0;
-                                    background: #dc2626;
-                                    color: white;
-                                    padding: 11px 25px;
-                                    border-radius: 10px;
-                                    font-weight: 600;
-                                    cursor: pointer;
-                                "
-                            >
-                                Ir al inicio de sesión
-                            </button>
-
-                        </div>
+                      <i class="bi bi-person-x-fill"></i>
 
                     </div>
-                `;
+
+
+                    <h3 style="
+                      margin-bottom: 10px;
+                      color: #1e293b;
+                    ">
+
+                      Cuenta desactivada
+
+                    </h3>
+
+
+                    <p style="
+                      color: #64748b;
+                      margin-bottom: 25px;
+                    ">
+
+                      Tu cuenta ha sido desactivada por un administrador.
+                      Tu sesión se cerrará.
+
+                    </p>
+
+
+                    <button
+                      onclick="window.location.href='{{ url_for('auth.login') }}'"
+                      style="
+                        border: 0;
+                        background: #dc2626;
+                        color: white;
+                        padding: 11px 25px;
+                        border-radius: 10px;
+                        font-weight: 600;
+                        cursor: pointer;
+                      "
+                    >
+
+                      Ir al inicio de sesión
+
+                    </button>
+
+                  </div>
+
+                </div>
+
+              `;
 
             document.body.appendChild(modal);
           }

@@ -247,10 +247,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     return (
                         String(
                             minutos
-                        ).padStart(2, "0")
-                        +
-                        ":"
-                        +
+                        ).padStart(2, "0") +
+                        ":" +
                         String(
                             segundosRestantes
                         ).padStart(2, "0")
