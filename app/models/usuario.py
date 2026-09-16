@@ -57,6 +57,7 @@ class Usuario(db.Model):
     )
     
     horas_extras = db.relationship(
-        "HoraExtra",
-        back_populates="usuario"
+    "HoraExtra",
+    back_populates="usuario",
+    cascade="all, delete-orphan"
     )
