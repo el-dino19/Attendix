@@ -39,7 +39,6 @@
 
     <div class="login-page">
       <!-- FONDOS -->
-     
 
       <!-- =================================================
            TARJETA PRINCIPAL
@@ -169,6 +168,8 @@
             action="{{ url_for('auth.login') }}"
             class="login-form"
           >
+            <input type="hidden" name="zona_horaria" id="zona_horaria" />
+
             <!-- CORREO -->
 
             <div class="form-group">
@@ -244,7 +245,7 @@
           <div class="login-footer">
             <div class="status-dot"></div>
 
-            Sistema Disponible 
+            Sistema Disponible
           </div>
         </div>
       </div>
@@ -287,6 +288,13 @@
         }
       });
     </script>
+
+  <!-- =============Obtener Zona horaria====================== -->
+    <script>
+    document.getElementById("zona_horaria").value =
+        Intl.DateTimeFormat().resolvedOptions().timeZone;
+    </script>
+
 
     <!-- =================================================
          OCULTAR ALERTAS

@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from config import Config
-from app.extensions import db, bcrypt, mail
+from app.extensions import db, bcrypt
 
 
 
@@ -11,8 +11,6 @@ def create_app():
 
     db.init_app(app)
     bcrypt.init_app(app)
-    mail.init_app(app)
-
     
     @app.errorhandler(403)
     def forbidden(error):
@@ -23,12 +21,9 @@ def create_app():
     from app.routes.auth import auth_bp
     from app.routes.empleado import empleado_bp
     from app.routes.admin import admin_bp
-    
-
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(empleado_bp)
     app.register_blueprint(admin_bp)
-    
 
     return app

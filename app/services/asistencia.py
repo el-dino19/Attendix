@@ -5,23 +5,26 @@ from app import db
 from app.models.jornada import Jornada
 
 
-ZONA_HORARIA = ZoneInfo("America/Chicago")
+def obtener_hora_actual(zona_horaria="UTC"):
 
+    try:
+        zona = ZoneInfo(zona_horaria)
+    except Exception:
+        zona = ZoneInfo("UTC")
 
-def obtener_hora_actual():
-
-    ahora = datetime.now(
-        ZONA_HORARIA
-    )
+    ahora = datetime.now(zona)
 
     return ahora.time()
 
 
-def obtener_fecha_actual():
+def obtener_fecha_actual(zona_horaria="UTC"):
 
-    ahora = datetime.now(
-        ZONA_HORARIA
-    )
+    try:
+        zona = ZoneInfo(zona_horaria)
+    except Exception:
+        zona = ZoneInfo("UTC")
+
+    ahora = datetime.now(zona)
 
     return ahora.date()
 
@@ -38,9 +41,14 @@ def obtener_jornada_abierta(usuario_id):
     return jornada
 
 
-def registrar_entrada(usuario_id):
+def registrar_entrada(usuario_id, zona_horaria="UTC"):
 
-    ahora = datetime.now(ZONA_HORARIA)
+    try:
+        zona = ZoneInfo(zona_horaria)
+    except Exception:
+        zona = ZoneInfo("UTC")
+
+    ahora = datetime.now(zona)
 
     fecha_hoy = ahora.date()
     hora_actual = ahora.time()
@@ -55,7 +63,6 @@ def registrar_entrada(usuario_id):
     ).first()
 
     if jornada_existente:
-
         return jornada_existente
 
     # ==========================================
@@ -74,17 +81,18 @@ def registrar_entrada(usuario_id):
     return jornada
 
 
-def registrar_salida(usuario_id):
+def registrar_salida(usuario_id, zona_horaria="UTC"):
 
     jornada = obtener_jornada_abierta(
         usuario_id
     )
 
     if jornada is None:
-
         return None
 
-    jornada.salida = obtener_hora_actual()
+    jornada.salida = obtener_hora_actual(
+        zona_horaria
+    )
 
     db.session.commit()
 

@@ -68,6 +68,20 @@
       <!-- USUARIO -->
 
       <div class="header-user">
+        <!-- =====================================================
+     UBICACIÓN DEL USUARIO
+====================================================== -->
+
+        <div class="header-location" id="ubicacion-container">
+          <div class="location-icon">
+            <i class="bi bi-geo-alt-fill"></i>
+          </div>
+
+          <div class="location-info">
+            <span>Ubicación</span>
+            <strong id="ubicacion-texto">Obteniendo ubicación...</strong>
+          </div>
+        </div>
         <div class="user-avatar">{{ session["nombre"][0]|upper }}</div>
 
         <div class="user-info">
@@ -827,9 +841,6 @@
       setInterval(actualizarReloj, 1000);
     </script>
 
-
-    
-    
     <!-- MENSAJE DE BANEO -->
     <script>
       setInterval(async function () {
@@ -919,6 +930,72 @@
           console.error("Error comprobando la sesión:", error);
         }
       }, 5000);
+    </script>
+
+    <!-- =====================================================
+     UBICACIÓN DEL USUARIO
+====================================================== -->
+
+    <script>
+      function obtenerUbicacion() {
+        const elemento = document.getElementById("ubicacion-texto");
+
+        if (!elemento) {
+          return;
+        }
+
+        // Verificar compatibilidad del navegador
+        if (!navigator.geolocation) {
+          elemento.textContent = "No disponible";
+
+          return;
+        }
+
+        elemento.textContent = "Solicitando permiso...";
+
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            const latitud = position.coords.latitude;
+            const longitud = position.coords.longitude;
+
+            elemento.textContent = `${latitud.toFixed(5)}, ${longitud.toFixed(5)}`;
+
+            console.log("Ubicación del usuario:");
+            console.log("Latitud:", latitud);
+            console.log("Longitud:", longitud);
+          },
+
+          function (error) {
+            switch (error.code) {
+              case error.PERMISSION_DENIED:
+                elemento.textContent = "Permiso denegado";
+
+                break;
+
+              case error.POSITION_UNAVAILABLE:
+                elemento.textContent = "Ubicación no disponible";
+
+                break;
+
+              case error.TIMEOUT:
+                elemento.textContent = "Tiempo agotado";
+
+                break;
+
+              default:
+                elemento.textContent = "Error de ubicación";
+            }
+          },
+
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 300000,
+          },
+        );
+      }
+
+      obtenerUbicacion();
     </script>
   </body>
 </html>

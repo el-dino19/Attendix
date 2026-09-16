@@ -30,13 +30,6 @@ class Jornada(db.Model):
         db.Time,
         nullable=True
     )
-    
-    correo_recordatorio = db.Column(
-    db.Boolean,
-    nullable=False,
-    default=False
-)
-
 
     created_at = db.Column(
         db.DateTime,

@@ -94,9 +94,9 @@ def dashboard():
 def salida():
 
     jornada = registrar_salida(
-        session["usuario_id"]
+        session["usuario_id"],
+        session.get("zona_horaria", "UTC")
     )
-
 
     if jornada is None:
 
@@ -109,12 +109,10 @@ def salida():
             url_for("empleado.dashboard")
         )
 
-
     flash(
         "Jornada finalizada correctamente.",
         "success"
     )
-
 
     return redirect(
         url_for("empleado.dashboard")

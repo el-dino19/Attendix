@@ -1940,3 +1940,91 @@ main .reloj-card {
     outline: none;
     box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.3);
 }
+
+/* =====================================================
+   UBICACIÓN
+====================================================== */
+
+.header-location {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    margin-right: 12px;
+
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    border-radius: 12px;
+
+    color: white;
+
+    min-width: 170px;
+}
+
+.location-icon {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: rgba(59, 130, 246, 0.18);
+    color: #60a5fa;
+
+    font-size: 17px;
+}
+
+.location-info {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+.location-info span {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.location-info strong {
+    font-size: 12px;
+    font-weight: 600;
+
+    color: white;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    max-width: 130px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+====================================================== */
+
+@media (max-width: 900px) {
+
+    .header-location {
+        min-width: auto;
+        padding: 7px;
+        margin-right: 5px;
+    }
+
+    .location-info {
+        display: none;
+    }
+
+    .location-icon {
+        width: 36px;
+        height: 36px;
+    }
+}

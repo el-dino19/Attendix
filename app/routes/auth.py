@@ -50,6 +50,12 @@ def login():
             ""
         )
 
+        # Zona horaria detectada por el navegador
+        zona_horaria = request.form.get(
+            "zona_horaria",
+            "UTC"
+        ).strip()
+
         # ========================================
         # VALIDAR CAMPOS
         # ========================================
@@ -116,13 +122,19 @@ def login():
         session["correo"] = usuario.correo
         session["rol"] = usuario.rol
 
+        # Guardar zona horaria del navegador
+        session["zona_horaria"] = zona_horaria
+
         # ========================================
         # REGISTRAR ENTRADA
         # ========================================
 
-        registrar_entrada(
-            usuario.id
-        )
+        if usuario.rol == "empleado":
+
+            registrar_entrada(
+                usuario.id,
+                zona_horaria
+            )
 
         # ========================================
         # REDIRECCIÓN SEGÚN ROL
@@ -145,6 +157,7 @@ def login():
     return render_template(
         "login.html"
     )
+
 
 
 @auth_bp.route("/logout")
