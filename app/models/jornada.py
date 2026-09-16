@@ -22,9 +22,24 @@ class Jornada(db.Model):
     )
 
     entrada = db.Column(
-    db.Time,
-    nullable=False
-)
+        db.Time,
+        nullable=False
+    )
+
+    latitud = db.Column(
+        db.Float,
+        nullable=True
+    )
+
+    longitud = db.Column(
+        db.Float,
+        nullable=True
+    )
+
+    direccion = db.Column(
+        db.String(500),
+        nullable=True
+    )
 
     salida = db.Column(
         db.Time,

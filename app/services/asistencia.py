@@ -41,7 +41,13 @@ def obtener_jornada_abierta(usuario_id):
     return jornada
 
 
-def registrar_entrada(usuario_id, zona_horaria="UTC"):
+def registrar_entrada(
+    usuario_id,
+    zona_horaria="UTC",
+    latitud=None,
+    longitud=None,
+    direccion=None
+):
 
     try:
         zona = ZoneInfo(zona_horaria)
@@ -53,10 +59,6 @@ def registrar_entrada(usuario_id, zona_horaria="UTC"):
     fecha_hoy = ahora.date()
     hora_actual = ahora.time()
 
-    # ==========================================
-    # VERIFICAR SI YA EXISTE JORNADA HOY
-    # ==========================================
-
     jornada_existente = Jornada.query.filter(
         Jornada.usuario_id == usuario_id,
         Jornada.fecha == fecha_hoy
@@ -65,20 +67,21 @@ def registrar_entrada(usuario_id, zona_horaria="UTC"):
     if jornada_existente:
         return jornada_existente
 
-    # ==========================================
-    # CREAR NUEVA JORNADA
-    # ==========================================
-
     jornada = Jornada(
         usuario_id=usuario_id,
         fecha=fecha_hoy,
-        entrada=hora_actual
+        entrada=hora_actual,
+        latitud=latitud,
+        longitud=longitud,
+        direccion=direccion
     )
 
     db.session.add(jornada)
     db.session.commit()
 
     return jornada
+
+
 
 
 def registrar_salida(usuario_id, zona_horaria="UTC"):

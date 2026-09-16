@@ -38,8 +38,6 @@
     ================================================== -->
 
     <div class="login-page">
-      <!-- FONDOS -->
-
       <!-- =================================================
            TARJETA PRINCIPAL
       ================================================== -->
@@ -167,10 +165,23 @@
             method="POST"
             action="{{ url_for('auth.login') }}"
             class="login-form"
+            id="loginForm"
           >
+            <!-- =================================================
+                 DATOS DE UBICACIÓN
+            ================================================== -->
+
             <input type="hidden" name="zona_horaria" id="zona_horaria" />
 
-            <!-- CORREO -->
+            <input type="hidden" name="latitud" id="latitud" />
+
+            <input type="hidden" name="longitud" id="longitud" />
+
+            <input type="hidden" name="direccion" id="direccion" />
+
+            <!-- =================================================
+                 CORREO
+            ================================================== -->
 
             <div class="form-group">
               <label for="correo">
@@ -194,7 +205,9 @@
               </div>
             </div>
 
-            <!-- CONTRASEÑA -->
+            <!-- =================================================
+                 CONTRASEÑA
+            ================================================== -->
 
             <div class="form-group">
               <label for="password">
@@ -229,12 +242,30 @@
               </div>
             </div>
 
-            <!-- BOTÓN -->
+            <!-- =================================================
+                 ESTADO DE UBICACIÓN
+            ================================================== -->
 
-            <button type="submit" class="btn login-button">
-              <span> Iniciar sesión </span>
+            <div
+              id="estado-ubicacion"
+              style="
+                display: none;
+                margin-bottom: 15px;
+                padding: 10px 12px;
+                border-radius: 10px;
+                font-size: 13px;
+                text-align: center;
+              "
+            ></div>
 
-              <i class="bi bi-arrow-right"></i>
+            <!-- =================================================
+                 BOTÓN
+            ================================================== -->
+
+            <button type="submit" class="btn login-button" id="loginButton">
+              <span id="loginButtonText"> Iniciar sesión </span>
+
+              <i class="bi bi-arrow-right" id="loginButtonIcon"></i>
             </button>
           </form>
 
@@ -289,12 +320,219 @@
       });
     </script>
 
-  <!-- =============Obtener Zona horaria====================== -->
-    <script>
-    document.getElementById("zona_horaria").value =
-        Intl.DateTimeFormat().resolvedOptions().timeZone;
-    </script>
+    <!-- =================================================
+         LOGIN + UBICACIÓN
+    ================================================== -->
 
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const formulario = document.getElementById("loginForm");
+
+        const boton = document.getElementById("loginButton");
+
+        const textoBoton = document.getElementById("loginButtonText");
+
+        const iconoBoton = document.getElementById("loginButtonIcon");
+
+        const estado = document.getElementById("estado-ubicacion");
+
+        const zonaHoraria = document.getElementById("zona_horaria");
+
+        const latitud = document.getElementById("latitud");
+
+        const longitud = document.getElementById("longitud");
+
+        const direccion = document.getElementById("direccion");
+
+        // =================================================
+        // ZONA HORARIA
+        // =================================================
+
+        zonaHoraria.value =
+          Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+
+        // =================================================
+        // MOSTRAR ESTADO
+        // =================================================
+
+        function mostrarEstado(mensaje, tipo = "info") {
+          estado.style.display = "block";
+
+          estado.textContent = mensaje;
+
+          if (tipo === "error") {
+            estado.style.background = "#fee2e2";
+
+            estado.style.color = "#b91c1c";
+          } else if (tipo === "success") {
+            estado.style.background = "#dcfce7";
+
+            estado.style.color = "#15803d";
+          } else {
+            estado.style.background = "#dbeafe";
+
+            estado.style.color = "#1d4ed8";
+          }
+        }
+
+        // =================================================
+        // OBTENER UBICACIÓN
+        // =================================================
+
+        function obtenerUbicacion() {
+          return new Promise(function (resolve, reject) {
+            if (!navigator.geolocation) {
+              reject(new Error("Tu navegador no soporta geolocalización."));
+
+              return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+              function (position) {
+                const lat = position.coords.latitude;
+
+                const lon = position.coords.longitude;
+
+                latitud.value = lat;
+
+                longitud.value = lon;
+
+                resolve({
+                  lat: lat,
+                  lon: lon,
+                });
+              },
+
+              function (error) {
+                let mensaje = "No fue posible obtener tu ubicación.";
+
+                if (error.code === error.PERMISSION_DENIED) {
+                  mensaje =
+                    "Debes permitir el acceso a tu ubicación para registrar la jornada.";
+                } else if (error.code === error.POSITION_UNAVAILABLE) {
+                  mensaje = "Tu ubicación no está disponible.";
+                } else if (error.code === error.TIMEOUT) {
+                  mensaje = "Se agotó el tiempo para obtener tu ubicación.";
+                }
+
+                reject(new Error(mensaje));
+              },
+
+              {
+                enableHighAccuracy: true,
+
+                timeout: 15000,
+
+                maximumAge: 0,
+              },
+            );
+          });
+        }
+
+        // =================================================
+        // OBTENER DIRECCIÓN
+        // =================================================
+
+        async function obtenerDireccion(lat, lon) {
+          const respuesta = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=18&addressdetails=1`,
+            {
+              headers: {
+                Accept: "application/json",
+              },
+            },
+          );
+
+          if (!respuesta.ok) {
+            throw new Error("No se pudo obtener la dirección.");
+          }
+
+          const datos = await respuesta.json();
+
+          const direccionCompleta = datos.display_name || "";
+
+          if (!direccionCompleta) {
+            throw new Error("No se encontró una dirección.");
+          }
+
+          return direccionCompleta;
+        }
+
+        // =================================================
+        // ENVIAR LOGIN
+        // =================================================
+
+        formulario.addEventListener("submit", async function (event) {
+          // Evitar envío normal
+          event.preventDefault();
+
+          // Evitar doble clic
+          boton.disabled = true;
+
+          textoBoton.textContent = "Obteniendo ubicación...";
+
+          iconoBoton.className = "bi bi-geo-alt";
+
+          mostrarEstado("Solicitando permiso de ubicación...", "info");
+
+          try {
+            // ==========================================
+            // OBTENER GPS
+            // ==========================================
+
+            const ubicacion = await obtenerUbicacion();
+
+            // ==========================================
+            // OBTENER DIRECCIÓN
+            // ==========================================
+
+            mostrarEstado("Ubicación obtenida. Buscando dirección...", "info");
+
+            try {
+              const direccionObtenida = await obtenerDireccion(
+                ubicacion.lat,
+                ubicacion.lon,
+              );
+
+              direccion.value = direccionObtenida;
+            } catch (error) {
+              console.warn("No se pudo obtener la dirección:", error);
+
+              // Guardamos coordenadas aunque
+              // falle la dirección.
+
+              direccion.value = "Dirección no disponible";
+            }
+
+            // ==========================================
+            // MOSTRAR ÉXITO
+            // ==========================================
+
+            mostrarEstado("Ubicación obtenida correctamente.", "success");
+
+            textoBoton.textContent = "Iniciando sesión...";
+
+            iconoBoton.className = "bi bi-arrow-right";
+
+            // ==========================================
+            // ENVIAR FORMULARIO
+            // ==========================================
+
+            formulario.submit();
+          } catch (error) {
+            console.error("Error de ubicación:", error);
+
+            mostrarEstado(error.message, "error");
+
+            textoBoton.textContent = "Iniciar sesión";
+
+            iconoBoton.className = "bi bi-arrow-right";
+
+            boton.disabled = false;
+          }
+        });
+      });
+    </script>
 
     <!-- =================================================
          OCULTAR ALERTAS

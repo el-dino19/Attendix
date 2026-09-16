@@ -40,6 +40,10 @@ def login():
 
     if request.method == "POST":
 
+        # ========================================
+        # DATOS DEL FORMULARIO
+        # ========================================
+
         correo = request.form.get(
             "correo",
             ""
@@ -50,11 +54,54 @@ def login():
             ""
         )
 
-        # Zona horaria detectada por el navegador
+        # ========================================
+        # ZONA HORARIA DEL NAVEGADOR
+        # ========================================
+
         zona_horaria = request.form.get(
             "zona_horaria",
             "UTC"
         ).strip()
+
+        # ========================================
+        # UBICACIÓN DEL NAVEGADOR
+        # ========================================
+
+        latitud = request.form.get(
+            "latitud"
+        )
+
+        longitud = request.form.get(
+            "longitud"
+        )
+
+        direccion = request.form.get(
+            "direccion",
+            ""
+        ).strip()
+
+        # ========================================
+        # CONVERTIR COORDENADAS
+        # ========================================
+
+        try:
+
+            latitud = (
+                float(latitud)
+                if latitud
+                else None
+            )
+
+            longitud = (
+                float(longitud)
+                if longitud
+                else None
+            )
+
+        except (ValueError, TypeError):
+
+            latitud = None
+            longitud = None
 
         # ========================================
         # VALIDAR CAMPOS
@@ -81,7 +128,8 @@ def login():
         )
 
         # ========================================
-        # USUARIO NO EXISTE / CONTRASEÑA INCORRECTA
+        # USUARIO NO EXISTE /
+        # CONTRASEÑA INCORRECTA
         # ========================================
 
         if usuario is None:
@@ -122,7 +170,9 @@ def login():
         session["correo"] = usuario.correo
         session["rol"] = usuario.rol
 
-        # Guardar zona horaria del navegador
+        # Guardar zona horaria para utilizarla
+        # también al registrar la salida.
+
         session["zona_horaria"] = zona_horaria
 
         # ========================================
@@ -133,7 +183,10 @@ def login():
 
             registrar_entrada(
                 usuario.id,
-                zona_horaria
+                zona_horaria,
+                latitud,
+                longitud,
+                direccion
             )
 
         # ========================================
@@ -159,6 +212,9 @@ def login():
     )
 
 
+#===========================
+# CERRAR SESION
+# ==========================
 
 @auth_bp.route("/logout")
 def logout():
