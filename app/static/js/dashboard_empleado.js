@@ -7,9 +7,14 @@
 // =========================================================
 
 window.ATTENDIX = {
-    iniciarHorasExtrasUrl: "/Attendix/horas-extras/iniciar",
-    finalizarHorasExtrasUrl: "/Attendix/horas-extras/finalizar",
-    estadoHorasExtrasUrl: "/Attendix/horas-extras/estado"
+    iniciarHorasExtrasUrl:
+        "{{ url_for('empleado.iniciar_horas_extras_ruta') }}",
+
+    finalizarHorasExtrasUrl:
+        "{{ url_for('empleado.finalizar_horas_extras_ruta') }}",
+
+    estadoHorasExtrasUrl:
+        "{{ url_for('empleado.estado_horas_extras') }}"
 };
 
 

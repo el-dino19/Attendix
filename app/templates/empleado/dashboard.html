@@ -1220,25 +1220,16 @@
 ========================================================= -->
 
 <script>
-    /*
-     * Zona horaria oficial de la aplicación.
-     */
-    window.ATTENDIX_TIMEZONE = "America/Bogota";
+window.ATTENDIX = {
+    iniciarHorasExtrasUrl:
+        "{{ url_for('empleado.iniciar_horas_extras_ruta') }}",
 
+    finalizarHorasExtrasUrl:
+        "{{ url_for('empleado.finalizar_horas_extras_ruta') }}",
 
-    /*
-     * URLs utilizadas por dashboard_empleado.js
-     *
-     * Si tus endpoints tienen otros nombres,
-     * cambia únicamente estas dos líneas.
-     */
-    window.horasExtrasUrls = {
-
-        iniciar: "{{ url_for('empleado.iniciar_horas_extras') }}",
-
-        finalizar: "{{ url_for('empleado.finalizar_horas_extras') }}"
-
-    };
+    estadoHorasExtrasUrl:
+        "{{ url_for('empleado.estado_horas_extras') }}"
+};
 </script>
 
 
