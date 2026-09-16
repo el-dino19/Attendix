@@ -65,10 +65,19 @@ def proteger_empleado():
 @empleado_bp.route("/dashboard")
 def dashboard():
 
+    usuario_id = session["usuario_id"]
+
+    # ==========================================
+    # OBTENER JORNADA ABIERTA
+    # ==========================================
+
     jornada = obtener_jornada_abierta(
-        session["usuario_id"]
+        usuario_id
     )
 
+    # ==========================================
+    # OBTENER DESCANSO ACTIVO
+    # ==========================================
 
     descanso_activo = None
 
@@ -78,11 +87,25 @@ def dashboard():
             jornada.id
         )
 
+    # ==========================================
+    # OBTENER DIRECCIÓN DE LA JORNADA
+    # ==========================================
+
+    direccion_corta = None
+
+    if jornada and jornada.direccion:
+
+        direccion_corta = jornada.direccion
+
+    # ==========================================
+    # MOSTRAR DASHBOARD
+    # ==========================================
 
     return render_template(
         "empleado/dashboard.html",
         jornada=jornada,
-        descanso_activo=descanso_activo
+        descanso_activo=descanso_activo,
+        direccion_corta=direccion_corta
     )
 
 
