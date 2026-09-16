@@ -21,8 +21,8 @@
 
     <!-- BOOTSTRAP ICONS -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
       rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
 
     <!-- CSS LOGIN -->
@@ -54,6 +54,7 @@
               Bienvenido a<br />
               <span>Attendix</span>
             </h2>
+
             <p>
               Tu asistencia, bajo control. Gestiona tus registros de asistencia
               de forma rápida, sencilla y segura.
@@ -70,6 +71,8 @@
              PANEL DERECHO
         ================================================== -->
         <div class="login-right">
+
+          <!-- HEADER -->
           <div class="login-header">
             <h1>Iniciar sesión</h1>
             <p>Ingresa tus datos para continuar</p>
@@ -94,6 +97,7 @@
                       login-alert-info
                     {% endif %}"
                   >
+                    <!-- ICONO -->
                     <div class="login-alert-icon">
                       {% if categoria == "success" %}
                         <i class="bi bi-check-circle-fill"></i>
@@ -106,6 +110,7 @@
                       {% endif %}
                     </div>
 
+                    <!-- MENSAJE -->
                     <div class="login-alert-content">
                       <strong>
                         {% if categoria == "success" %}
@@ -121,6 +126,7 @@
                       <span>{{ mensaje }}</span>
                     </div>
 
+                    <!-- CERRAR -->
                     <button
                       type="button"
                       class="login-alert-close"
@@ -136,7 +142,7 @@
           {% endwith %}
 
           <!-- =================================================
-               FORMULARIO
+               FORMULARIO LOGIN
           ================================================== -->
           <form
             method="POST"
@@ -156,6 +162,7 @@
                 <i class="bi bi-envelope"></i>
                 Correo electrónico
               </label>
+
               <div class="input-container">
                 <i class="bi bi-envelope input-icon"></i>
                 <input
@@ -176,6 +183,7 @@
                 <i class="bi bi-lock"></i>
                 Contraseña
               </label>
+
               <div class="input-container">
                 <i class="bi bi-lock input-icon"></i>
                 <input
@@ -187,6 +195,7 @@
                   autocomplete="current-password"
                   required
                 />
+
                 <button
                   type="button"
                   class="password-toggle"
@@ -198,21 +207,19 @@
               </div>
             </div>
 
-            <!-- MENSAJE DE UBICACIÓN -->
+            <!-- ESTADO DE UBICACIÓN -->
             <div
               id="estado-ubicacion"
-              style="
-                display: none;
-                margin-bottom: 15px;
-                padding: 10px 12px;
-                border-radius: 10px;
-                font-size: 13px;
-                text-align: center;
-              "
+              class="login-location-status"
+              style="display: none;"
             ></div>
 
-            <!-- BOTÓN -->
-            <button type="submit" class="btn login-button" id="loginButton">
+            <!-- BOTÓN LOGIN -->
+            <button
+              type="submit"
+              class="btn login-button"
+              id="loginButton"
+            >
               <span id="loginButtonText">Iniciar sesión</span>
               <i class="bi bi-arrow-right" id="loginButtonIcon"></i>
             </button>
@@ -225,6 +232,7 @@
             <div class="status-dot"></div>
             Sistema Disponible
           </div>
+
         </div>
 
       </div>
@@ -236,7 +244,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- =================================================
-         JAVASCRIPT DEL LOGIN
+         JAVASCRIPT LOGIN
     ================================================== -->
     <script
       src="{{ url_for('static', filename='js/login.js') }}"

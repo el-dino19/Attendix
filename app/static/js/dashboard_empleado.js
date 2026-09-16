@@ -1,343 +1,829 @@
 // ==========================================
 // DASHBOARD EMPLEADO
 // CONTADOR DE DESCANSOS
+// UBICACIÓN DEL USUARIO
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const contador = document.getElementById("contador");
+    // ==========================================================
+    // CONTADOR DE DESCANSOS
+    // ==========================================================
 
-    // No existe descanso activo
-    if (!contador) {
-        return;
-    }
-
-
-    // ==========================================
-    // ELEMENTOS
-    // ==========================================
-
-    const mensaje =
-        document.getElementById("mensaje-contador");
-
-    const formulario =
-        document.getElementById("form-finalizar-descanso");
-
-    const boton =
-        document.getElementById("btn-finalizar-descanso");
+    const contador =
+        document.getElementById("contador");
 
 
-    // ==========================================
-    // DATOS DEL DESCANSO
-    // ==========================================
+    // ==========================================================
+    // SI EXISTE UN DESCANSO ACTIVO
+    // ==========================================================
 
-    const tipoDescanso =
-        (contador.dataset.tipo || "").trim();
+    if (contador) {
 
-    const horaInicio =
-        (contador.dataset.inicio || "").trim();
+        const mensaje =
+            document.getElementById("mensaje-contador");
 
+        const formulario =
+            document.getElementById("form-finalizar-descanso");
 
-    console.log("Tipo de descanso:", tipoDescanso);
-    console.log("Hora de inicio:", horaInicio);
-
-
-    // ==========================================
-    // DURACIONES
-    // ==========================================
-
-    const duraciones = {
-
-        break_manana: 15 * 60,
-
-        lunch: 60 * 60,
-
-        break_tarde: 15 * 60
-
-    };
+        const boton =
+            document.getElementById("btn-finalizar-descanso");
 
 
-    const duracionTotal =
-        duraciones[tipoDescanso];
+        // ======================================================
+        // DATOS DEL DESCANSO
+        // ======================================================
+
+        const tipoDescanso =
+            (contador.dataset.tipo || "").trim();
+
+        const horaInicio =
+            (contador.dataset.inicio || "").trim();
 
 
-    // ==========================================
-    // VALIDAR TIPO
-    // ==========================================
-
-    if (!duracionTotal) {
-
-        console.error(
-            "Tipo de descanso no válido:",
+        console.log(
+            "Tipo de descanso:",
             tipoDescanso
         );
 
-        contador.textContent = "00:00";
-
-        if (mensaje) {
-            mensaje.textContent =
-                "Tipo de descanso no válido.";
-        }
-
-        return;
-    }
-
-
-    // ==========================================
-    // CONVERTIR HORA A SEGUNDOS
-    // ==========================================
-
-    function convertirHoraASegundos(hora) {
-
-        const partes = hora.split(":");
-
-
-        if (partes.length !== 3) {
-
-            console.error(
-                "Formato de hora incorrecto:",
-                hora
-            );
-
-            return null;
-        }
-
-
-        const horas =
-            Number(partes[0]);
-
-        const minutos =
-            Number(partes[1]);
-
-        const segundos =
-            Number(partes[2]);
-
-
-        if (
-            Number.isNaN(horas) ||
-            Number.isNaN(minutos) ||
-            Number.isNaN(segundos)
-        ) {
-
-            return null;
-        }
-
-
-        return (
-            horas * 3600 +
-            minutos * 60 +
-            segundos
-        );
-    }
-
-
-    // ==========================================
-    // HORA DE INICIO
-    // ==========================================
-
-    const inicioSegundos =
-        convertirHoraASegundos(
+        console.log(
+            "Hora de inicio:",
             horaInicio
         );
 
 
-    if (inicioSegundos === null) {
+        // ======================================================
+        // DURACIONES
+        // ======================================================
 
-        contador.textContent = "00:00";
+        const duraciones = {
 
-        if (mensaje) {
-            mensaje.textContent =
-                "No se pudo calcular el tiempo.";
-        }
+            break_manana: 15 * 60,
 
-        return;
-    }
+            lunch: 60 * 60,
 
+            break_tarde: 15 * 60
 
-    // ==========================================
-    // OBTENER HORA ACTUAL
-    // ==========================================
-
-    function obtenerHoraActualSegundos() {
-
-        const ahora = new Date();
-
-        return (
-            ahora.getHours() * 3600 +
-            ahora.getMinutes() * 60 +
-            ahora.getSeconds()
-        );
-    }
+        };
 
 
-    // ==========================================
-    // TIEMPO TRANSCURRIDO
-    // ==========================================
-
-    function obtenerTiempoTranscurrido() {
-
-        const actual =
-            obtenerHoraActualSegundos();
+        const duracionTotal =
+            duraciones[tipoDescanso];
 
 
-        let diferencia =
-            actual - inicioSegundos;
+        // ======================================================
+        // VALIDAR TIPO DE DESCANSO
+        // ======================================================
 
+        if (!duracionTotal) {
 
-        /*
-         * Si cruza medianoche,
-         * ajustamos las 24 horas.
-         */
-
-        if (diferencia < 0) {
-
-            diferencia +=
-                24 * 60 * 60;
-        }
-
-
-        return diferencia;
-    }
-
-
-    // ==========================================
-    // FORMATEAR
-    // ==========================================
-
-    function formatearTiempo(segundos) {
-
-        segundos =
-            Math.max(
-                0,
-                Math.floor(segundos)
+            console.error(
+                "Tipo de descanso no válido:",
+                tipoDescanso
             );
 
-
-        const minutos =
-            Math.floor(
-                segundos / 60
-            );
-
-
-        const segundosRestantes =
-            segundos % 60;
-
-
-        return (
-            String(minutos).padStart(2, "0")
-            +
-            ":"
-            +
-            String(segundosRestantes).padStart(2, "0")
-        );
-    }
-
-
-    // ==========================================
-    // ACTUALIZAR CONTADOR
-    // ==========================================
-
-    function actualizarContador() {
-
-        const transcurrido =
-            obtenerTiempoTranscurrido();
-
-
-        const restante =
-            duracionTotal -
-            transcurrido;
-
-
-        // ======================================
-        // TIEMPO TERMINADO
-        // ======================================
-
-        if (restante <= 0) {
-
-            contador.textContent =
-                "00:00";
-
+            contador.textContent = "00:00";
 
             if (mensaje) {
 
                 mensaje.textContent =
-                    "El tiempo del descanso ha terminado. Pulsa finalizar para registrar la hora.";
+                    "Tipo de descanso no válido.";
+
+            }
+
+        } else {
+
+            // ==================================================
+            // CONVERTIR HORA A SEGUNDOS
+            // ==================================================
+
+            function convertirHoraASegundos(hora) {
+
+                const partes =
+                    hora.split(":");
+
+
+                if (partes.length !== 3) {
+
+                    console.error(
+                        "Formato de hora incorrecto:",
+                        hora
+                    );
+
+                    return null;
+                }
+
+
+                const horas =
+                    Number(partes[0]);
+
+                const minutos =
+                    Number(partes[1]);
+
+                const segundos =
+                    Number(partes[2]);
+
+
+                if (
+                    Number.isNaN(horas) ||
+                    Number.isNaN(minutos) ||
+                    Number.isNaN(segundos)
+                ) {
+
+                    return null;
+                }
+
+
+                return (
+                    horas * 3600 +
+                    minutos * 60 +
+                    segundos
+                );
             }
 
 
-            /*
-             * IMPORTANTE:
-             *
-             * NO enviamos el formulario.
-             *
-             * El descanso solamente termina
-             * cuando el empleado pulsa el botón.
-             */
+            // ==================================================
+            // HORA DE INICIO
+            // ==================================================
 
-            return;
+            const inicioSegundos =
+                convertirHoraASegundos(
+                    horaInicio
+                );
+
+
+            if (inicioSegundos === null) {
+
+                contador.textContent =
+                    "00:00";
+
+
+                if (mensaje) {
+
+                    mensaje.textContent =
+                        "No se pudo calcular el tiempo.";
+
+                }
+
+            } else {
+
+                // ==================================================
+                // OBTENER HORA ACTUAL
+                // ==================================================
+
+                function obtenerHoraActualSegundos() {
+
+                    const ahora =
+                        new Date();
+
+
+                    return (
+                        ahora.getHours() * 3600 +
+                        ahora.getMinutes() * 60 +
+                        ahora.getSeconds()
+                    );
+                }
+
+
+                // ==================================================
+                // TIEMPO TRANSCURRIDO
+                // ==================================================
+
+                function obtenerTiempoTranscurrido() {
+
+                    const actual =
+                        obtenerHoraActualSegundos();
+
+
+                    let diferencia =
+                        actual -
+                        inicioSegundos;
+
+
+                    /*
+                     * Si cruza medianoche,
+                     * ajustamos las 24 horas.
+                     */
+
+                    if (diferencia < 0) {
+
+                        diferencia +=
+                            24 * 60 * 60;
+
+                    }
+
+
+                    return diferencia;
+                }
+
+
+                // ==================================================
+                // FORMATEAR TIEMPO
+                // ==================================================
+
+                function formatearTiempo(
+                    segundos
+                ) {
+
+                    segundos =
+                        Math.max(
+                            0,
+                            Math.floor(
+                                segundos
+                            )
+                        );
+
+
+                    const minutos =
+                        Math.floor(
+                            segundos / 60
+                        );
+
+
+                    const segundosRestantes =
+                        segundos % 60;
+
+
+                    return (
+                        String(
+                            minutos
+                        ).padStart(2, "0")
+                        +
+                        ":"
+                        +
+                        String(
+                            segundosRestantes
+                        ).padStart(2, "0")
+                    );
+                }
+
+
+                // ==================================================
+                // ACTUALIZAR CONTADOR
+                // ==================================================
+
+                function actualizarContador() {
+
+                    const transcurrido =
+                        obtenerTiempoTranscurrido();
+
+
+                    const restante =
+                        duracionTotal -
+                        transcurrido;
+
+
+                    // ==========================================
+                    // TIEMPO TERMINADO
+                    // ==========================================
+
+                    if (restante <= 0) {
+
+                        contador.textContent =
+                            "00:00";
+
+
+                        if (mensaje) {
+
+                            mensaje.textContent =
+                                "El tiempo del descanso ha terminado. Pulsa finalizar para registrar la hora.";
+
+                        }
+
+
+                        /*
+                         * NO finalizamos automáticamente.
+                         *
+                         * El empleado debe pulsar
+                         * el botón de finalizar.
+                         */
+
+                        return;
+                    }
+
+
+                    // ==========================================
+                    // MOSTRAR TIEMPO
+                    // ==========================================
+
+                    contador.textContent =
+                        formatearTiempo(
+                            restante
+                        );
+
+
+                    if (mensaje) {
+
+                        mensaje.textContent =
+                            "Descanso en progreso";
+
+                    }
+                }
+
+
+                // ==================================================
+                // PRIMERA EJECUCIÓN
+                // ==================================================
+
+                actualizarContador();
+
+
+                // ==================================================
+                // ACTUALIZAR CADA SEGUNDO
+                // ==================================================
+
+                const intervalo =
+                    setInterval(
+                        actualizarContador,
+                        1000
+                    );
+
+
+                // ==================================================
+                // FINALIZAR MANUALMENTE
+                // ==================================================
+
+                if (
+                    formulario &&
+                    boton
+                ) {
+
+                    formulario.addEventListener(
+                        "submit",
+                        function () {
+
+                            boton.disabled =
+                                true;
+
+
+                            boton.textContent =
+                                "FINALIZANDO...";
+
+
+                            clearInterval(
+                                intervalo
+                            );
+                        }
+                    );
+                }
+            }
+        }
+    }
+
+
+    // ==========================================================
+    // UBICACIÓN DEL USUARIO
+    // ==========================================================
+
+    const ubicacionTexto =
+        document.getElementById(
+            "ubicacion-texto"
+        );
+
+
+    // Si el elemento no existe,
+    // no hacemos nada.
+
+    if (!ubicacionTexto) {
+        return;
+    }
+
+
+    // ==========================================================
+    // MOSTRAR ESTADO
+    // ==========================================================
+
+    function mostrarEstadoUbicacion(
+        mensaje
+    ) {
+
+        ubicacionTexto.textContent =
+            mensaje;
+    }
+
+
+    // ==========================================================
+    // CREAR DIRECCIÓN CORTA
+    // ==========================================================
+
+    function construirDireccionCorta(
+        datos
+    ) {
+
+        const address =
+            datos.address || {};
+
+
+        const partes = [];
+
+
+        // ======================================================
+        // NOMBRE DEL LUGAR
+        // ======================================================
+
+        const lugar =
+            datos.name ||
+            address.amenity ||
+            address.shop ||
+            address.tourism ||
+            address.hotel ||
+            address.building;
+
+
+        if (lugar) {
+
+            partes.push(lugar);
+
         }
 
 
-        // ======================================
-        // MOSTRAR TIEMPO
-        // ======================================
+        // ======================================================
+        // CALLE + NÚMERO
+        // ======================================================
 
-        contador.textContent =
-            formatearTiempo(
-                restante
+        if (address.road) {
+
+            let calle =
+                address.road;
+
+
+            if (address.house_number) {
+
+                calle +=
+                    ` ${address.house_number}`;
+
+            }
+
+
+            partes.push(
+                calle
+            );
+        }
+
+
+        // ======================================================
+        // BARRIO / ZONA
+        // ======================================================
+
+        const zona =
+            address.neighbourhood ||
+            address.suburb ||
+            address.quarter ||
+            address.city_district;
+
+
+        if (zona) {
+
+            partes.push(
+                zona
+            );
+        }
+
+
+        // ======================================================
+        // CIUDAD
+        // ======================================================
+
+        const ciudad =
+            address.city ||
+            address.town ||
+            address.village ||
+            address.municipality;
+
+
+        if (ciudad) {
+
+            partes.push(
+                ciudad
+            );
+        }
+
+
+        // ======================================================
+        // ESTADO / PROVINCIA / DEPARTAMENTO
+        // ======================================================
+
+        const estado =
+            address.state ||
+            address.province ||
+            address.region;
+
+
+        if (estado) {
+
+            partes.push(
+                estado
+            );
+        }
+
+
+        // ======================================================
+        // PAÍS
+        // ======================================================
+
+        if (address.country) {
+
+            partes.push(
+                address.country
+            );
+        }
+
+
+        // ======================================================
+        // ELIMINAR DUPLICADOS
+        // ======================================================
+
+        const resultado =
+            [...new Set(partes)];
+
+
+        return resultado.join(
+            ", "
+        );
+    }
+
+
+    // ==========================================================
+    // OBTENER UBICACIÓN
+    // ==========================================================
+
+    function obtenerUbicacion() {
+
+        return new Promise(
+            function (
+                resolve,
+                reject
+            ) {
+
+                if (
+                    !navigator.geolocation
+                ) {
+
+                    reject(
+                        new Error(
+                            "Este navegador no soporta la geolocalización."
+                        )
+                    );
+
+                    return;
+                }
+
+
+                navigator.geolocation.getCurrentPosition(
+
+                    // ==================================================
+                    // ÉXITO
+                    // ==================================================
+
+                    function (
+                        position
+                    ) {
+
+                        resolve({
+
+                            latitud:
+                                position.coords.latitude,
+
+                            longitud:
+                                position.coords.longitude
+
+                        });
+                    },
+
+
+                    // ==================================================
+                    // ERROR
+                    // ==================================================
+
+                    function (
+                        error
+                    ) {
+
+                        switch (
+                            error.code
+                        ) {
+
+                            case error.PERMISSION_DENIED:
+
+                                reject(
+                                    new Error(
+                                        "Permiso de ubicación denegado."
+                                    )
+                                );
+
+                                break;
+
+
+                            case error.POSITION_UNAVAILABLE:
+
+                                reject(
+                                    new Error(
+                                        "La ubicación no está disponible."
+                                    )
+                                );
+
+                                break;
+
+
+                            case error.TIMEOUT:
+
+                                reject(
+                                    new Error(
+                                        "Se agotó el tiempo para obtener la ubicación."
+                                    )
+                                );
+
+                                break;
+
+
+                            default:
+
+                                reject(
+                                    new Error(
+                                        "No se pudo obtener la ubicación."
+                                    )
+                                );
+                        }
+                    },
+
+
+                    // ==================================================
+                    // OPCIONES
+                    // ==================================================
+
+                    {
+
+                        enableHighAccuracy:
+                            true,
+
+                        timeout:
+                            15000,
+
+                        maximumAge:
+                            300000
+
+                    }
+                );
+            }
+        );
+    }
+
+
+    // ==========================================================
+    // OBTENER DIRECCIÓN
+    // ==========================================================
+
+    async function obtenerDireccion(
+        latitud,
+        longitud
+    ) {
+
+        const url =
+            "https://nominatim.openstreetmap.org/reverse" +
+            "?format=jsonv2" +
+            "&lat=" +
+            encodeURIComponent(
+                latitud
+            ) +
+            "&lon=" +
+            encodeURIComponent(
+                longitud
+            ) +
+            "&zoom=18" +
+            "&addressdetails=1";
+
+
+        const respuesta =
+            await fetch(
+                url,
+                {
+
+                    headers: {
+
+                        Accept:
+                            "application/json"
+
+                    }
+
+                }
             );
 
 
-        if (mensaje) {
+        if (!respuesta.ok) {
 
-            mensaje.textContent =
-                "Descanso en progreso";
+            throw new Error(
+                "No se pudo obtener la dirección."
+            );
+        }
+
+
+        return await respuesta.json();
+    }
+
+
+    // ==========================================================
+    // CARGAR UBICACIÓN
+    // ==========================================================
+
+    async function cargarUbicacion() {
+
+        mostrarEstadoUbicacion(
+            "Obteniendo ubicación..."
+        );
+
+
+        try {
+
+            // ==================================================
+            // COORDENADAS
+            // ==================================================
+
+            const ubicacion =
+                await obtenerUbicacion();
+
+
+            const latitud =
+                ubicacion.latitud;
+
+
+            const longitud =
+                ubicacion.longitud;
+
+
+            console.log(
+                "Latitud:",
+                latitud
+            );
+
+
+            console.log(
+                "Longitud:",
+                longitud
+            );
+
+
+            // ==================================================
+            // DIRECCIÓN
+            // ==================================================
+
+            const datos =
+                await obtenerDireccion(
+                    latitud,
+                    longitud
+                );
+
+
+            console.log(
+                "Datos de ubicación:",
+                datos
+            );
+
+
+            // ==================================================
+            // DIRECCIÓN CORTA
+            // ==================================================
+
+            const direccionCorta =
+                construirDireccionCorta(
+                    datos
+                );
+
+
+            // ==================================================
+            // MOSTRAR DIRECCIÓN
+            // ==================================================
+
+            if (direccionCorta) {
+
+                ubicacionTexto.textContent =
+                    direccionCorta;
+
+            } else {
+
+                ubicacionTexto.textContent =
+                    `${latitud.toFixed(5)}, ${longitud.toFixed(5)}`;
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Error obteniendo ubicación:",
+                error
+            );
+
+
+            mostrarEstadoUbicacion(
+                "Ubicación no disponible"
+            );
         }
     }
 
 
-    // ==========================================
-    // PRIMERA EJECUCIÓN
-    // ==========================================
+    // ==========================================================
+    // INICIAR UBICACIÓN
+    // ==========================================================
 
-    actualizarContador();
-
-
-    // ==========================================
-    // ACTUALIZAR CADA SEGUNDO
-    // ==========================================
-
-    const intervalo =
-        setInterval(
-            actualizarContador,
-            1000
-        );
-
-
-    // ==========================================
-    // FINALIZAR MANUALMENTE
-    // ==========================================
-
-    if (formulario && boton) {
-
-        formulario.addEventListener(
-            "submit",
-            function () {
-
-                /*
-                 * El botón es quien realmente
-                 * registra el fin del descanso.
-                 */
-
-                boton.disabled = true;
-
-                boton.textContent =
-                    "FINALIZANDO...";
-
-
-                clearInterval(intervalo);
-            }
-        );
-    }
+    cargarUbicacion();
 
 });
