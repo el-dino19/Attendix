@@ -1947,55 +1947,60 @@ main .reloj-card {
 
 .header-location {
     display: flex;
-    align-items: flex-start;
-    gap: 9px;
+    align-items: center;
 
-    width: fit-content;
-    max-width: 380px;
-    min-width: 220px;
+    min-width: 260px;
+    max-width: 520px;
 
-    padding: 7px 12px;
+    padding: 9px 14px;
 
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    background: #172033;
 
-    box-sizing: border-box;
+    border: 1px solid #2d3a50;
 
-    flex-shrink: 1;
+    border-radius: 14px;
+
+    color: #ffffff;
+
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+
+    overflow: hidden;
+
+    transition:
+        max-width 0.25s ease,
+        width 0.25s ease,
+        background 0.25s ease;
 }
 
 
-/* =====================================================
-   ICONO DE UBICACIÓN
-===================================================== */
+/* ICONO */
 
 .location-icon {
-    width: 32px;
-    height: 32px;
+    flex: 0 0 38px;
 
-    min-width: 32px;
+    width: 38px;
+    height: 38px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    border-radius: 9px;
+    margin-right: 10px;
 
-    background: #dbeafe;
-    color: #2563eb;
+    background: rgba(59, 130, 246, 0.15);
 
-    font-size: 15px;
+    color: #60a5fa;
+
+    border-radius: 10px;
+
+    font-size: 18px;
 }
 
 
-/* =====================================================
-   CONTENEDOR DEL TEXTO
-===================================================== */
+/* INFORMACIÓN */
 
 .location-info {
     min-width: 0;
-    max-width: 100%;
 
     display: flex;
     flex-direction: column;
@@ -2004,122 +2009,101 @@ main .reloj-card {
 }
 
 
-/* =====================================================
-   TITULO
-===================================================== */
+/* TÍTULO */
 
 .location-info span {
     display: block;
 
     margin-bottom: 2px;
 
+    color: #94a3b8;
+
     font-size: 10px;
-    font-weight: 700;
 
-    line-height: 1.2;
-
-    color: #64748b;
+    font-weight: 600;
 
     text-transform: uppercase;
-    letter-spacing: 0.4px;
+
+    letter-spacing: 0.06em;
 }
 
 
-/* =====================================================
-   DIRECCIÓN
-===================================================== */
+/* DIRECCIÓN */
 
 .location-info strong {
     display: block;
 
-    max-width: 100%;
+    color: #f8fafc;
 
-    font-size: 12px;
+    font-size: 13px;
+
     font-weight: 600;
 
-    line-height: 1.4;
-
-    color: #334155;
+    line-height: 1.35;
 
     white-space: normal;
 
     overflow-wrap: anywhere;
+
     word-break: normal;
 }
 
 
-/* =====================================================
-   UBICACIÓN NO DISPONIBLE
-===================================================== */
+/* HOVER */
 
-.location-info strong:empty {
-    display: none;
+.header-location:hover {
+    background: #1e293b;
+
+    border-color: #3b4b63;
 }
 
 
 /* =====================================================
-   TABLETS
+   DIRECCIÓN LARGA
 ===================================================== */
 
-@media (max-width: 1000px) {
+@media (min-width: 992px) {
 
     .header-location {
-        max-width: 320px;
-        min-width: 190px;
+        max-width: 480px;
     }
 
 }
 
 
 /* =====================================================
-   MÓVILES
+   TABLET
+===================================================== */
+
+@media (max-width: 991px) {
+
+    .header-location {
+        min-width: 220px;
+
+        max-width: 360px;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL
 ===================================================== */
 
 @media (max-width: 768px) {
 
     .header-location {
         width: 100%;
+
         max-width: 100%;
+
         min-width: 0;
 
-        padding: 8px 10px;
+        margin-top: 10px;
     }
 
     .location-info strong {
-        font-size: 11px;
-    }
-
-}
-
-
-/* =====================================================
-   MÓVILES PEQUEÑOS
-===================================================== */
-
-@media (max-width: 480px) {
-
-    .header-location {
-        gap: 8px;
-
-        border-radius: 10px;
-    }
-
-    .location-icon {
-        width: 30px;
-        height: 30px;
-
-        min-width: 30px;
-
-        font-size: 14px;
-    }
-
-    .location-info span {
-        font-size: 9px;
-    }
-
-    .location-info strong {
-        font-size: 10px;
-        line-height: 1.35;
+        font-size: 12px;
     }
 
 }

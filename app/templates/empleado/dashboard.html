@@ -69,21 +69,17 @@
       ================================================== -->
 
       <div class="header-user">
-        <!-- =================================================
-             UBICACIÓN DE ENTRADA
-        ================================================== -->
-
         <div class="header-location" id="ubicacion-container">
           <div class="location-icon">
             <i class="bi bi-geo-alt-fill"></i>
           </div>
 
           <div class="location-info">
-            <span> Ubicación de entrada </span>
+            <span>Ubicación de entrada</span>
 
             <strong id="ubicacion-texto">
               {% if direccion_corta %} {{ direccion_corta }} {% else %}
-              Ubicación no disponible {% endif %}
+              Obteniendo ubicación... {% endif %}
             </strong>
           </div>
         </div>
