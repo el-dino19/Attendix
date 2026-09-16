@@ -223,25 +223,36 @@ body {
 
 .btn-header,
 .btn-logout {
+    width: 42px;
+    height: 42px;
 
     display: flex;
-
     align-items: center;
-
-    gap: 7px;
-
-    padding: 9px 13px;
+    justify-content: center;
 
     border-radius: 9px;
 
     text-decoration: none;
 
-    font-size: 13px;
+    color: var(--danger);
 
-    font-weight: 600;
+    border: 1px solid rgba(255, 92, 112, .25);
+
+    background: rgba(255, 92, 112, .06);
+
+    font-size: 18px;
 
     transition: all .2s ease;
 }
+
+.btn-logout:hover {
+    color: #ffffff;
+
+    background: var(--danger);
+
+    transform: translateY(-1px);
+}
+
 
 
 .btn-header {
