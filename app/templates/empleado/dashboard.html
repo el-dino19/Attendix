@@ -68,10 +68,6 @@
       <!-- USUARIO -->
 
       <div class="header-user">
-        <!-- =====================================================
-     UBICACIÓN DEL USUARIO
-====================================================== -->
-
         <div class="header-location" id="ubicacion-container">
           <div class="location-icon">
             <i class="bi bi-geo-alt-fill"></i>
@@ -80,16 +76,19 @@
           <div class="location-info">
             <span>Ubicación de entrada</span>
 
-            {% if jornada and jornada.direccion %}
-
-            <strong id="ubicacion-texto"> {{ jornada.direccion }} </strong>
-
-            {% else %}
-
-            <strong id="ubicacion-texto"> Ubicación no disponible </strong>
-
-            {% endif %}
+            <strong id="ubicacion-texto">
+              {% if direccion_corta %} {{ direccion_corta }} {% else %}
+              Ubicación no disponible {% endif %}
+            </strong>
           </div>
+        </div>
+
+        <div class="user-avatar">{{ session["nombre"][0]|upper }}</div>
+
+        <div class="user-info">
+          <strong> {{ session["nombre"] }} </strong>
+
+          <small> Colaborador </small>
         </div>
 
         <div class="user-avatar">{{ session["nombre"][0]|upper }}</div>

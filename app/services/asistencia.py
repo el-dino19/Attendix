@@ -16,6 +16,43 @@ def obtener_hora_actual(zona_horaria="UTC"):
 
     return ahora.time()
 
+def formatear_direccion_corta(direccion):
+    """
+    Genera una dirección corta para mostrar en el dashboard.
+
+    No depende de un país o ciudad específica.
+    La dirección original permanece intacta en la base de datos.
+    """
+
+    if not direccion:
+        return "Ubicación no disponible"
+
+    partes = [
+        parte.strip()
+        for parte in direccion.split(",")
+        if parte.strip()
+    ]
+
+    # Elimina duplicados manteniendo el orden
+    resultado = []
+
+    for parte in partes:
+
+        if parte not in resultado:
+            resultado.append(parte)
+
+    # Tomamos solamente las primeras partes relevantes.
+    #
+    # Como la estructura de Nominatim puede variar según el país,
+    # evitamos eliminar nombres específicos como "Barranquilla",
+    # "Riomar", etc.
+
+    if len(resultado) > 6:
+        resultado = resultado[:6]
+
+    return ", ".join(resultado)
+
+
 
 def obtener_fecha_actual(zona_horaria="UTC"):
 

@@ -1942,79 +1942,184 @@ main .reloj-card {
 }
 
 /* =====================================================
-   UBICACIÓN EN HEADER
+   UBICACIÓN DEL HEADER
 ===================================================== */
 
 .header-location {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
+    gap: 9px;
 
-    max-width: 420px;
-    min-width: 180px;
+    width: fit-content;
+    max-width: 380px;
+    min-width: 220px;
 
-    padding: 8px 12px;
-
-    border-radius: 12px;
+    padding: 7px 12px;
 
     background: #f8fafc;
     border: 1px solid #e2e8f0;
+    border-radius: 12px;
 
     box-sizing: border-box;
+
+    flex-shrink: 1;
 }
 
-.location-icon {
-    width: 34px;
-    height: 34px;
 
-    min-width: 34px;
+/* =====================================================
+   ICONO DE UBICACIÓN
+===================================================== */
+
+.location-icon {
+    width: 32px;
+    height: 32px;
+
+    min-width: 32px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    border-radius: 10px;
+    border-radius: 9px;
 
     background: #dbeafe;
     color: #2563eb;
+
+    font-size: 15px;
 }
+
+
+/* =====================================================
+   CONTENEDOR DEL TEXTO
+===================================================== */
 
 .location-info {
     min-width: 0;
-    flex: 1;
+    max-width: 100%;
 
     display: flex;
     flex-direction: column;
+
+    overflow: hidden;
 }
 
+
+/* =====================================================
+   TITULO
+===================================================== */
+
 .location-info span {
-    font-size: 11px;
-    font-weight: 600;
+    display: block;
+
+    margin-bottom: 2px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    line-height: 1.2;
 
     color: #64748b;
 
-    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
 }
 
+
+/* =====================================================
+   DIRECCIÓN
+===================================================== */
+
 .location-info strong {
+    display: block;
+
+    max-width: 100%;
+
     font-size: 12px;
     font-weight: 600;
 
-    color: #1e293b;
-
     line-height: 1.4;
+
+    color: #334155;
 
     white-space: normal;
 
     overflow-wrap: anywhere;
-    word-break: break-word;
+    word-break: normal;
 }
+
+
+/* =====================================================
+   UBICACIÓN NO DISPONIBLE
+===================================================== */
+
+.location-info strong:empty {
+    display: none;
+}
+
+
+/* =====================================================
+   TABLETS
+===================================================== */
+
+@media (max-width: 1000px) {
+
+    .header-location {
+        max-width: 320px;
+        min-width: 190px;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVILES
+===================================================== */
 
 @media (max-width: 768px) {
 
     .header-location {
-        max-width: 100%;
         width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        padding: 8px 10px;
+    }
+
+    .location-info strong {
+        font-size: 11px;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVILES PEQUEÑOS
+===================================================== */
+
+@media (max-width: 480px) {
+
+    .header-location {
+        gap: 8px;
+
+        border-radius: 10px;
+    }
+
+    .location-icon {
+        width: 30px;
+        height: 30px;
+
+        min-width: 30px;
+
+        font-size: 14px;
+    }
+
+    .location-info span {
+        font-size: 9px;
+    }
+
+    .location-info strong {
+        font-size: 10px;
+        line-height: 1.35;
     }
 
 }
