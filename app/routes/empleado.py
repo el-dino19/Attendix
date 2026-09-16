@@ -8,6 +8,8 @@ from flask import (
     abort
 )
 
+
+
 from app.services.horas_extras import (
     obtener_hora_extra_abierta,
     iniciar_hora_extra,
@@ -253,21 +255,23 @@ def historial():
 
 
 # =========================================================
-# INICIAR HORAS EXTRAS
+# INICIAR HORA EXTRA
 # =========================================================
 
 @empleado_bp.route(
-    "/horas-extra/iniciar",
+    "/hora-extra/iniciar",
     methods=["POST"]
 )
-def iniciar_horas_extra():
+def iniciar_hora_extra_ruta():
 
-    exitoso, mensaje, hora_extra = iniciar_hora_extra(
-        session["usuario_id"],
+    usuario_id = session["usuario_id"]
+
+    hora_extra, mensaje = iniciar_hora_extra(
+        usuario_id,
         session.get("zona_horaria", "UTC")
     )
 
-    if exitoso:
+    if hora_extra:
 
         flash(
             mensaje,
@@ -280,6 +284,7 @@ def iniciar_horas_extra():
             mensaje,
             "error"
         )
+
 
     return redirect(
         url_for("empleado.dashboard")
@@ -287,21 +292,23 @@ def iniciar_horas_extra():
 
 
 # =========================================================
-# FINALIZAR HORAS EXTRAS
+# FINALIZAR HORA EXTRA
 # =========================================================
 
 @empleado_bp.route(
-    "/horas-extra/finalizar",
+    "/hora-extra/finalizar",
     methods=["POST"]
 )
-def finalizar_horas_extra():
+def finalizar_hora_extra_ruta():
 
-    exitoso, mensaje, hora_extra = finalizar_hora_extra(
-        session["usuario_id"],
+    usuario_id = session["usuario_id"]
+
+    hora_extra, mensaje = finalizar_hora_extra(
+        usuario_id,
         session.get("zona_horaria", "UTC")
     )
 
-    if exitoso:
+    if hora_extra:
 
         flash(
             mensaje,
@@ -314,6 +321,7 @@ def finalizar_horas_extra():
             mensaje,
             "error"
         )
+
 
     return redirect(
         url_for("empleado.dashboard")

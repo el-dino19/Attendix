@@ -1,11 +1,13 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from app import db
-
-from app.models.jornada import Jornada
+from app.extensions import db
 from app.models.hora_extra import HoraExtra
 
+
+# =========================================================
+# HORA ACTUAL
+# =========================================================
 
 def obtener_hora_actual(zona_horaria="UTC"):
 
@@ -17,38 +19,25 @@ def obtener_hora_actual(zona_horaria="UTC"):
     return datetime.now(zona).time()
 
 
-def obtener_fecha_actual(zona_horaria="UTC"):
+# =========================================================
+# OBTENER HORA EXTRA ABIERTA
+# =========================================================
 
-    try:
-        zona = ZoneInfo(zona_horaria)
-    except Exception:
-        zona = ZoneInfo("UTC")
-
-    return datetime.now(zona).date()
-
-
-def obtener_hora_extra_activa(usuario_id):
+def obtener_hora_extra_abierta(usuario_id):
 
     hora_extra = HoraExtra.query.filter(
         HoraExtra.usuario_id == usuario_id,
-        HoraExtra.fin.is_(None)
+        HoraExtra.salida.is_(None)
     ).order_by(
-        HoraExtra.inicio.desc()
+        HoraExtra.entrada.desc()
     ).first()
 
     return hora_extra
 
 
-def obtener_ultima_jornada(usuario_id):
-
-    return Jornada.query.filter(
-        Jornada.usuario_id == usuario_id,
-        Jornada.salida.is_not(None)
-    ).order_by(
-        Jornada.fecha.desc(),
-        Jornada.salida.desc()
-    ).first()
-
+# =========================================================
+# INICIAR HORA EXTRA
+# =========================================================
 
 def iniciar_hora_extra(
     usuario_id,
@@ -58,125 +47,67 @@ def iniciar_hora_extra(
     direccion=None
 ):
 
-    # ==========================================
-    # VERIFICAR QUE NO TENGA HORAS EXTRAS ACTIVAS
-    # ==========================================
+    # Verificar que no tenga una hora extra abierta
 
-    hora_extra_activa = obtener_hora_extra_activa(
+    hora_extra_abierta = obtener_hora_extra_abierta(
         usuario_id
     )
 
-    if hora_extra_activa:
-
-        return (
-            False,
-            "Ya tienes unas horas extras en curso.",
-            hora_extra_activa
-        )
+    if hora_extra_abierta:
+        return None, "Ya tienes una hora extra activa."
 
 
-    # ==========================================
-    # VERIFICAR JORNADA ABIERTA
-    # ==========================================
-
-    jornada_abierta = Jornada.query.filter(
-        Jornada.usuario_id == usuario_id,
-        Jornada.salida.is_(None)
-    ).first()
-
-    if jornada_abierta:
-
-        return (
-            False,
-            "Debes finalizar tu jornada antes de iniciar horas extras.",
-            None
-        )
+    try:
+        zona = ZoneInfo(zona_horaria)
+    except Exception:
+        zona = ZoneInfo("UTC")
 
 
-    # ==========================================
-    # BUSCAR LA ÚLTIMA JORNADA FINALIZADA
-    # ==========================================
+    ahora = datetime.now(zona)
 
-    jornada = obtener_ultima_jornada(
-        usuario_id
-    )
-
-    if jornada is None:
-
-        return (
-            False,
-            "No existe una jornada finalizada para registrar horas extras.",
-            None
-        )
-
-
-    # ==========================================
-    # HORA Y FECHA ACTUAL
-    # ==========================================
-
-    fecha_actual = obtener_fecha_actual(
-        zona_horaria
-    )
-
-    hora_actual = obtener_hora_actual(
-        zona_horaria
-    )
-
-
-    # ==========================================
-    # CREAR HORAS EXTRAS
-    # ==========================================
 
     hora_extra = HoraExtra(
         usuario_id=usuario_id,
-        jornada_id=jornada.id,
-        fecha=fecha_actual,
-        inicio=hora_actual,
-        fin=None,
+        fecha=ahora.date(),
+        entrada=ahora.time(),
         latitud=latitud,
         longitud=longitud,
         direccion=direccion
     )
 
-    db.session.add(hora_extra)
 
+    db.session.add(hora_extra)
     db.session.commit()
 
 
-    return (
-        True,
-        "Horas extras iniciadas correctamente.",
-        hora_extra
-    )
+    return hora_extra, "Hora extra iniciada correctamente."
 
+
+# =========================================================
+# FINALIZAR HORA EXTRA
+# =========================================================
 
 def finalizar_hora_extra(
     usuario_id,
     zona_horaria="UTC"
 ):
 
-    hora_extra = obtener_hora_extra_activa(
+    hora_extra = obtener_hora_extra_abierta(
         usuario_id
     )
 
+
     if hora_extra is None:
 
-        return (
-            False,
-            "No tienes horas extras activas.",
-            None
-        )
+        return None, "No tienes una hora extra activa."
 
 
-    hora_extra.fin = obtener_hora_actual(
+    hora_extra.salida = obtener_hora_actual(
         zona_horaria
     )
+
 
     db.session.commit()
 
 
-    return (
-        True,
-        "Horas extras finalizadas correctamente.",
-        hora_extra
-    )
+    return hora_extra, "Hora extra finalizada correctamente."
