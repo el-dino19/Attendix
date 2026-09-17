@@ -1,7 +1,8 @@
 // ==========================================
 // DASHBOARD EMPLEADO
 // CONTADOR DE DESCANSOS
-// UBICACIÓN DEL USUARIO
+// UBICACIÓN
+// HORAS EXTRAS
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -14,10 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("contador");
 
 
-    // ==========================================================
-    // SI EXISTE UN DESCANSO ACTIVO
-    // ==========================================================
-
     if (contador) {
 
         const mensaje =
@@ -29,10 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const boton =
             document.getElementById("btn-finalizar-descanso");
 
-
-        // ======================================================
-        // DATOS DEL DESCANSO
-        // ======================================================
 
         const tipoDescanso =
             (contador.dataset.tipo || "").trim();
@@ -52,10 +45,6 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        // ======================================================
-        // DURACIONES
-        // ======================================================
-
         const duraciones = {
 
             break_manana: 15 * 60,
@@ -70,10 +59,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const duracionTotal =
             duraciones[tipoDescanso];
 
-
-        // ======================================================
-        // VALIDAR TIPO DE DESCANSO
-        // ======================================================
 
         if (!duracionTotal) {
 
@@ -92,10 +77,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
         } else {
-
-            // ==================================================
-            // CONVERTIR HORA A SEGUNDOS
-            // ==================================================
 
             function convertirHoraASegundos(hora) {
 
@@ -142,10 +123,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
 
-            // ==================================================
-            // HORA DE INICIO
-            // ==================================================
-
             const inicioSegundos =
                 convertirHoraASegundos(
                     horaInicio
@@ -167,10 +144,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             } else {
 
-                // ==================================================
-                // OBTENER HORA ACTUAL
-                // ==================================================
-
                 function obtenerHoraActualSegundos() {
 
                     const ahora =
@@ -185,10 +158,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                // ==================================================
-                // TIEMPO TRANSCURRIDO
-                // ==================================================
-
                 function obtenerTiempoTranscurrido() {
 
                     const actual =
@@ -199,11 +168,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         actual -
                         inicioSegundos;
 
-
-                    /*
-                     * Si cruza medianoche,
-                     * ajustamos las 24 horas.
-                     */
 
                     if (diferencia < 0) {
 
@@ -217,10 +181,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                // ==================================================
-                // FORMATEAR TIEMPO
-                // ==================================================
-
                 function formatearTiempo(
                     segundos
                 ) {
@@ -228,9 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     segundos =
                         Math.max(
                             0,
-                            Math.floor(
-                                segundos
-                            )
+                            Math.floor(segundos)
                         );
 
 
@@ -256,10 +214,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                // ==================================================
-                // ACTUALIZAR CONTADOR
-                // ==================================================
-
                 function actualizarContador() {
 
                     const transcurrido =
@@ -270,10 +224,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         duracionTotal -
                         transcurrido;
 
-
-                    // ==========================================
-                    // TIEMPO TERMINADO
-                    // ==========================================
 
                     if (restante <= 0) {
 
@@ -289,20 +239,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
 
 
-                        /*
-                         * NO finalizamos automáticamente.
-                         *
-                         * El empleado debe pulsar
-                         * el botón de finalizar.
-                         */
-
                         return;
                     }
 
-
-                    // ==========================================
-                    // MOSTRAR TIEMPO
-                    // ==========================================
 
                     contador.textContent =
                         formatearTiempo(
@@ -319,16 +258,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                // ==================================================
-                // PRIMERA EJECUCIÓN
-                // ==================================================
-
                 actualizarContador();
 
-
-                // ==================================================
-                // ACTUALIZAR CADA SEGUNDO
-                // ==================================================
 
                 const intervalo =
                     setInterval(
@@ -336,10 +267,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         1000
                     );
 
-
-                // ==================================================
-                // FINALIZAR MANUALMENTE
-                // ==================================================
 
                 if (
                     formulario &&
@@ -370,7 +297,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // ==========================================================
-    // UBICACIÓN DEL USUARIO
+    // ELEMENTOS DE UBICACIÓN
     // ==========================================================
 
     const ubicacionTexto =
@@ -379,25 +306,34 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-    // Si el elemento no existe,
-    // no hacemos nada.
-
-    if (!ubicacionTexto) {
-        return;
-    }
+    const formHoraExtra =
+        document.getElementById(
+            "form-iniciar-hora-extra"
+        );
 
 
-    // ==========================================================
-    // MOSTRAR ESTADO
-    // ==========================================================
+    const botonHoraExtra =
+        document.getElementById(
+            "btn-iniciar-hora-extra"
+        );
 
-    function mostrarEstadoUbicacion(
-        mensaje
-    ) {
 
-        ubicacionTexto.textContent =
-            mensaje;
-    }
+    const latitudInput =
+        document.getElementById(
+            "hora-extra-latitud"
+        );
+
+
+    const longitudInput =
+        document.getElementById(
+            "hora-extra-longitud"
+        );
+
+
+    const direccionInput =
+        document.getElementById(
+            "hora-extra-direccion"
+        );
 
 
     // ==========================================================
@@ -415,9 +351,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const partes = [];
 
 
-        // ======================================================
+        // ------------------------------------------------------
         // NOMBRE DEL LUGAR
-        // ======================================================
+        // ------------------------------------------------------
 
         const lugar =
             datos.name ||
@@ -435,9 +371,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // ======================================================
+        // ------------------------------------------------------
         // CALLE + NÚMERO
-        // ======================================================
+        // ------------------------------------------------------
 
         if (address.road) {
 
@@ -459,9 +395,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // ======================================================
+        // ------------------------------------------------------
         // BARRIO / ZONA
-        // ======================================================
+        // ------------------------------------------------------
 
         const zona =
             address.neighbourhood ||
@@ -478,9 +414,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // ======================================================
+        // ------------------------------------------------------
         // CIUDAD
-        // ======================================================
+        // ------------------------------------------------------
 
         const ciudad =
             address.city ||
@@ -497,9 +433,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // ======================================================
-        // ESTADO / PROVINCIA / DEPARTAMENTO
-        // ======================================================
+        // ------------------------------------------------------
+        // DEPARTAMENTO
+        // ------------------------------------------------------
 
         const estado =
             address.state ||
@@ -515,9 +451,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // ======================================================
+        // ------------------------------------------------------
         // PAÍS
-        // ======================================================
+        // ------------------------------------------------------
 
         if (address.country) {
 
@@ -527,17 +463,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // ======================================================
+        // ------------------------------------------------------
         // ELIMINAR DUPLICADOS
-        // ======================================================
+        // ------------------------------------------------------
 
-        const resultado =
-            [...new Set(partes)];
-
-
-        return resultado.join(
-            ", "
-        );
+        return [
+            ...new Set(partes)
+        ].join(", ");
     }
 
 
@@ -569,13 +501,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 navigator.geolocation.getCurrentPosition(
 
-                    // ==================================================
-                    // ÉXITO
-                    // ==================================================
-
-                    function (
-                        position
-                    ) {
+                    function (position) {
 
                         resolve({
 
@@ -586,16 +512,11 @@ document.addEventListener("DOMContentLoaded", function () {
                                 position.coords.longitude
 
                         });
+
                     },
 
 
-                    // ==================================================
-                    // ERROR
-                    // ==================================================
-
-                    function (
-                        error
-                    ) {
+                    function (error) {
 
                         switch (
                             error.code
@@ -642,12 +563,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                     )
                                 );
                         }
+
                     },
 
-
-                    // ==================================================
-                    // OPCIONES
-                    // ==================================================
 
                     {
 
@@ -668,7 +586,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // ==========================================================
-    // OBTENER DIRECCIÓN
+    // OBTENER DIRECCIÓN DESDE COORDENADAS
     // ==========================================================
 
     async function obtenerDireccion(
@@ -680,13 +598,9 @@ document.addEventListener("DOMContentLoaded", function () {
             "https://nominatim.openstreetmap.org/reverse" +
             "?format=jsonv2" +
             "&lat=" +
-            encodeURIComponent(
-                latitud
-            ) +
+            encodeURIComponent(latitud) +
             "&lon=" +
-            encodeURIComponent(
-                longitud
-            ) +
+            encodeURIComponent(longitud) +
             "&zoom=18" +
             "&addressdetails=1";
 
@@ -695,14 +609,10 @@ document.addEventListener("DOMContentLoaded", function () {
             await fetch(
                 url,
                 {
-
                     headers: {
-
                         Accept:
                             "application/json"
-
                     }
-
                 }
             );
 
@@ -720,21 +630,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // ==========================================================
-    // CARGAR UBICACIÓN
+    // OBTENER UBICACIÓN PARA EL DASHBOARD
     // ==========================================================
 
     async function cargarUbicacion() {
 
-        mostrarEstadoUbicacion(
-            "Obteniendo ubicación..."
-        );
+        if (!ubicacionTexto) {
+            return;
+        }
+
+
+        ubicacionTexto.textContent =
+            "Obteniendo ubicación...";
 
 
         try {
-
-            // ==================================================
-            // COORDENADAS
-            // ==================================================
 
             const ubicacion =
                 await obtenerUbicacion();
@@ -760,43 +670,46 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
-            // ==================================================
-            // DIRECCIÓN
-            // ==================================================
+            try {
 
-            const datos =
-                await obtenerDireccion(
-                    latitud,
-                    longitud
-                );
+                const datos =
+                    await obtenerDireccion(
+                        latitud,
+                        longitud
+                    );
 
 
-            console.log(
-                "Datos de ubicación:",
-                datos
-            );
-
-
-            // ==================================================
-            // DIRECCIÓN CORTA
-            // ==================================================
-
-            const direccionCorta =
-                construirDireccionCorta(
+                console.log(
+                    "Datos de ubicación:",
                     datos
                 );
 
 
-            // ==================================================
-            // MOSTRAR DIRECCIÓN
-            // ==================================================
+                const direccion =
+                    construirDireccionCorta(
+                        datos
+                    );
 
-            if (direccionCorta) {
 
-                ubicacionTexto.textContent =
-                    direccionCorta;
+                if (direccion) {
 
-            } else {
+                    ubicacionTexto.textContent =
+                        direccion;
+
+                } else {
+
+                    ubicacionTexto.textContent =
+                        `${latitud.toFixed(5)}, ${longitud.toFixed(5)}`;
+
+                }
+
+            } catch (errorDireccion) {
+
+                console.error(
+                    "Error obteniendo dirección:",
+                    errorDireccion
+                );
+
 
                 ubicacionTexto.textContent =
                     `${latitud.toFixed(5)}, ${longitud.toFixed(5)}`;
@@ -811,185 +724,231 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
-            mostrarEstadoUbicacion(
-                "Ubicación no disponible"
-            );
+            ubicacionTexto.textContent =
+                "Ubicación no disponible";
         }
     }
 
 
     // ==========================================================
-    // INICIAR UBICACIÓN
+    // INICIAR HORA EXTRA
+    // ==========================================================
+
+    if (
+        formHoraExtra &&
+        botonHoraExtra &&
+        latitudInput &&
+        longitudInput &&
+        direccionInput
+    ) {
+
+        formHoraExtra.addEventListener(
+            "submit",
+            async function (event) {
+
+                // ----------------------------------------------
+                // Evitar envío inmediato
+                // ----------------------------------------------
+
+                event.preventDefault();
+
+
+                // ----------------------------------------------
+                // Guardar HTML original
+                // ----------------------------------------------
+
+                const textoOriginal =
+                    botonHoraExtra.innerHTML;
+
+
+                // ----------------------------------------------
+                // Deshabilitar botón
+                // ----------------------------------------------
+
+                botonHoraExtra.disabled =
+                    true;
+
+
+                botonHoraExtra.innerHTML = `
+                    <div class="break-option-icon">
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+
+                    <div class="break-option-info">
+                        <strong>
+                            Obteniendo ubicación...
+                        </strong>
+
+                        <small>
+                            Espera un momento
+                        </small>
+                    </div>
+                `;
+
+
+                try {
+
+                    // ==========================================
+                    // 1. OBTENER GPS
+                    // ==========================================
+
+                    const ubicacion =
+                        await obtenerUbicacion();
+
+
+                    const latitud =
+                        ubicacion.latitud;
+
+
+                    const longitud =
+                        ubicacion.longitud;
+
+
+                    console.log(
+                        "Hora extra - latitud:",
+                        latitud
+                    );
+
+
+                    console.log(
+                        "Hora extra - longitud:",
+                        longitud
+                    );
+
+
+                    // ==========================================
+                    // 2. GUARDAR COORDENADAS
+                    // ==========================================
+
+                    latitudInput.value =
+                        latitud;
+
+
+                    longitudInput.value =
+                        longitud;
+
+
+                    // ==========================================
+                    // 3. OBTENER DIRECCIÓN
+                    // ==========================================
+
+                    botonHoraExtra.innerHTML = `
+                        <div class="break-option-icon">
+                            <i class="bi bi-map-fill"></i>
+                        </div>
+
+                        <div class="break-option-info">
+                            <strong>
+                                Obteniendo dirección...
+                            </strong>
+
+                            <small>
+                                Espera un momento
+                            </small>
+                        </div>
+                    `;
+
+
+                    try {
+
+                        const datos =
+                            await obtenerDireccion(
+                                latitud,
+                                longitud
+                            );
+
+
+                        const direccion =
+                            construirDireccionCorta(
+                                datos
+                            );
+
+
+                        direccionInput.value =
+                            direccion || "";
+
+
+                        console.log(
+                            "Hora extra - dirección:",
+                            direccion
+                        );
+
+                    } catch (errorDireccion) {
+
+                        console.error(
+                            "No se pudo obtener la dirección:",
+                            errorDireccion
+                        );
+
+
+                        // ------------------------------------------------
+                        // Si falla la dirección, conservamos las coordenadas
+                        // ------------------------------------------------
+
+                        direccionInput.value =
+                            "";
+                    }
+
+
+                    // ==========================================
+                    // 4. ENVIAR FORMULARIO
+                    // ==========================================
+
+                    botonHoraExtra.innerHTML = `
+                        <div class="break-option-icon">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+
+                        <div class="break-option-info">
+                            <strong>
+                                Registrando...
+                            </strong>
+
+                            <small>
+                                Guardando hora extra
+                            </small>
+                        </div>
+                    `;
+
+
+                    formHoraExtra.submit();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Error obteniendo ubicación:",
+                        error
+                    );
+
+
+                    // ------------------------------------------
+                    // Restaurar botón
+                    // ------------------------------------------
+
+                    botonHoraExtra.disabled =
+                        false;
+
+
+                    botonHoraExtra.innerHTML =
+                        textoOriginal;
+
+
+                    alert(
+                        error.message ||
+                        "No fue posible obtener tu ubicación."
+                    );
+                }
+
+            }
+        );
+    }
+
+
+    // ==========================================================
+    // CARGAR UBICACIÓN DEL DASHBOARD
     // ==========================================================
 
     cargarUbicacion();
 
 });
-
-
-
-// ==========================================================
-    // HORAS EXTRAS     
-    // ==========================================================
-document.addEventListener("DOMContentLoaded", function () {
-
-    const form = document.getElementById(
-        "form-iniciar-hora-extra"
-    );
-
-    const button = document.getElementById(
-        "btn-iniciar-hora-extra"
-    );
-
-    const latitudInput = document.getElementById(
-        "hora-extra-latitud"
-    );
-
-    const longitudInput = document.getElementById(
-        "hora-extra-longitud"
-    );
-
-    const direccionInput = document.getElementById(
-        "hora-extra-direccion"
-    );
-
-
-    form.addEventListener("submit", function (event) {
-
-        // Evitar que el formulario se envíe inmediatamente
-        event.preventDefault();
-
-
-        // -------------------------------------------------
-        // Verificar soporte de geolocalización
-        // -------------------------------------------------
-
-        if (!navigator.geolocation) {
-
-            alert(
-                "Tu navegador no permite obtener la ubicación."
-            );
-
-            return;
-        }
-
-
-        // -------------------------------------------------
-        // Deshabilitar botón mientras obtenemos ubicación
-        // -------------------------------------------------
-
-        button.disabled = true;
-
-        const textoOriginal = button.innerHTML;
-
-        button.innerHTML = `
-            <div class="break-option-icon">
-                <i class="bi bi-geo-alt-fill"></i>
-            </div>
-
-            <div class="break-option-info">
-                <strong>
-                    Obteniendo ubicación...
-                </strong>
-
-                <small>
-                    Espera un momento
-                </small>
-            </div>
-        `;
-
-
-        // -------------------------------------------------
-        // Obtener ubicación
-        // -------------------------------------------------
-
-        navigator.geolocation.getCurrentPosition(
-
-            function (position) {
-
-                const latitud =
-                    position.coords.latitude;
-
-                const longitud =
-                    position.coords.longitude;
-
-
-                // -----------------------------------------
-                // Guardar coordenadas en el formulario
-                // -----------------------------------------
-
-                latitudInput.value = latitud;
-
-                longitudInput.value = longitud;
-
-
-                // -----------------------------------------
-                // Por ahora no tenemos geocodificación
-                // -----------------------------------------
-
-                direccionInput.value = "";
-
-
-                // -----------------------------------------
-                // Enviar formulario
-                // -----------------------------------------
-
-                form.submit();
-
-            },
-
-
-            function (error) {
-
-                button.disabled = false;
-
-                button.innerHTML = textoOriginal;
-
-
-                let mensaje =
-                    "No fue posible obtener tu ubicación.";
-
-
-                switch (error.code) {
-
-                    case error.PERMISSION_DENIED:
-
-                        mensaje =
-                            "Debes permitir el acceso a tu ubicación para iniciar las horas extras.";
-
-                        break;
-
-
-                    case error.POSITION_UNAVAILABLE:
-
-                        mensaje =
-                            "No se pudo determinar tu ubicación.";
-
-                        break;
-
-
-                    case error.TIMEOUT:
-
-                        mensaje =
-                            "La solicitud de ubicación tardó demasiado.";
-
-                        break;
-                }
-
-
-                alert(mensaje);
-            },
-
-
-            {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0
-            }
-
-        );
-
-    });
-
-});
-
