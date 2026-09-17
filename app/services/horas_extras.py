@@ -62,10 +62,13 @@ def iniciar_hora_extra(
     longitud=None,
     direccion=None
 ):
-    
+    """
+    Inicia una hora extra únicamente si el usuario
+    tiene una jornada registrada para el día actual.
+    """
 
     # ---------------------------------------------------------
-    # 1. Verificar si el usuario ya tiene una hora extra abierta
+    # 1. Verificar si ya tiene una hora extra abierta
     # ---------------------------------------------------------
 
     hora_extra_abierta = obtener_hora_extra_abierta(
@@ -73,10 +76,12 @@ def iniciar_hora_extra(
     )
 
     if hora_extra_abierta:
+
         return (
             None,
             "Ya tienes una hora extra activa."
         )
+
 
     # ---------------------------------------------------------
     # 2. Obtener fecha y hora actuales
@@ -90,8 +95,9 @@ def iniciar_hora_extra(
         zona_horaria
     )
 
+
     # ---------------------------------------------------------
-    # 3. Buscar la jornada del usuario para ese día
+    # 3. Buscar la jornada de HOY
     # ---------------------------------------------------------
 
     jornada = obtener_jornada_del_dia(
@@ -99,14 +105,27 @@ def iniciar_hora_extra(
         fecha
     )
 
+
     # ---------------------------------------------------------
-    # 4. Crear la hora extra
+    # 4. OBLIGATORIO: debe existir jornada
+    # ---------------------------------------------------------
+
+    if jornada is None:
+
+        return (
+            None,
+            "No puedes iniciar horas extras porque no tienes una jornada registrada para hoy."
+        )
+
+
+    # ---------------------------------------------------------
+    # 5. Crear hora extra
     # ---------------------------------------------------------
 
     hora_extra = HoraExtra(
         usuario_id=usuario_id,
 
-        jornada_id=jornada.id if jornada else None,
+        jornada_id=jornada.id,
 
         fecha=fecha,
 
@@ -119,8 +138,9 @@ def iniciar_hora_extra(
         direccion=direccion
     )
 
+
     # ---------------------------------------------------------
-    # 5. Guardar en base de datos
+    # 6. Guardar
     # ---------------------------------------------------------
 
     db.session.add(
@@ -129,10 +149,12 @@ def iniciar_hora_extra(
 
     db.session.commit()
 
+
     return (
         hora_extra,
         "Hora extra iniciada correctamente."
     )
+
 
 
 def finalizar_hora_extra(
