@@ -1,26 +1,27 @@
 setInterval(async function () {
+
     try {
-        const response = await fetch("{{ url_for('auth.check_session') }}", {
-            method: "GET",
-            credentials: "same-origin",
-            cache: "no-store"
-        });
+
+        const response = await fetch(
+            "{{ url_for('auth.check_session') }}",
+            {
+                method: "GET",
+                credentials: "same-origin",
+                cache: "no-store"
+            }
+        );
 
         const data = await response.json();
 
-        // Usuario sigue activo (activo = 1)
-        if (data.activo === true) {
-            return;
-        }
+        console.log("CHECK SESSION:", data);
 
-        // Usuario fue desactivado (activo = 0)
-        if (
-            data.activo === false &&
-            data.sesion === true &&
-            data.motivo === "cuenta_desactivada"
-        ) {
+        // ==========================================
+        // CUENTA DESACTIVADA
+        // activo = 0
+        // ==========================================
+        if (data.motivo === "cuenta_desactivada") {
 
-            // No mostrar la modal más de una vez
+            // Evita crear varias modales
             if (document.getElementById("cuenta-desactivada-modal")) {
                 return;
             }
@@ -33,20 +34,20 @@ setInterval(async function () {
                 <div style="
                     position: fixed;
                     inset: 0;
-                    background: rgba(15, 23, 42, 0.65);
+                    background: rgba(15, 23, 42, 0.70);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    z-index: 99999;
+                    z-index: 999999;
                 ">
 
                     <div style="
-                        background: white;
+                        background: #ffffff;
                         width: min(420px, 90%);
                         border-radius: 20px;
                         padding: 32px;
                         text-align: center;
-                        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+                        box-shadow: 0 20px 50px rgba(0,0,0,.25);
                     ">
 
                         <div style="
@@ -65,7 +66,7 @@ setInterval(async function () {
                         </div>
 
                         <h3 style="
-                            margin-bottom: 10px;
+                            margin: 0 0 10px;
                             color: #1e293b;
                         ">
                             Cuenta desactivada
@@ -73,16 +74,21 @@ setInterval(async function () {
 
                         <p style="
                             color: #64748b;
-                            margin-bottom: 25px;
+                            margin: 0 0 25px;
+                            line-height: 1.5;
                         ">
                             Tu cuenta ha sido desactivada por un administrador.
                             Ya no puedes continuar utilizando la aplicación.
                         </p>
 
                         <button
-                            onclick="window.location.href='{{ url_for('auth.login') }}'"
+                            type="button"
+                            onclick="
+                                window.location.href =
+                                '{{ url_for('auth.login') }}';
+                            "
                             style="
-                                border: none;
+                                border: 0;
                                 background: #dc2626;
                                 color: white;
                                 padding: 11px 25px;
@@ -95,6 +101,7 @@ setInterval(async function () {
                         </button>
 
                     </div>
+
                 </div>
             `;
 
@@ -102,10 +109,12 @@ setInterval(async function () {
         }
 
     } catch (error) {
+
         console.error(
             "Error comprobando el estado de la cuenta:",
             error
         );
+
     }
 
 }, 5000);
