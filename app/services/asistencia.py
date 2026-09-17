@@ -72,6 +72,7 @@ def obtener_jornada_abierta(usuario_id):
         Jornada.usuario_id == usuario_id,
         Jornada.salida.is_(None)
     ).order_by(
+        Jornada.fecha.desc(),
         Jornada.entrada.desc()
     ).first()
 
@@ -86,15 +87,29 @@ def registrar_entrada(
     direccion=None
 ):
 
+    # =====================================================
+    # ZONA HORARIA
+    # =====================================================
+
     try:
         zona = ZoneInfo(zona_horaria)
     except Exception:
         zona = ZoneInfo("UTC")
 
+
+    # =====================================================
+    # FECHA Y HORA ACTUAL
+    # =====================================================
+
     ahora = datetime.now(zona)
 
     fecha_hoy = ahora.date()
     hora_actual = ahora.time()
+
+
+    # =====================================================
+    # VERIFICAR SI YA EXISTE JORNADA
+    # =====================================================
 
     jornada_existente = Jornada.query.filter(
         Jornada.usuario_id == usuario_id,
@@ -103,6 +118,22 @@ def registrar_entrada(
 
     if jornada_existente:
         return jornada_existente
+
+
+    # =====================================================
+    # LIMPIAR DIRECCIÓN
+    # =====================================================
+
+    if direccion:
+        direccion = direccion.strip()
+
+    else:
+        direccion = None
+
+
+    # =====================================================
+    # CREAR JORNADA
+    # =====================================================
 
     jornada = Jornada(
         usuario_id=usuario_id,
@@ -113,8 +144,14 @@ def registrar_entrada(
         direccion=direccion
     )
 
+
+    # =====================================================
+    # GUARDAR
+    # =====================================================
+
     db.session.add(jornada)
     db.session.commit()
+
 
     return jornada
 

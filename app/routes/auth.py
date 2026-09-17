@@ -181,13 +181,24 @@ def login():
 
         if usuario.rol == "empleado":
 
-            registrar_entrada(
+            jornada = registrar_entrada(
                 usuario.id,
                 zona_horaria,
                 latitud,
                 longitud,
                 direccion
             )
+
+            print("========================================")
+            print("JORNADA REGISTRADA")
+            print("Usuario:", usuario.id)
+            print("Fecha:", jornada.fecha)
+            print("Entrada:", jornada.entrada)
+            print("Latitud:", jornada.latitud)
+            print("Longitud:", jornada.longitud)
+            print("Dirección:", jornada.direccion)
+            print("========================================")
+
 
         # ========================================
         # REDIRECCIÓN SEGÚN ROL

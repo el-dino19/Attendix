@@ -1,254 +1,466 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
     <title>Iniciar sesión | Attendix</title>
 
-    <!-- FAVICON -->
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="512x512"
-      href="{{ url_for('static', filename='img/Logo_Asistencia.png') }}"
-    />
 
-    <!-- BOOTSTRAP CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <!-- =====================================================
+         FAVICON
+    ====================================================== -->
 
-    <!-- BOOTSTRAP ICONS -->
     <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    />
+        rel="icon"
+        type="image/png"
+        sizes="512x512"
+        href="{{ url_for('static', filename='img/Logo_Asistencia.png') }}"
+    >
 
-    <!-- CSS LOGIN -->
+
+    <!-- =====================================================
+         BOOTSTRAP CSS
+    ====================================================== -->
+
     <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/login.css') }}"
-    />
-  </head>
-  <body>
-    <!-- =================================================
-         PAGINA LOGIN
-    ================================================== -->
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         BOOTSTRAP ICONS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+
+    <!-- =====================================================
+         CSS LOGIN
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/login.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- =====================================================
+         PÁGINA LOGIN
+    ====================================================== -->
+
     <div class="login-page">
-      <div class="login-container">
 
-        <!-- =================================================
-             PANEL IZQUIERDO
-        ================================================== -->
-        <div class="login-left">
-          <div class="left-logo">
-            <img
-              src="{{ url_for('static', filename='img/Logo_Asistencia.png') }}"
-              alt="Logo Attendix"
-            />
-          </div>
+        <div class="login-container">
 
-          <div class="left-content">
-            <h2>
-              Bienvenido a<br />
-              <span>Attendix</span>
-            </h2>
 
-            <p>
-              Tu asistencia, bajo control. Gestiona tus registros de asistencia
-              de forma rápida, sencilla y segura.
-            </p>
-          </div>
+            <!-- =================================================
+                 PANEL IZQUIERDO
+            ================================================== -->
 
-          <div class="left-footer">
-            <i class="bi bi-check-circle-fill"></i>
-            CRG Solutions
-          </div>
-        </div>
+            <div class="login-left">
 
-        <!-- =================================================
-             PANEL DERECHO
-        ================================================== -->
-        <div class="login-right">
+                <!-- LOGO -->
 
-          <!-- HEADER -->
-          <div class="login-header">
-            <h1>Iniciar sesión</h1>
-            <p>Ingresa tus datos para continuar</p>
-          </div>
+                <div class="left-logo">
 
-          <!-- =================================================
-               MENSAJES FLASK
-          ================================================== -->
-          {% with mensajes = get_flashed_messages(with_categories=true) %}
-            {% if mensajes %}
-              <div class="login-messages">
-                {% for categoria, mensaje in mensajes %}
-                  <div
-                    class="login-alert
-                    {% if categoria == 'success' %}
-                      login-alert-success
-                    {% elif categoria == 'danger' %}
-                      login-alert-danger
-                    {% elif categoria == 'warning' %}
-                      login-alert-warning
-                    {% else %}
-                      login-alert-info
-                    {% endif %}"
-                  >
-                    <!-- ICONO -->
-                    <div class="login-alert-icon">
-                      {% if categoria == "success" %}
-                        <i class="bi bi-check-circle-fill"></i>
-                      {% elif categoria == "danger" %}
-                        <i class="bi bi-x-circle-fill"></i>
-                      {% elif categoria == "warning" %}
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                      {% else %}
-                        <i class="bi bi-info-circle-fill"></i>
-                      {% endif %}
-                    </div>
-
-                    <!-- MENSAJE -->
-                    <div class="login-alert-content">
-                      <strong>
-                        {% if categoria == "success" %}
-                          Correcto
-                        {% elif categoria == "danger" %}
-                          Error de acceso
-                        {% elif categoria == "warning" %}
-                          Cuenta desactivada
-                        {% else %}
-                          Información
-                        {% endif %}
-                      </strong>
-                      <span>{{ mensaje }}</span>
-                    </div>
-
-                    <!-- CERRAR -->
-                    <button
-                      type="button"
-                      class="login-alert-close"
-                      onclick="this.parentElement.remove()"
-                      aria-label="Cerrar"
+                    <img
+                        src="{{ url_for('static', filename='img/Logo_Asistencia.png') }}"
+                        alt="Logo Attendix"
                     >
-                      <i class="bi bi-x"></i>
-                    </button>
-                  </div>
-                {% endfor %}
-              </div>
-            {% endif %}
-          {% endwith %}
 
-          <!-- =================================================
-               FORMULARIO LOGIN
-          ================================================== -->
-          <form
-            method="POST"
-            action="{{ url_for('auth.login') }}"
-            class="login-form"
-            id="loginForm"
-          >
-            <!-- DATOS DEL NAVEGADOR -->
-            <input type="hidden" name="zona_horaria" id="zona_horaria" />
-            <input type="hidden" name="latitud" id="latitud" />
-            <input type="hidden" name="longitud" id="longitud" />
-            <input type="hidden" name="direccion" id="direccion" />
+                </div>
 
-            <!-- CORREO -->
-            <div class="form-group">
-              <label for="correo">
-                <i class="bi bi-envelope"></i>
-                Correo electrónico
-              </label>
 
-              <div class="input-container">
-                <i class="bi bi-envelope input-icon"></i>
-                <input
-                  type="email"
-                  id="correo"
-                  name="correo"
-                  class="form-control login-input"
-                  placeholder="correo@empresa.com"
-                  autocomplete="email"
-                  required
-                />
-              </div>
+                <!-- CONTENIDO -->
+
+                <div class="left-content">
+
+                    <h2>
+                        Bienvenido a<br>
+                        <span>Attendix</span>
+                    </h2>
+
+                    <p>
+                        Tu asistencia, bajo control.
+                        Gestiona tus registros de asistencia
+                        de forma rápida, sencilla y segura.
+                    </p>
+
+                </div>
+
+
+                <!-- FOOTER -->
+
+                <div class="left-footer">
+
+                    <i class="bi bi-check-circle-fill"></i>
+
+                    CRG Solutions
+
+                </div>
+
             </div>
 
-            <!-- CONTRASEÑA -->
-            <div class="form-group">
-              <label for="password">
-                <i class="bi bi-lock"></i>
-                Contraseña
-              </label>
 
-              <div class="input-container">
-                <i class="bi bi-lock input-icon"></i>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  class="form-control login-input"
-                  placeholder="Ingresa tu contraseña"
-                  autocomplete="current-password"
-                  required
-                />
+            <!-- =================================================
+                 PANEL DERECHO
+            ================================================== -->
 
-                <button
-                  type="button"
-                  class="password-toggle"
-                  id="togglePassword"
-                  aria-label="Mostrar contraseña"
+            <div class="login-right">
+
+
+                <!-- =================================================
+                     HEADER
+                ================================================== -->
+
+                <div class="login-header">
+
+                    <h1>
+                        Iniciar sesión
+                    </h1>
+
+                    <p>
+                        Ingresa tus datos para continuar
+                    </p>
+
+                </div>
+
+
+                <!-- =================================================
+                     MENSAJES FLASK
+                ================================================== -->
+
+                {% with mensajes = get_flashed_messages(with_categories=true) %}
+
+                    {% if mensajes %}
+
+                        <div class="login-messages">
+
+                            {% for categoria, mensaje in mensajes %}
+
+                                <div
+                                    class="
+                                        login-alert
+                                        {% if categoria == 'success' %}
+                                            login-alert-success
+                                        {% elif categoria == 'danger' %}
+                                            login-alert-danger
+                                        {% elif categoria == 'warning' %}
+                                            login-alert-warning
+                                        {% else %}
+                                            login-alert-info
+                                        {% endif %}
+                                    "
+                                >
+
+                                    <!-- ICONO -->
+
+                                    <div class="login-alert-icon">
+
+                                        {% if categoria == "success" %}
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                        {% elif categoria == "danger" %}
+
+                                            <i class="bi bi-x-circle-fill"></i>
+
+                                        {% elif categoria == "warning" %}
+
+                                            <i class="bi bi-exclamation-triangle-fill"></i>
+
+                                        {% else %}
+
+                                            <i class="bi bi-info-circle-fill"></i>
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <!-- CONTENIDO -->
+
+                                    <div class="login-alert-content">
+
+                                        <strong>
+
+                                            {% if categoria == "success" %}
+
+                                                Correcto
+
+                                            {% elif categoria == "danger" %}
+
+                                                Error de acceso
+
+                                            {% elif categoria == "warning" %}
+
+                                                Cuenta desactivada
+
+                                            {% else %}
+
+                                                Información
+
+                                            {% endif %}
+
+                                        </strong>
+
+
+                                        <span>
+                                            {{ mensaje }}
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- CERRAR -->
+
+                                    <button
+                                        type="button"
+                                        class="login-alert-close"
+                                        onclick="this.parentElement.remove()"
+                                        aria-label="Cerrar mensaje"
+                                    >
+
+                                        <i class="bi bi-x"></i>
+
+                                    </button>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endwith %}
+
+
+                <!-- =================================================
+                     FORMULARIO LOGIN
+                ================================================== -->
+
+                <form
+                    method="POST"
+                    action="{{ url_for('auth.login') }}"
+                    class="login-form"
+                    id="loginForm"
+                    autocomplete="on"
                 >
-                  <i class="bi bi-eye" id="passwordIcon"></i>
-                </button>
-              </div>
+
+
+                    <!-- =================================================
+                         DATOS DEL NAVEGADOR
+                         
+                         Estos campos son ocultos.
+                         login.js los completa antes de enviar.
+                    ================================================== -->
+
+                    <input
+                        type="hidden"
+                        name="zona_horaria"
+                        id="zona_horaria"
+                        value=""
+                    >
+
+                    <input
+                        type="hidden"
+                        name="latitud"
+                        id="latitud"
+                        value=""
+                    >
+
+                    <input
+                        type="hidden"
+                        name="longitud"
+                        id="longitud"
+                        value=""
+                    >
+
+                    <input
+                        type="hidden"
+                        name="direccion"
+                        id="direccion"
+                        value=""
+                    >
+
+
+                    <!-- =================================================
+                         CORREO
+                    ================================================== -->
+
+                    <div class="form-group">
+
+                        <label for="correo">
+
+                            <i class="bi bi-envelope"></i>
+
+                            Correo electrónico
+
+                        </label>
+
+
+                        <div class="input-container">
+
+                            <i class="bi bi-envelope input-icon"></i>
+
+                            <input
+                                type="email"
+                                id="correo"
+                                name="correo"
+                                class="form-control login-input"
+                                placeholder="correo@empresa.com"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         CONTRASEÑA
+                    ================================================== -->
+
+                    <div class="form-group">
+
+                        <label for="password">
+
+                            <i class="bi bi-lock"></i>
+
+                            Contraseña
+
+                        </label>
+
+
+                        <div class="input-container">
+
+                            <i class="bi bi-lock input-icon"></i>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="form-control login-input"
+                                placeholder="Ingresa tu contraseña"
+                                autocomplete="current-password"
+                                required
+                            >
+
+
+                            <!-- MOSTRAR / OCULTAR CONTRASEÑA -->
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="togglePassword"
+                                aria-label="Mostrar contraseña"
+                            >
+
+                                <i
+                                    class="bi bi-eye"
+                                    id="passwordIcon"
+                                ></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         ESTADO DE UBICACIÓN
+                         
+                         login.js utiliza este elemento para mostrar
+                         mensajes como:
+                         - Solicitando ubicación...
+                         - Ubicación obtenida
+                         - Ubicación no disponible
+                    ================================================== -->
+
+                    <div
+                        id="estado-ubicacion"
+                        class="login-location-status"
+                        style="display: none;"
+                        role="status"
+                        aria-live="polite"
+                    ></div>
+
+
+                    <!-- =================================================
+                         BOTÓN LOGIN
+                    ================================================== -->
+
+                    <button
+                        type="submit"
+                        class="btn login-button"
+                        id="loginButton"
+                    >
+
+                        <span id="loginButtonText">
+                            Iniciar sesión
+                        </span>
+
+                        <i
+                            class="bi bi-arrow-right"
+                            id="loginButtonIcon"
+                        ></i>
+
+                    </button>
+
+                </form>
+
+
+                <!-- =================================================
+                     ESTADO DEL SISTEMA
+                ================================================== -->
+
+                <div class="login-footer">
+
+                    <div class="status-dot"></div>
+
+                    Sistema Disponible
+
+                </div>
+
             </div>
-
-            <!-- ESTADO DE UBICACIÓN -->
-            <div
-              id="estado-ubicacion"
-              class="login-location-status"
-              style="display: none;"
-            ></div>
-
-            <!-- BOTÓN LOGIN -->
-            <button
-              type="submit"
-              class="btn login-button"
-              id="loginButton"
-            >
-              <span id="loginButtonText">Iniciar sesión</span>
-              <i class="bi bi-arrow-right" id="loginButtonIcon"></i>
-            </button>
-          </form>
-
-          <!-- =================================================
-               ESTADO DEL SISTEMA
-          ================================================== -->
-          <div class="login-footer">
-            <div class="status-dot"></div>
-            Sistema Disponible
-          </div>
 
         </div>
 
-      </div>
     </div>
 
-    <!-- =================================================
-         BOOTSTRAP JS
-    ================================================== -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- =================================================
-         JAVASCRIPT LOGIN
-    ================================================== -->
+    <!-- =====================================================
+         BOOTSTRAP JS
+    ====================================================== -->
+
     <script
-      src="{{ url_for('static', filename='js/login.js') }}"
-      defer
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     ></script>
-  </body>
+
+
+    <script
+        src="{{ url_for('static', filename='js/login.js') }}"
+        defer
+    ></script>
+
+</body>
+
 </html>

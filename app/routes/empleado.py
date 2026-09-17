@@ -71,57 +71,79 @@ def proteger_empleado():
 # =========================================================
 # DASHBOARD
 # =========================================================
-
 @empleado_bp.route("/dashboard")
 def dashboard():
 
+    # =====================================================
+    # USUARIO
+    # =====================================================
+
     usuario_id = session["usuario_id"]
 
-    # ==========================================
-    # JORNADA NORMAL
-    # ==========================================
 
-    jornada = obtener_jornada_abierta(
-        usuario_id
-    )
+    # =====================================================
+    # JORNADA ABIERTA
+    # =====================================================
 
-    # ==========================================
+    jornada = obtener_jornada_abierta(usuario_id)
+
+
+    # =====================================================
     # DESCANSO ACTIVO
-    # ==========================================
+    # =====================================================
 
     descanso_activo = None
 
     if jornada:
+        descanso_activo = obtener_descanso_activo(jornada.id)
 
-        descanso_activo = obtener_descanso_activo(
-            jornada.id
-        )
 
-    # ==========================================
+    # =====================================================
     # HORA EXTRA ACTIVA
-    # ==========================================
+    # =====================================================
 
-    hora_extra = obtener_hora_extra_abierta(
-        usuario_id
-    )
+    hora_extra = obtener_hora_extra_abierta(usuario_id)
 
-    # ==========================================
+
+    # =====================================================
     # DIRECCIÓN
-    # ==========================================
+    # =====================================================
 
     direccion_corta = None
 
     if jornada and jornada.direccion:
-
         direccion_corta = jornada.direccion
 
     elif hora_extra and hora_extra.direccion:
-
         direccion_corta = hora_extra.direccion
 
-    # ==========================================
-    # DASHBOARD
-    # ==========================================
+
+    # =====================================================
+    # DEBUG
+    # =====================================================
+
+    print("========================================")
+    print("DASHBOARD")
+    print("Usuario:", usuario_id)
+
+    if jornada:
+        print("Jornada ID:", jornada.id)
+        print("Fecha:", jornada.fecha)
+        print("Entrada:", jornada.entrada)
+        print("Salida:", jornada.salida)
+        print("Latitud:", jornada.latitud)
+        print("Longitud:", jornada.longitud)
+        print("Dirección:", jornada.direccion)
+    else:
+        print("NO HAY JORNADA ABIERTA")
+
+    print("Dirección dashboard:", direccion_corta)
+    print("========================================")
+
+
+    # =====================================================
+    # RENDER
+    # =====================================================
 
     return render_template(
         "empleado/dashboard.html",
@@ -130,6 +152,7 @@ def dashboard():
         hora_extra=hora_extra,
         direccion_corta=direccion_corta
     )
+
 
 
 
