@@ -1641,156 +1641,541 @@ body {
     }
 }
 
-/* ==========================================
+/* =====================================================
    MODAL CUENTA DESACTIVADA
-   ========================================== */
+===================================================== */
 
 .modal-cuenta-desactivada {
-    border: none;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
-    background: #ffffff;
+
+    background:
+        linear-gradient(145deg,
+            rgba(11, 39, 49, 0.98),
+            rgba(7, 29, 38, 0.98)) !important;
+
+    border:
+        1px solid rgba(255, 92, 112, 0.22) !important;
+
+    border-radius:
+        22px !important;
+
+    color:
+        var(--text-white);
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.60);
+
+    overflow:
+        hidden;
+
+    position:
+        relative;
 }
 
-/* Icono */
+
+/* =====================================================
+   LÍNEA SUPERIOR DECORATIVA
+===================================================== */
+
+.modal-cuenta-desactivada::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 3px;
+
+    background:
+        linear-gradient(90deg,
+            var(--danger),
+            #ff7b89,
+            var(--danger));
+
+    box-shadow:
+        0 0 18px rgba(255, 92, 112, 0.45);
+}
+
+
+/* =====================================================
+   ICONO
+===================================================== */
 
 .icono-cuenta-desactivada {
-    display: flex;
-    justify-content: center;
-    padding-top: 30px;
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    padding-top:
+        35px;
+
+    position:
+        relative;
 }
+
 
 .icono-circulo {
-    width: 80px;
-    height: 80px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width:
+        82px;
 
-    border-radius: 50%;
+    height:
+        82px;
 
-    background: #fff1f2;
-    color: #dc3545;
+    display:
+        flex;
 
-    font-size: 34px;
+    align-items:
+        center;
 
-    animation: aparecerIcono 0.5s ease;
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(255, 92, 112, 0.10);
+
+    border:
+        1px solid rgba(255, 92, 112, 0.28);
+
+    color:
+        var(--danger);
+
+    font-size:
+        32px;
+
+    box-shadow:
+        0 0 30px rgba(255, 92, 112, 0.12);
+
+    animation:
+        aparecerIcono 0.5s ease;
 }
 
 
-/* Título */
+/* =====================================================
+   EFECTO ALREDEDOR DEL ICONO
+===================================================== */
+
+.icono-circulo::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 102px;
+    height: 102px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid rgba(255, 92, 112, 0.08);
+
+    animation:
+        pulsoDesactivacion 2s infinite;
+}
+
+
+/* =====================================================
+   TÍTULO
+===================================================== */
 
 .titulo-cuenta-desactivada {
-    margin-top: 20px;
-    margin-bottom: 12px;
 
-    color: #212529;
+    margin-top:
+        22px;
 
-    font-size: 25px;
-    font-weight: 700;
+    margin-bottom:
+        12px;
+
+    color:
+        #ffffff;
+
+    font-size:
+        24px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.3px;
 }
 
 
-/* Mensaje */
+/* =====================================================
+   MENSAJE PRINCIPAL
+===================================================== */
 
 .mensaje-cuenta-desactivada {
-    margin: 0 auto 8px;
 
-    max-width: 400px;
+    max-width:
+        390px;
 
-    color: #495057;
+    margin:
+        0 auto 8px;
 
-    font-size: 16px;
-    line-height: 1.5;
+    color:
+        var(--text-light);
+
+    font-size:
+        14px;
+
+    line-height:
+        1.6;
 }
 
 
-/* Texto secundario */
+/* =====================================================
+   MENSAJE SECUNDARIO
+===================================================== */
 
 .texto-sesion {
-    margin-bottom: 20px;
 
-    color: #6c757d;
+    margin-bottom:
+        20px;
 
-    font-size: 14px;
+    color:
+        var(--text-muted);
+
+    font-size:
+        12px;
 }
 
 
-/* Contador */
+/* =====================================================
+   CONTADOR
+===================================================== */
 
 .contador-cuenta {
-    width: 55px;
-    height: 55px;
 
-    margin: 0 auto 10px;
+    width:
+        62px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height:
+        62px;
 
-    border-radius: 50%;
+    margin:
+        0 auto 12px;
 
-    background: #dc3545;
-    color: white;
+    display:
+        flex;
 
-    font-size: 22px;
-    font-weight: 700;
+    align-items:
+        center;
 
-    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(255, 92, 112, 0.08);
+
+    border:
+        2px solid var(--danger);
+
+    color:
+        var(--danger);
+
+    font-size:
+        23px;
+
+    font-weight:
+        800;
+
+    font-variant-numeric:
+        tabular-nums;
+
+    box-shadow:
+        0 0 20px rgba(255, 92, 112, 0.15);
+
+    animation:
+        contadorPulso 1s infinite;
 }
 
 
-/* Texto redirección */
+/* =====================================================
+   TEXTO REDIRECCIÓN
+===================================================== */
 
 .texto-redireccion {
-    margin-bottom: 0;
 
-    color: #6c757d;
+    margin-bottom:
+        0;
 
-    font-size: 13px;
+    color:
+        var(--text-muted);
+
+    font-size:
+        11px;
 }
 
 
-/* Botón */
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.modal-cuenta-desactivada .modal-footer {
+
+    padding:
+        18px 25px 25px;
+
+    border-top:
+        1px solid rgba(255, 255, 255, 0.05);
+
+    background:
+        rgba(0, 0, 0, 0.08);
+}
+
+
+/* =====================================================
+   BOTÓN
+===================================================== */
 
 .btn-cuenta-desactivada {
-    min-width: 130px;
 
-    padding: 10px 25px;
+    min-width:
+        145px;
 
-    border: none;
-    border-radius: 10px;
+    padding:
+        11px 25px;
 
-    background: #dc3545;
-    color: white;
+    border:
+        1px solid rgba(255, 92, 112, 0.30);
 
-    font-weight: 600;
+    border-radius:
+        10px;
 
-    transition: all 0.2s ease;
+    background:
+        linear-gradient(135deg,
+            #ff5c70,
+            #e6455c);
+
+    color:
+        #ffffff;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+    box-shadow:
+        0 7px 20px rgba(255, 92, 112, 0.15);
+
+    cursor:
+        pointer;
+
+    transition:
+        all 0.2s ease;
 }
+
 
 .btn-cuenta-desactivada:hover {
-    background: #bb2d3b;
-    color: white;
 
-    transform: translateY(-1px);
+    background:
+        linear-gradient(135deg,
+            #ff6b7d,
+            #ed4b60);
+
+    color:
+        #ffffff;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 10px 25px rgba(255, 92, 112, 0.25);
 }
 
 
-/* Animación */
+.btn-cuenta-desactivada:active {
+
+    transform:
+        translateY(0);
+
+}
+
+
+/* =====================================================
+   FONDO OSCURO DE LA MODAL
+===================================================== */
+
+#modalCuentaDesactivada {
+
+    background:
+        rgba(3, 18, 23, 0.72);
+}
+
+
+/* =====================================================
+   ANIMACIÓN ICONO
+===================================================== */
 
 @keyframes aparecerIcono {
 
     from {
-        opacity: 0;
-        transform: scale(0.7);
+
+        opacity:
+            0;
+
+        transform:
+            scale(0.65);
+
     }
 
     to {
-        opacity: 1;
-        transform: scale(1);
+
+        opacity:
+            1;
+
+        transform:
+            scale(1);
+
+    }
+
+}
+
+
+/* =====================================================
+   ANIMACIÓN DEL CÍRCULO
+===================================================== */
+
+@keyframes pulsoDesactivacion {
+
+    0% {
+
+        opacity:
+            0.7;
+
+        transform:
+            scale(0.9);
+
+    }
+
+    70% {
+
+        opacity:
+            0;
+
+        transform:
+            scale(1.15);
+
+    }
+
+    100% {
+
+        opacity:
+            0;
+
+        transform:
+            scale(1.15);
+
+    }
+
+}
+
+
+/* =====================================================
+   ANIMACIÓN DEL CONTADOR
+===================================================== */
+
+@keyframes contadorPulso {
+
+    0%,
+    100% {
+
+        transform:
+            scale(1);
+
+    }
+
+    50% {
+
+        transform:
+            scale(1.05);
+
+    }
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 576px) {
+
+    .modal-cuenta-desactivada {
+
+        margin:
+            15px;
+
+        border-radius:
+            18px !important;
+
+    }
+
+
+    .icono-circulo {
+
+        width:
+            70px;
+
+        height:
+            70px;
+
+        font-size:
+            27px;
+
+    }
+
+
+    .titulo-cuenta-desactivada {
+
+        font-size:
+            21px;
+
+    }
+
+
+    .mensaje-cuenta-desactivada {
+
+        font-size:
+            13px;
+
+        padding:
+            0 10px;
+
+    }
+
+
+    .contador-cuenta {
+
+        width:
+            57px;
+
+        height:
+            57px;
+
+        font-size:
+            21px;
+
+    }
+
+
+    .btn-cuenta-desactivada {
+
+        width:
+            100%;
+
     }
 
 }
