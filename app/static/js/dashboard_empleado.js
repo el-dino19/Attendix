@@ -970,88 +970,88 @@ document.addEventListener(
     }
 );
 
+ let cuentaDesactivada = false;
 
+    async function verificarEstadoCuenta() {
 
-let cuentaDesactivada = false;
+        if (cuentaDesactivada) {
+            return;
+        }
 
-async function verificarEstadoCuenta() {
+        try {
 
-    // Evitar hacer más peticiones después de detectar
-    // que la cuenta fue desactivada.
-    if (cuentaDesactivada) {
-        return;
-    }
-
-    try {
-
-        const respuesta = await fetch(
-            "{{ url_for('auth.verificar_estado') }}",
-            {
-                method: "GET",
-                credentials: "same-origin",
-                cache: "no-store"
-            }
-        );
-
-        const datos = await respuesta.json();
-
-        // La cuenta fue desactivada
-        if (datos.activo === false) {
-
-            cuentaDesactivada = true;
-
-            const modalElement = document.getElementById(
-                "cuentaDesactivadaModal"
-            );
-
-            const modal = new bootstrap.Modal(
-                modalElement,
+            const response = await fetch(
+                "{{ url_for('auth.verificar_estado') }}",
                 {
-                    backdrop: "static",
-                    keyboard: false
+                    method: "GET",
+                    credentials: "same-origin",
+                    cache: "no-store"
                 }
             );
 
-            modal.show();
+            if (!response.ok) {
+                return;
+            }
 
-            // Cerrar sesión automáticamente
-            setTimeout(() => {
+            const data = await response.json();
 
-                window.location.href =
-                    "{{ url_for('auth.logout') }}";
+            if (data.activo === false) {
 
-            }, 3000);
+                cuentaDesactivada = true;
+
+                const modalElement =
+                    document.getElementById(
+                        "modalCuentaDesactivada"
+                    );
+
+                const modal =
+                    new bootstrap.Modal(
+                        modalElement,
+                        {
+                            backdrop: "static",
+                            keyboard: false
+                        }
+                    );
+
+                modal.show();
+
+                // Cerrar sesión después de 3 segundos
+                setTimeout(function () {
+
+                    window.location.href =
+                        "{{ url_for('auth.logout') }}";
+
+                }, 3000);
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Error verificando cuenta:",
+                error
+            );
+
         }
-
-    } catch (error) {
-
-        console.error(
-            "Error verificando estado de cuenta:",
-            error
-        );
-
     }
-}
 
 
-// Revisar cada 5 segundos
-setInterval(
-    verificarEstadoCuenta,
-    5000
-);
+    // Revisar cada 5 segundos
+    setInterval(
+        verificarEstadoCuenta,
+        5000
+    );
 
 
-// Verificar también inmediatamente
-verificarEstadoCuenta();
+    // Revisar inmediatamente al cargar la página
+    verificarEstadoCuenta();
 
 
-// Botón Aceptar
-document
-    .getElementById("btnCerrarCuentaDesactivada")
-    .addEventListener("click", function () {
+    // Si pulsa Aceptar
+    document
+        .getElementById("btnCuentaDesactivada")
+        .addEventListener("click", function () {
 
-        window.location.href =
-            "{{ url_for('auth.logout') }}";
+            window.location.href =
+                "{{ url_for('auth.logout') }}";
 
-    });
-
+        });
