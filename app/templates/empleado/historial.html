@@ -2,24 +2,19 @@
 <html lang="es">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Mi historial | Attendix</title>
 
-  <!-- FAVICON -->
-  <link rel="icon" type="image/png" sizes="512x512"
-    href="{{ url_for('static', filename='img/Logo_Asistencia.png') }}" />
+  <link rel="icon" type="image/png" sizes="512x512" href="{{ url_for('static', filename='img/Logo_Asistencia.png') }}">
 
-  <!-- BOOTSTRAP ICONS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
-  <!-- BOOTSTRAP -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-  <!-- CSS HISTORIAL -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/historial.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/historial.css') }}">
 </head>
 
 <body>
@@ -29,9 +24,7 @@
   ====================================================== -->
 
   <header class="topbar">
-
     <div class="brand">
-
       <div class="brand-icon">
         <i class="bi bi-clock-history"></i>
       </div>
@@ -40,14 +33,10 @@
         <strong>Attendix</strong>
         <span>Control de jornadas</span>
       </div>
-
     </div>
 
-
     <div class="topbar-actions">
-
       <div class="user-info">
-
         <div class="user-avatar">
           {{ session["nombre"][0] | upper }}
         </div>
@@ -56,28 +45,18 @@
           <strong>{{ session["nombre"] }}</strong>
           <small>Colaborador</small>
         </div>
-
       </div>
 
-
       <a href="{{ url_for('empleado.dashboard') }}" class="btn-dashboard">
-
         <i class="bi bi-grid-fill"></i>
-
         Dashboard
-
       </a>
-
 
       <a href="#" class="btn btn-danger btn-logout" data-bs-toggle="modal" data-bs-target="#confirmarLogoutModal"
         aria-label="Cerrar sesión">
-
         <i class="bi bi-box-arrow-left"></i>
-
       </a>
-
     </div>
-
   </header>
 
 
@@ -89,66 +68,43 @@
     aria-hidden="true">
 
     <div class="modal-dialog modal-dialog-centered">
-
       <div class="modal-content confirm-modal">
 
         <div class="modal-body text-center p-4">
 
           <div class="confirm-icon logout-icon">
-
             <i class="bi bi-box-arrow-left"></i>
-
           </div>
 
-
           <h3 class="confirm-title" id="confirmarLogoutModalLabel">
-
             Cerrar sesión
-
           </h3>
 
-
           <p class="confirm-text">
-
             ¿Deseas cerrar tu sesión?
-
           </p>
-
 
           <p class="confirm-warning">
-
             <i class="bi bi-shield-check"></i>
-
             Tu sesión se cerrará de forma segura.
-
           </p>
-
 
           <div class="confirm-buttons">
 
             <button type="button" class="btn confirm-cancel" data-bs-dismiss="modal">
-
               Cancelar
-
             </button>
 
-
             <a href="{{ url_for('auth.logout') }}" class="btn btn-danger confirm-logout">
-
               <i class="bi bi-box-arrow-left"></i>
-
               Cerrar sesión
-
             </a>
 
           </div>
-
         </div>
 
       </div>
-
     </div>
-
   </div>
 
 
@@ -158,35 +114,25 @@
 
   <main class="page-container">
 
-
     <!-- =================================================
          CABECERA
     ================================================== -->
 
     <section class="page-header">
-
       <div>
 
         <span class="section-tag">
-
           <i class="bi bi-calendar3"></i>
-
           REGISTROS
-
         </span>
 
-
-        <h1>
-          Mi historial
-        </h1>
-
+        <h1>Mi historial</h1>
 
         <p>
           Consulta tus jornadas de trabajo, descansos y horas extras registradas.
         </p>
 
       </div>
-
     </section>
 
 
@@ -196,89 +142,52 @@
 
     <section class="summary-grid">
 
-
-      <!-- JORNADAS -->
-
       <div class="summary-card">
 
         <div class="summary-icon blue">
-
           <i class="bi bi-calendar-check-fill"></i>
-
         </div>
 
-
         <div>
-
-          <span>
-            Jornadas registradas
-          </span>
-
-          <strong>
-            {{ historial|length }}
-          </strong>
-
+          <span>Jornadas registradas</span>
+          <strong>{{ historial|length }}</strong>
         </div>
 
       </div>
 
-
-      <!-- FINALIZADAS -->
 
       <div class="summary-card">
 
         <div class="summary-icon green">
-
           <i class="bi bi-check-circle-fill"></i>
-
         </div>
 
-
         <div>
-
-          <span>
-            Jornadas finalizadas
-          </span>
+          <span>Jornadas finalizadas</span>
 
           <strong>
-
             {{ historial
             | selectattr("jornada.salida")
             | list
             | length }}
-
           </strong>
-
         </div>
 
       </div>
 
-
-      <!-- CONTROL -->
 
       <div class="summary-card">
 
         <div class="summary-icon cyan">
-
           <i class="bi bi-clock-fill"></i>
-
         </div>
 
-
         <div>
-
-          <span>
-            Control horario
-          </span>
-
-          <strong>
-            Activo
-          </strong>
-
+          <span>Control horario</span>
+          <strong>Activo</strong>
         </div>
 
       </div>
-
 
     </section>
 
@@ -289,24 +198,17 @@
 
     <section class="history-section">
 
-
       <div class="section-title">
 
         <div>
-
           <h2>
-
             <i class="bi bi-clock-history"></i>
-
             Jornadas
-
           </h2>
-
 
           <p>
             Tus registros más recientes.
           </p>
-
         </div>
 
       </div>
@@ -314,32 +216,23 @@
 
       {% if historial %}
 
-
       <div class="timeline">
-
-
-        <!-- =================================================
-             LOOP DE JORNADAS
-        ================================================== -->
 
         {% for registro in historial %}
 
+        <!-- =================================================
+             TARJETA DE JORNADA
+        ================================================== -->
 
         <article class="history-card">
 
-
-          <!-- =========================================
-               FECHA
-          ========================================== -->
+          <!-- FECHA -->
 
           <div class="date-column">
 
             <span class="date-day">
-
               {{ registro.jornada.fecha.strftime("%d") }}
-
             </span>
-
 
             <span class="date-month">
 
@@ -362,27 +255,20 @@
 
             </span>
 
-
             <span class="date-year">
-
               {{ registro.jornada.fecha.strftime("%Y") }}
-
             </span>
 
           </div>
 
 
-          <!-- =========================================
-               CONTENIDO
-          ========================================== -->
+          <!-- CONTENIDO -->
 
           <div class="history-content">
-
 
             <!-- CABECERA -->
 
             <div class="history-header">
-
 
               <div>
 
@@ -390,11 +276,9 @@
                   Jornada laboral
                 </h3>
 
-
                 <span class="history-date">
 
                   <i class="bi bi-calendar3"></i>
-
 
                   {% set dias = {
                   'Monday': 'lunes',
@@ -405,7 +289,6 @@
                   'Saturday': 'sábado',
                   'Sunday': 'domingo'
                   } %}
-
 
                   {% set meses_largos = {
                   'January': 'enero',
@@ -422,17 +305,11 @@
                   'December': 'diciembre'
                   } %}
 
-
                   {{ dias[registro.jornada.fecha.strftime('%A')] }},
-
                   {{ registro.jornada.fecha.strftime('%d') }}
-
                   de
-
                   {{ meses_largos[registro.jornada.fecha.strftime('%B')] }}
-
                   de
-
                   {{ registro.jornada.fecha.strftime('%Y') }}
 
                 </span>
@@ -444,7 +321,6 @@
 
               <div class="d-flex align-items-center gap-2">
 
-
                 <!-- =================================================
                      BOTÓN HORAS EXTRAS
                 ================================================== -->
@@ -455,7 +331,6 @@
                   data-bs-target="#modalHoraExtra{{ loop.index }}">
 
                   <i class="bi bi-clock-history"></i>
-
                   Horas extras
 
                 </button>
@@ -468,55 +343,40 @@
                 {% if registro.jornada.salida %}
 
                 <span class="status finished">
-
                   <i class="bi bi-check-circle-fill"></i>
-
                   Finalizada
-
                 </span>
 
                 {% else %}
 
                 <span class="status active">
-
                   <i class="bi bi-circle-fill"></i>
-
                   Activa
-
                 </span>
 
                 {% endif %}
-
 
               </div>
 
             </div>
 
 
-            <!-- =========================================
+            <!-- =================================================
                  HORARIOS
-            ========================================== -->
+            ================================================== -->
 
             <div class="time-row">
-
 
               <!-- ENTRADA -->
 
               <div class="time-box">
 
                 <div class="time-icon entry">
-
                   <i class="bi bi-box-arrow-in-right"></i>
-
                 </div>
 
-
                 <div>
-
-                  <span>
-                    Entrada
-                  </span>
-
+                  <span>Entrada</span>
 
                   <strong>
 
@@ -531,18 +391,13 @@
                     {% endif %}
 
                   </strong>
-
                 </div>
 
               </div>
 
 
-              <!-- LÍNEA -->
-
               <div class="time-line">
-
                 <span></span>
-
               </div>
 
 
@@ -551,18 +406,11 @@
               <div class="time-box">
 
                 <div class="time-icon exit">
-
                   <i class="bi bi-box-arrow-right"></i>
-
                 </div>
 
-
                 <div>
-
-                  <span>
-                    Salida
-                  </span>
-
+                  <span>Salida</span>
 
                   <strong>
 
@@ -577,79 +425,56 @@
                     {% endif %}
 
                   </strong>
-
                 </div>
 
               </div>
 
-
             </div>
 
 
-            <!-- =========================================
+            <!-- =================================================
                  UBICACIÓN
-            ========================================== -->
+            ================================================== -->
 
             <div class="location-card">
 
-
               <div class="location-icon">
-
                 <i class="bi bi-geo-alt-fill"></i>
-
               </div>
-
 
               <div class="location-content">
 
-
                 <span class="location-label">
-
                   Ubicación registrada
-
                 </span>
-
 
                 {% if registro.jornada.direccion %}
 
-
                 <span class="location-address" title="{{ registro.jornada.direccion }}">
-
                   {{ registro.jornada.direccion }}
-
                 </span>
-
 
                 {% if registro.jornada.latitud is not none
                 and registro.jornada.longitud is not none %}
-
 
                 <div class="location-coordinates">
 
                   <i class="bi bi-crosshair"></i>
 
                   {{ "%.5f"|format(registro.jornada.latitud) }},
-
                   {{ "%.5f"|format(registro.jornada.longitud) }}
 
                 </div>
 
-
                 {% endif %}
-
 
                 {% else %}
 
-
                 <span class="location-address empty">
-
                   Ubicación no registrada
-
                 </span>
 
-
                 {% endif %}
-
 
               </div>
 
@@ -663,15 +488,13 @@
             </div>
 
 
-            <!-- =========================================
+            <!-- =================================================
                  DESCANSOS
-            ========================================== -->
+            ================================================== -->
 
             <div class="break-section">
 
-
               <div class="break-header">
-
 
                 <div>
 
@@ -683,32 +506,24 @@
 
                 </div>
 
-
                 <span>
                   {{ registro.descansos|length }}
                 </span>
-
 
               </div>
 
 
               {% if registro.descansos %}
 
-
               <div class="break-list">
-
 
                 {% for descanso in registro.descansos %}
 
-
                 <div class="break-item">
-
 
                   <div class="break-type">
 
-
                     <div class="break-icon">
-
 
                       {% if descanso.tipo == "lunch" %}
 
@@ -720,15 +535,11 @@
 
                       {% endif %}
 
-
                     </div>
-
 
                     <div>
 
-
                       <strong>
-
 
                         {% if descanso.tipo == "break_manana" %}
 
@@ -748,17 +559,13 @@
 
                         {% endif %}
 
-
                       </strong>
-
 
                       <small>
                         Descanso registrado
                       </small>
 
-
                     </div>
-
 
                   </div>
 
@@ -767,13 +574,9 @@
 
                   <div class="break-time">
 
-
                     <div>
 
-                      <span>
-                        Inicio
-                      </span>
-
+                      <span>Inicio</span>
 
                       <strong>
 
@@ -797,10 +600,7 @@
 
                     <div>
 
-                      <span>
-                        Fin
-                      </span>
-
+                      <span>Fin</span>
 
                       <strong>
 
@@ -810,9 +610,7 @@
 
                         {% else %}
 
-                        <em>
-                          En curso
-                        </em>
+                        <em>En curso</em>
 
                         {% endif %}
 
@@ -820,21 +618,15 @@
 
                     </div>
 
-
                   </div>
-
 
                 </div>
 
-
                 {% endfor %}
-
 
               </div>
 
-
               {% else %}
-
 
               <div class="no-breaks">
 
@@ -846,75 +638,52 @@
 
               </div>
 
-
               {% endif %}
-
 
             </div>
 
-
           </div>
-          <!-- FIN history-content -->
-
 
         </article>
-        <!-- FIN history-card -->
 
 
         <!-- =================================================
-             MODAL HORAS EXTRAS DE ESTA JORNADA
+             MODAL HORAS EXTRAS
         ================================================== -->
 
         {% if registro.hora_extra %}
 
-
         <div class="modal fade" id="modalHoraExtra{{ loop.index }}" tabindex="-1"
           aria-labelledby="modalHoraExtraLabel{{ loop.index }}" aria-hidden="true">
 
-
           <div class="modal-dialog modal-dialog-centered">
 
-
             <div class="modal-content hora-extra-modal">
-
 
               <!-- HEADER -->
 
               <div class="modal-header">
 
-
                 <div class="hora-extra-modal-title">
 
-
                   <div class="hora-extra-modal-icon">
-
                     <i class="bi bi-clock-history"></i>
-
                   </div>
-
 
                   <div>
 
-                    <span>
-                      REGISTRO
-                    </span>
-
+                    <span>REGISTRO</span>
 
                     <h5 id="modalHoraExtraLabel{{ loop.index }}">
-
                       Horas extras
-
                     </h5>
 
                   </div>
 
-
                 </div>
-
 
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar">
                 </button>
-
 
               </div>
 
@@ -923,19 +692,16 @@
 
               <div class="modal-body">
 
-
                 <!-- ESTADO -->
 
                 <div class="hora-extra-status">
-
 
                   <span class="hora-extra-label">
                     Estado
                   </span>
 
 
-                  {% if registro.hora_extra.salida %}
-
+                  {% if registro.hora_extra.fin %}
 
                   <span class="hora-extra-badge completed">
 
@@ -945,9 +711,7 @@
 
                   </span>
 
-
                   {% else %}
-
 
                   <span class="hora-extra-badge active">
 
@@ -957,9 +721,7 @@
 
                   </span>
 
-
                   {% endif %}
-
 
                 </div>
 
@@ -968,18 +730,13 @@
 
                 <div class="hora-extra-times">
 
-
                   <!-- INICIO -->
 
                   <div class="hora-extra-time">
 
-
                     <div class="hora-extra-time-icon start">
-
                       <i class="bi bi-play-fill"></i>
-
                     </div>
-
 
                     <div>
 
@@ -987,24 +744,11 @@
                         Inicio
                       </span>
 
-
                       <strong>
-
 
                         {% if registro.hora_extra.inicio %}
 
                         {{ registro.hora_extra.inicio.strftime("%I:%M:%S %p") }}
-
-
-                        {% elif registro.hora_extra.hora_inicio %}
-
-                        {{ registro.hora_extra.hora_inicio.strftime("%I:%M:%S %p") }}
-
-
-                        {% elif registro.hora_extra.entrada %}
-
-                        {{ registro.hora_extra.entrada.strftime("%I:%M:%S %p") }}
-
 
                         {% else %}
 
@@ -1012,11 +756,9 @@
 
                         {% endif %}
 
-
                       </strong>
 
                     </div>
-
 
                   </div>
 
@@ -1024,38 +766,29 @@
                   <!-- FLECHA -->
 
                   <div class="hora-extra-arrow">
-
                     <i class="bi bi-arrow-right"></i>
-
                   </div>
 
 
-                  <!-- SALIDA -->
+                  <!-- FIN -->
 
                   <div class="hora-extra-time">
 
-
                     <div class="hora-extra-time-icon end">
-
                       <i class="bi bi-stop-fill"></i>
-
                     </div>
-
 
                     <div>
 
                       <span>
-                        Salida
+                        Fin
                       </span>
-
 
                       <strong>
 
+                        {% if registro.hora_extra.fin %}
 
-                        {% if registro.hora_extra.salida %}
-
-                        {{ registro.hora_extra.salida.strftime("%I:%M:%S %p") }}
-
+                        {{ registro.hora_extra.fin.strftime("%I:%M:%S %p") }}
 
                         {% else %}
 
@@ -1065,14 +798,11 @@
 
                         {% endif %}
 
-
                       </strong>
 
                     </div>
 
-
                   </div>
-
 
                 </div>
 
@@ -1081,16 +811,11 @@
 
                 {% if registro.hora_extra.direccion %}
 
-
                 <div class="hora-extra-location">
 
-
                   <div class="hora-extra-location-icon">
-
                     <i class="bi bi-geo-alt-fill"></i>
-
                   </div>
-
 
                   <div>
 
@@ -1098,18 +823,13 @@
                       Ubicación registrada
                     </span>
 
-
                     <strong>
-
                       {{ registro.hora_extra.direccion }}
-
                     </strong>
 
                   </div>
 
-
                 </div>
-
 
                 {% endif %}
 
@@ -1118,21 +838,16 @@
 
                 <div class="hora-extra-date">
 
-
                   <i class="bi bi-calendar3"></i>
-
 
                   <span>
 
                     Jornada del
-
                     {{ registro.jornada.fecha.strftime("%d/%m/%Y") }}
 
                   </span>
 
-
                 </div>
-
 
               </div>
 
@@ -1141,16 +856,13 @@
 
               <div class="modal-footer">
 
-
                 <button type="button" class="btn btn-cerrar-hora-extra" data-bs-dismiss="modal">
 
                   Cerrar
 
                 </button>
 
-
               </div>
-
 
             </div>
 
@@ -1158,20 +870,15 @@
 
         </div>
 
-
         {% endif %}
 
 
         {% endfor %}
-        <!-- FIN for registro in historial -->
-
 
       </div>
-      <!-- FIN timeline -->
 
 
       {% else %}
-
 
       <!-- =================================================
            SIN HISTORIAL
@@ -1179,23 +886,17 @@
 
       <div class="empty-state">
 
-
         <div class="empty-icon">
-
           <i class="bi bi-calendar-x"></i>
-
         </div>
-
 
         <h3>
           No hay registros todavía
         </h3>
 
-
         <p>
           Cuando registres una jornada, aparecerá aquí.
         </p>
-
 
         <a href="{{ url_for('empleado.dashboard') }}" class="empty-button">
 
@@ -1205,15 +906,11 @@
 
         </a>
 
-
       </div>
-
 
       {% endif %}
 
-
     </section>
-
 
   </main>
 
@@ -1225,32 +922,20 @@
   <div class="modal fade" id="modalCuentaDesactivada" tabindex="-1" aria-labelledby="modalCuentaDesactivadaLabel"
     aria-hidden="true">
 
-
     <div class="modal-dialog modal-dialog-centered">
-
 
       <div class="modal-content modal-cuenta-desactivada">
 
-
-        <!-- ICONO -->
-
         <div class="icono-cuenta-desactivada">
 
-
           <div class="icono-circulo">
-
             <i class="bi bi-person-x-fill"></i>
-
           </div>
-
 
         </div>
 
 
-        <!-- CONTENIDO -->
-
         <div class="modal-body text-center">
-
 
           <h3 class="titulo-cuenta-desactivada" id="modalCuentaDesactivadaLabel">
 
@@ -1258,13 +943,11 @@
 
           </h3>
 
-
           <p class="mensaje-cuenta-desactivada">
 
             Tu cuenta ha sido desactivada por un administrador.
 
           </p>
-
 
           <p class="texto-sesion">
 
@@ -1272,8 +955,6 @@
 
           </p>
 
-
-          <!-- CONTADOR -->
 
           <div class="contador-cuenta">
 
@@ -1290,14 +971,10 @@
 
           </p>
 
-
         </div>
 
 
-        <!-- BOTÓN -->
-
         <div class="modal-footer justify-content-center">
-
 
           <button type="button" class="btn btn-cuenta-desactivada" id="btnCuentaDesactivada">
 
@@ -1305,9 +982,7 @@
 
           </button>
 
-
         </div>
-
 
       </div>
 
@@ -1330,23 +1005,15 @@
   ====================================================== -->
 
   <script>
-
     let cuentaDesactivada = false;
-
     let intervaloDesactivacion = null;
 
-
     async function verificarEstadoCuenta() {
-
-
       if (cuentaDesactivada) {
         return;
       }
 
-
       try {
-
-
         const response = await fetch(
           "{{ url_for('auth.verificar_estado') }}",
           {
@@ -1356,37 +1023,25 @@
           }
         );
 
-
         if (!response.ok) {
           return;
         }
 
-
         const data = await response.json();
 
-
         if (data.activo === false) {
-
-
           cuentaDesactivada = true;
 
-
-          const modalElement =
-            document.getElementById(
-              "modalCuentaDesactivada"
-            );
-
+          const modalElement = document.getElementById(
+            "modalCuentaDesactivada"
+          );
 
           if (!modalElement) {
-
             console.error(
               "No se encontró la modal de cuenta desactivada."
             );
-
             return;
-
           }
-
 
           const modal =
             bootstrap.Modal.getOrCreateInstance(
@@ -1397,98 +1052,49 @@
               }
             );
 
-
           modal.show();
-
-
-          // =====================================
-          // CONTADOR
-          // =====================================
 
           let segundos = 10;
 
-
-          const contador =
-            document.getElementById(
-              "contadorDesactivacion"
-            );
-
+          const contador = document.getElementById(
+            "contadorDesactivacion"
+          );
 
           if (contador) {
-
-            contador.textContent =
-              segundos;
-
+            contador.textContent = segundos;
           }
-
 
           if (intervaloDesactivacion) {
-
-            clearInterval(
-              intervaloDesactivacion
-            );
-
+            clearInterval(intervaloDesactivacion);
           }
 
+          intervaloDesactivacion = setInterval(function () {
+            segundos--;
 
-          intervaloDesactivacion =
-            setInterval(function () {
+            if (contador) {
+              contador.textContent = segundos;
+            }
 
+            if (segundos <= 0) {
+              clearInterval(intervaloDesactivacion);
 
-              segundos--;
-
-
-              if (contador) {
-
-                contador.textContent =
-                  segundos;
-
-              }
-
-
-              if (segundos <= 0) {
-
-
-                clearInterval(
-                  intervaloDesactivacion
-                );
-
-
-                window.location.href =
-                  "{{ url_for('auth.logout') }}";
-
-              }
-
-
-            }, 1000);
-
+              window.location.href =
+                "{{ url_for('auth.logout') }}";
+            }
+          }, 1000);
         }
 
-
       } catch (error) {
-
-
         console.error(
           "Error verificando estado:",
           error
         );
-
-
       }
-
     }
 
 
-    // =====================================
-    // VERIFICAR AL CARGAR
-    // =====================================
-
     verificarEstadoCuenta();
 
-
-    // =====================================
-    // VERIFICAR CADA 5 SEGUNDOS
-    // =====================================
 
     setInterval(
       verificarEstadoCuenta,
@@ -1496,43 +1102,27 @@
     );
 
 
-    // =====================================
-    // BOTÓN ENTENDIDO
-    // =====================================
-
-    const boton =
-      document.getElementById(
-        "btnCuentaDesactivada"
-      );
-
+    const boton = document.getElementById(
+      "btnCuentaDesactivada"
+    );
 
     if (boton) {
-
-
       boton.addEventListener(
         "click",
         function () {
 
-
           if (intervaloDesactivacion) {
-
             clearInterval(
               intervaloDesactivacion
             );
-
           }
-
 
           window.location.href =
             "{{ url_for('auth.logout') }}";
-
         }
       );
-
     }
-
   </script>
-
 
 </body>
 

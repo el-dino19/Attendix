@@ -1,8 +1,10 @@
-from app.extensions import db
 from datetime import datetime
+
+from app.extensions import db
 
 
 class Jornada(db.Model):
+
     __tablename__ = "jornadas"
 
     id = db.Column(
@@ -45,13 +47,15 @@ class Jornada(db.Model):
         db.Time,
         nullable=True
     )
-    
-    # Asociación con horas extras
+
     horas_extras = db.relationship(
         "HoraExtra",
         back_populates="jornada",
+        cascade="all, delete-orphan",
         lazy=True
     )
+
+
 
     created_at = db.Column(
         db.DateTime,
@@ -66,22 +70,17 @@ class Jornada(db.Model):
         onupdate=datetime.utcnow
     )
 
+
+
     usuario = db.relationship(
         "Usuario",
         back_populates="jornadas"
     )
+
+    
 
     descansos = db.relationship(
         "Descanso",
         back_populates="jornada",
         cascade="all, delete-orphan"
     )
-    
-    horas_extras = db.relationship(
-    "HoraExtra",
-    back_populates="jornada",
-    cascade="all, delete-orphan"
-    )
-
-
-

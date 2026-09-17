@@ -22,7 +22,7 @@ class HoraExtra(db.Model):
     jornada_id = db.Column(
         db.BigInteger,
         db.ForeignKey("jornadas.id"),
-        nullable=True
+        nullable=False
     )
 
     fecha = db.Column(
@@ -54,10 +54,14 @@ class HoraExtra(db.Model):
         db.String(500),
         nullable=True
     )
-    
-    # Asociación con jornada
+
     jornada = db.relationship(
         "Jornada",
+        back_populates="horas_extras"
+    )
+
+    usuario = db.relationship(
+        "Usuario",
         back_populates="horas_extras"
     )
 
@@ -72,14 +76,4 @@ class HoraExtra(db.Model):
         nullable=False,
         default=datetime.utcnow,
         onupdate=datetime.utcnow
-    )
-
-    usuario = db.relationship(
-        "Usuario",
-        back_populates="horas_extras"
-    )
-
-    jornada = db.relationship(
-        "Jornada",
-        back_populates="horas_extras"
     )
