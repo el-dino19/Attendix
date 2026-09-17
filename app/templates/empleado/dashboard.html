@@ -128,7 +128,8 @@
     {% if mensajes %}
     <div class="toast-container">
       {% for categoria, mensaje in mensajes %}
-      <div class="custom-toast {% if categoria == 'success' %}toast-success{% elif categoria == 'warning' %}toast-warning{% else %}toast-danger{% endif %}">
+      <div
+        class="custom-toast {% if categoria == 'success' %}toast-success{% elif categoria == 'warning' %}toast-warning{% else %}toast-danger{% endif %}">
         <div class="toast-icon">
           {% if categoria == "success" %}
           <i class="bi bi-check-circle-fill"></i>
@@ -252,19 +253,19 @@
 
         <!-- FINALIZAR JORNADA -->
         {% if not jornada.salida %}
-          {% if not descanso_activo %}
-          <div class="form-action">
-            <button type="button" class="btn-danger-action" data-bs-toggle="modal" data-bs-target="#confirmarSalidaModal">
-              <i class="bi bi-stop-circle-fill"></i>
-              Finalizar jornada
-            </button>
-          </div>
-          {% else %}
-          <div class="warning-box">
-            <i class="bi bi-exclamation-triangle-fill"></i>
-            <span>Debes finalizar tu descanso antes de terminar la jornada.</span>
-          </div>
-          {% endif %}
+        {% if not descanso_activo %}
+        <div class="form-action">
+          <button type="button" class="btn-danger-action" data-bs-toggle="modal" data-bs-target="#confirmarSalidaModal">
+            <i class="bi bi-stop-circle-fill"></i>
+            Finalizar jornada
+          </button>
+        </div>
+        {% else %}
+        <div class="warning-box">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>Debes finalizar tu descanso antes de terminar la jornada.</span>
+        </div>
+        {% endif %}
         {% endif %}
 
         {% else %}
@@ -297,95 +298,96 @@
         </div>
 
         {% if jornada and not jornada.salida %}
-          {% if descanso_activo %}
-          <!-- DESCANSO ACTIVO -->
-          <div class="active-break">
-            <div class="break-status">
-              <div class="break-pulse">
-                <span></span>
-              </div>
-              <div>
-                <span class="card-label">DESCANSO EN PROGRESO</span>
-                <h3>
-                  {% if descanso_activo.tipo == "break_manana" %}
-                  <i class="bi bi-cup-hot"></i> Break de mañana
-                  {% elif descanso_activo.tipo == "lunch" %}
-                  <i class="bi bi-egg-fried"></i> Lunch
-                  {% elif descanso_activo.tipo == "break_tarde" %}
-                  <i class="bi bi-cup-hot"></i> Break de tarde
-                  {% endif %}
-                </h3>
-              </div>
+        {% if descanso_activo %}
+        <!-- DESCANSO ACTIVO -->
+        <div class="active-break">
+          <div class="break-status">
+            <div class="break-pulse">
+              <span></span>
             </div>
-
-            <div class="break-start">
-              <span>Inicio</span>
-              <strong>{{ descanso_activo.inicio.strftime("%I:%M:%S %p") }}</strong>
+            <div>
+              <span class="card-label">DESCANSO EN PROGRESO</span>
+              <h3>
+                {% if descanso_activo.tipo == "break_manana" %}
+                <i class="bi bi-cup-hot"></i> Break de mañana
+                {% elif descanso_activo.tipo == "lunch" %}
+                <i class="bi bi-egg-fried"></i> Lunch
+                {% elif descanso_activo.tipo == "break_tarde" %}
+                <i class="bi bi-cup-hot"></i> Break de tarde
+                {% endif %}
+              </h3>
             </div>
+          </div>
 
-            <div class="contador-container">
-              <span class="contador-label">Tiempo restante</span>
-              <div id="contador" class="contador" data-tipo="{{ descanso_activo.tipo }}" data-inicio="{{ descanso_activo.inicio.strftime('%H:%M:%S') }}">
-                00:00
-              </div>
-              <p id="mensaje-contador">Descanso en progreso</p>
+          <div class="break-start">
+            <span>Inicio</span>
+            <strong>{{ descanso_activo.inicio.strftime("%I:%M:%S %p") }}</strong>
+          </div>
+
+          <div class="contador-container">
+            <span class="contador-label">Tiempo restante</span>
+            <div id="contador" class="contador" data-tipo="{{ descanso_activo.tipo }}"
+              data-inicio="{{ descanso_activo.inicio.strftime('%H:%M:%S') }}">
+              00:00
             </div>
+            <p id="mensaje-contador">Descanso en progreso</p>
+          </div>
 
-            <form id="form-finalizar-descanso" method="POST" action="{{ url_for('empleado.finalizar_descanso_ruta') }}">
-              <button type="button" class="btn-salida" data-bs-toggle="modal" data-bs-target="#confirmarDescansoModal">
+          <form id="form-finalizar-descanso" method="POST" action="{{ url_for('empleado.finalizar_descanso_ruta') }}">
+            <button type="button" class="btn-salida" data-bs-toggle="modal" data-bs-target="#confirmarDescansoModal">
+              <i class="bi bi-cup-hot-fill"></i>
+              FINALIZAR DESCANSO
+            </button>
+          </form>
+        </div>
+        {% else %}
+        <!-- SELECCIÓN DESCANSOS -->
+        <div class="break-selection">
+          <p class="selection-text">Selecciona el descanso que deseas iniciar.</p>
+
+          <!-- BREAK MAÑANA -->
+          <form method="POST" action="{{ url_for('empleado.iniciar_descanso_ruta', tipo='break_manana') }}">
+            <button type="submit" class="break-option break-blue">
+              <div class="break-option-icon">
                 <i class="bi bi-cup-hot-fill"></i>
-                FINALIZAR DESCANSO
-              </button>
-            </form>
-          </div>
-          {% else %}
-          <!-- SELECCIÓN DESCANSOS -->
-          <div class="break-selection">
-            <p class="selection-text">Selecciona el descanso que deseas iniciar.</p>
+              </div>
+              <div class="break-option-info">
+                <strong>Break mañana</strong>
+                <small>15 minutos</small>
+              </div>
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </form>
 
-            <!-- BREAK MAÑANA -->
-            <form method="POST" action="{{ url_for('empleado.iniciar_descanso_ruta', tipo='break_manana') }}">
-              <button type="submit" class="break-option break-blue">
-                <div class="break-option-icon">
-                  <i class="bi bi-cup-hot-fill"></i>
-                </div>
-                <div class="break-option-info">
-                  <strong>Break mañana</strong>
-                  <small>15 minutos</small>
-                </div>
-                <i class="bi bi-chevron-right"></i>
-              </button>
-            </form>
+          <!-- LUNCH -->
+          <form method="POST" action="{{ url_for('empleado.iniciar_descanso_ruta', tipo='lunch') }}">
+            <button type="submit" class="break-option break-yellow">
+              <div class="break-option-icon">
+                <i class="bi bi-egg-fried"></i>
+              </div>
+              <div class="break-option-info">
+                <strong>Lunch</strong>
+                <small>60 minutos</small>
+              </div>
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </form>
 
-            <!-- LUNCH -->
-            <form method="POST" action="{{ url_for('empleado.iniciar_descanso_ruta', tipo='lunch') }}">
-              <button type="submit" class="break-option break-yellow">
-                <div class="break-option-icon">
-                  <i class="bi bi-egg-fried"></i>
-                </div>
-                <div class="break-option-info">
-                  <strong>Lunch</strong>
-                  <small>60 minutos</small>
-                </div>
-                <i class="bi bi-chevron-right"></i>
-              </button>
-            </form>
-
-            <!-- BREAK TARDE -->
-            <form method="POST" action="{{ url_for('empleado.iniciar_descanso_ruta', tipo='break_tarde') }}">
-              <button type="submit" class="break-option break-purple">
-                <div class="break-option-icon">
-                  <i class="bi bi-cup-hot-fill"></i>
-                </div>
-                <div class="break-option-info">
-                  <strong>Break tarde</strong>
-                  <small>15 minutos</small>
-                </div>
-                <i class="bi bi-chevron-right"></i>
-              </button>
-            </form>
-          </div>
-          {% endif %}
+          <!-- BREAK TARDE -->
+          <form method="POST" action="{{ url_for('empleado.iniciar_descanso_ruta', tipo='break_tarde') }}">
+            <button type="submit" class="break-option break-purple">
+              <div class="break-option-icon">
+                <i class="bi bi-cup-hot-fill"></i>
+              </div>
+              <div class="break-option-info">
+                <strong>Break tarde</strong>
+                <small>15 minutos</small>
+              </div>
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </form>
+        </div>
+        {% endif %}
         {% else %}
         <div class="empty-state">
           <div class="empty-icon">
@@ -415,127 +417,127 @@
         </div>
 
         {% if hora_extra %}
-          {% if not hora_extra.salida %}
-          <!-- HORA EXTRA ACTIVA -->
-          <div class="active-break">
-            <div class="break-status">
-              <div class="break-pulse">
-                <span></span>
-              </div>
-              <div>
-                <span class="card-label">HORA EXTRA EN PROGRESO</span>
-                <h3>
-                  <i class="bi bi-clock-fill"></i>
-                  Tiempo adicional
-                </h3>
-              </div>
+        {% if not hora_extra.salida %}
+        <!-- HORA EXTRA ACTIVA -->
+        <div class="active-break">
+          <div class="break-status">
+            <div class="break-pulse">
+              <span></span>
             </div>
-
-            <!-- FECHA -->
-            <div class="break-start">
-              <span>Fecha</span>
-              <strong>{{ hora_extra.fecha.strftime("%d/%m/%Y") }}</strong>
+            <div>
+              <span class="card-label">HORA EXTRA EN PROGRESO</span>
+              <h3>
+                <i class="bi bi-clock-fill"></i>
+                Tiempo adicional
+              </h3>
             </div>
-
-            <!-- INICIO CORREGIDO -->
-            <div class="break-start">
-              <span>Inicio</span>
-              <strong>
-                {% if hora_extra.hora_inicio is defined and hora_extra.hora_inicio %}
-                  {{ hora_extra.hora_inicio.strftime("%I:%M:%S %p") }}
-                {% elif hora_extra.entrada is defined and hora_extra.entrada %}
-                  {{ hora_extra.entrada.strftime("%I:%M:%S %p") }}
-                {% else %}
-                  --
-                {% endif %}
-              </strong>
-            </div>
-
-            <!-- UBICACIÓN -->
-            {% if hora_extra.direccion %}
-            <div class="info-row">
-              <div class="info-icon green">
-                <i class="bi bi-geo-alt-fill"></i>
-              </div>
-              <div class="info-content">
-                <span>Ubicación</span>
-                <strong>{{ hora_extra.direccion }}</strong>
-              </div>
-            </div>
-            {% endif %}
-
-            <!-- FINALIZAR -->
-            <form method="POST" action="{{ url_for('empleado.finalizar_hora_extra_ruta') }}">
-              <button type="button" class="btn-salida" data-bs-toggle="modal" data-bs-target="#confirmarHoraExtraModal">
-                <i class="bi bi-stop-circle-fill"></i>
-                FINALIZAR HORA EXTRA
-              </button>
-            </form>
           </div>
-          {% else %}
-          <!-- HORA EXTRA FINALIZADA -->
-          <div class="empty-state">
-            <div class="empty-icon">
-              <i class="bi bi-check-circle-fill"></i>
+
+          <!-- FECHA -->
+          <div class="break-start">
+            <span>Fecha</span>
+            <strong>{{ hora_extra.fecha.strftime("%d/%m/%Y") }}</strong>
+          </div>
+
+          <!-- INICIO CORREGIDO -->
+          <div class="break-start">
+            <span>Inicio</span>
+            <strong>
+              {% if hora_extra.hora_inicio is defined and hora_extra.hora_inicio %}
+              {{ hora_extra.hora_inicio.strftime("%I:%M:%S %p") }}
+              {% elif hora_extra.entrada is defined and hora_extra.entrada %}
+              {{ hora_extra.entrada.strftime("%I:%M:%S %p") }}
+              {% else %}
+              --
+              {% endif %}
+            </strong>
+          </div>
+
+          <!-- UBICACIÓN -->
+          {% if hora_extra.direccion %}
+          <div class="info-row">
+            <div class="info-icon green">
+              <i class="bi bi-geo-alt-fill"></i>
             </div>
-            <h3>Hora extra finalizada</h3>
-            <p>
-              Inició a las
-              <strong>
-                {% if hora_extra.hora_inicio is defined and hora_extra.hora_inicio %}
-                  {{ hora_extra.hora_inicio.strftime("%I:%M:%S %p") }}
-                {% elif hora_extra.entrada is defined and hora_extra.entrada %}
-                  {{ hora_extra.entrada.strftime("%I:%M:%S %p") }}
-                {% else %}
-                  --
-                {% endif %}
-              </strong>
-              y terminó a las
-              <strong>{{ hora_extra.salida.strftime("%I:%M:%S %p") }}</strong>
-            </p>
-            <span class="status-badge finished">
-              <i class="bi bi-check-circle-fill"></i>
-              Registro completado
-            </span>
+            <div class="info-content">
+              <span>Ubicación</span>
+              <strong>{{ hora_extra.direccion }}</strong>
+            </div>
           </div>
           {% endif %}
+
+          <!-- FINALIZAR -->
+          <form method="POST" action="{{ url_for('empleado.finalizar_hora_extra_ruta') }}">
+            <button type="button" class="btn-salida" data-bs-toggle="modal" data-bs-target="#confirmarHoraExtraModal">
+              <i class="bi bi-stop-circle-fill"></i>
+              FINALIZAR HORA EXTRA
+            </button>
+          </form>
+        </div>
         {% else %}
-          <!-- DISPONIBLE PARA INICIAR -->
-          {% if not jornada %}
-          <div class="break-selection">
-            <div class="empty-state">
-              <div class="empty-icon">
-                <i class="bi bi-clock"></i>
-              </div>
-              <h3>Horas extras disponibles</h3>
-              <p>Tu jornada laboral terminó. Puedes registrar el inicio de tus horas extras.</p>
-            </div>
-
-            <form method="POST" action="{{ url_for('empleado.iniciar_hora_extra_ruta') }}" id="form-iniciar-hora-extra">
-              <input type="hidden" name="latitud" id="hora-extra-latitud">
-              <input type="hidden" name="longitud" id="hora-extra-longitud">
-              <input type="hidden" name="direccion" id="hora-extra-direccion">
-              <button type="submit" class="break-option break-yellow" id="btn-iniciar-hora-extra">
-                <div class="break-option-icon">
-                  <i class="bi bi-play-circle-fill"></i>
-                </div>
-                <div class="break-option-info">
-                  <strong>Iniciar horas extras</strong>
-                  <small>Registrar inicio</small>
-                </div>
-                <i class="bi bi-chevron-right"></i>
-              </button>
-            </form>
+        <!-- HORA EXTRA FINALIZADA -->
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="bi bi-check-circle-fill"></i>
           </div>
-          {% else %}
+          <h3>Hora extra finalizada</h3>
+          <p>
+            Inició a las
+            <strong>
+              {% if hora_extra.hora_inicio is defined and hora_extra.hora_inicio %}
+              {{ hora_extra.hora_inicio.strftime("%I:%M:%S %p") }}
+              {% elif hora_extra.entrada is defined and hora_extra.entrada %}
+              {{ hora_extra.entrada.strftime("%I:%M:%S %p") }}
+              {% else %}
+              --
+              {% endif %}
+            </strong>
+            y terminó a las
+            <strong>{{ hora_extra.salida.strftime("%I:%M:%S %p") }}</strong>
+          </p>
+          <span class="status-badge finished">
+            <i class="bi bi-check-circle-fill"></i>
+            Registro completado
+          </span>
+        </div>
+        {% endif %}
+        {% else %}
+        <!-- DISPONIBLE PARA INICIAR -->
+        {% if not jornada %}
+        <div class="break-selection">
           <div class="empty-state">
             <div class="empty-icon">
-              <i class="bi bi-lock"></i>
+              <i class="bi bi-clock"></i>
             </div>
-            <h3>Horas extras no disponibles</h3>
-            <p>Primero debes finalizar tu jornada laboral.</p>
+            <h3>Horas extras disponibles</h3>
+            <p>Tu jornada laboral terminó. Puedes registrar el inicio de tus horas extras.</p>
           </div>
-          {% endif %}
+
+          <form method="POST" action="{{ url_for('empleado.iniciar_hora_extra_ruta') }}" id="form-iniciar-hora-extra">
+            <input type="hidden" name="latitud" id="hora-extra-latitud">
+            <input type="hidden" name="longitud" id="hora-extra-longitud">
+            <input type="hidden" name="direccion" id="hora-extra-direccion">
+            <button type="submit" class="break-option break-yellow" id="btn-iniciar-hora-extra">
+              <div class="break-option-icon">
+                <i class="bi bi-play-circle-fill"></i>
+              </div>
+              <div class="break-option-info">
+                <strong>Iniciar horas extras</strong>
+                <small>Registrar inicio</small>
+              </div>
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </form>
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="bi bi-lock"></i>
+          </div>
+          <h3>Horas extras no disponibles</h3>
+          <p>Primero debes finalizar tu jornada laboral.</p>
+        </div>
+        {% endif %}
         {% endif %}
       </section>
 
@@ -654,6 +656,44 @@
       </div>
     </section>
 
+    <!-- MODAL CUENTA DESACTIVADA -->
+    <div class="modal fade" id="cuentaDesactivadaModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Cuenta desactivada
+            </h5>
+          </div>
+
+          <div class="modal-body text-center">
+
+            <div class="mb-3">
+              <i class="fas fa-user-slash" style="font-size: 50px; color: #dc3545;"></i>
+            </div>
+
+            <p class="mb-0">
+              Tu cuenta ha sido desactivada por un administrador.
+            </p>
+
+            <p class="text-muted">
+              Tu sesión se cerrará automáticamente.
+            </p>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" id="btnCerrarCuentaDesactivada">
+              Aceptar
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
   </main>
 
   <!-- =====================================================
@@ -670,7 +710,7 @@
      MENSAJES AUTOMÁTICOS
 ====================================================== -->
   <script>
-    
+
   </script>
 
 </body>

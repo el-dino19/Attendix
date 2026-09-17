@@ -227,43 +227,41 @@ def logout():
     )
     
 
-@auth_bp.route("/check-session")
-def check_session():
+#===========================
+# VERIFICAR ESTADO
+# ==========================
+@auth_bp.route("/verificar-estado")
+def verificar_estado():
 
     usuario_id = session.get("usuario_id")
 
+    # No hay sesión activa
     if not usuario_id:
         return jsonify({
-            "activo": False,
-            "sesion": False,
-            "motivo": "sesion_expirada"
+            "autenticado": False
         }), 401
 
     usuario = Usuario.query.get(usuario_id)
 
+    # Usuario eliminado
     if usuario is None:
-
         session.clear()
 
         return jsonify({
-            "activo": False,
-            "sesion": False,
-            "motivo": "usuario_no_existe"
+            "autenticado": False,
+            "activo": False
         }), 401
 
-    # activo = 0 → cuenta desactivada
-    if usuario.activo == 0:
+    # Usuario desactivado
+    if not usuario.activo:
+        session.clear()
 
         return jsonify({
-            "activo": False,
-            "sesion": True,
-            "motivo": "cuenta_desactivada"
-        }), 403
+            "autenticado": True,
+            "activo": False
+        }), 200
 
-    # activo = 1 → cuenta activa
     return jsonify({
-        "activo": True,
-        "sesion": True,
-        "motivo": None
+        "autenticado": True,
+        "activo": True
     }), 200
-
