@@ -31,10 +31,7 @@ def obtener_fecha_actual(zona_horaria="UTC"):
 
 
 def obtener_hora_extra_abierta(usuario_id):
-    """
-    Busca la última hora extra activa del usuario.
-    Una hora extra está activa cuando fin es NULL.
-    """
+
     return HoraExtra.query.filter(
         HoraExtra.usuario_id == usuario_id,
         HoraExtra.fin.is_(None)
@@ -43,15 +40,16 @@ def obtener_hora_extra_abierta(usuario_id):
     ).first()
 
 
-def obtener_jornada_del_dia(usuario_id, fecha):
-    """
-    Busca la jornada correspondiente al usuario y a la fecha indicada.
-    """
-    return Jornada.query.filter(
-        Jornada.usuario_id == usuario_id,
-        Jornada.fecha == fecha
+def obtener_hora_extra_del_dia(
+    usuario_id,
+    fecha
+):
+
+    return HoraExtra.query.filter(
+        HoraExtra.usuario_id == usuario_id,
+        HoraExtra.fecha == fecha
     ).order_by(
-        Jornada.entrada.desc()
+        HoraExtra.inicio.desc()
     ).first()
 
 
@@ -63,12 +61,30 @@ def iniciar_hora_extra(
     direccion=None
 ):
     """
-    Inicia una hora extra únicamente si el usuario
-    tiene una jornada registrada para el día actual.
+    Inicia una hora extra.
+
+    Reglas:
+    - El usuario debe tener una jornada hoy.
+    - Solo puede existir una hora extra por día.
+    - La hora extra guarda la jornada_id.
+    - Guarda latitud, longitud y dirección.
     """
 
     # ---------------------------------------------------------
-    # 1. Verificar si ya tiene una hora extra abierta
+    # 1. Obtener fecha y hora actuales
+    # ---------------------------------------------------------
+
+    fecha = obtener_fecha_actual(
+        zona_horaria
+    )
+
+    hora = obtener_hora_actual(
+        zona_horaria
+    )
+
+
+    # ---------------------------------------------------------
+    # 2. Verificar si ya tiene una hora extra ABIERTA
     # ---------------------------------------------------------
 
     hora_extra_abierta = obtener_hora_extra_abierta(
@@ -84,30 +100,34 @@ def iniciar_hora_extra(
 
 
     # ---------------------------------------------------------
-    # 2. Obtener fecha y hora actuales
+    # 3. Verificar si YA REGISTRÓ una hora extra HOY
     # ---------------------------------------------------------
 
-    fecha = obtener_fecha_actual(
-        zona_horaria
+    hora_extra_del_dia = obtener_hora_extra_del_dia(
+        usuario_id,
+        fecha
     )
 
-    hora = obtener_hora_actual(
-        zona_horaria
-    )
+    if hora_extra_del_dia:
+
+        return (
+            None,
+            "Ya registraste una hora extra el día de hoy."
+        )
 
 
     # ---------------------------------------------------------
-    # 3. Buscar la jornada de HOY
+    # 4. Buscar la jornada de HOY
     # ---------------------------------------------------------
 
-    jornada = obtener_jornada_del_dia(
+    jornada = obtener_hora_extra_del_dia(
         usuario_id,
         fecha
     )
 
 
     # ---------------------------------------------------------
-    # 4. OBLIGATORIO: debe existir jornada
+    # 5. La jornada es obligatoria
     # ---------------------------------------------------------
 
     if jornada is None:
@@ -116,6 +136,46 @@ def iniciar_hora_extra(
             None,
             "No puedes iniciar horas extras porque no tienes una jornada registrada para hoy."
         )
+
+
+    # ---------------------------------------------------------
+    # 6. Crear hora extra
+    # ---------------------------------------------------------
+
+    hora_extra = HoraExtra(
+
+        usuario_id=usuario_id,
+
+        jornada_id=jornada.id,
+
+        fecha=fecha,
+
+        inicio=hora,
+
+        latitud=latitud,
+
+        longitud=longitud,
+
+        direccion=direccion
+
+    )
+
+
+    # ---------------------------------------------------------
+    # 7. Guardar
+    # ---------------------------------------------------------
+
+    db.session.add(
+        hora_extra
+    )
+
+    db.session.commit()
+
+
+    return (
+        hora_extra,
+        "Hora extra iniciada correctamente."
+    )
 
 
     # ---------------------------------------------------------
