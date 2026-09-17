@@ -519,7 +519,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     function (error) {
 
                         switch (
-                            error.code
+                        error.code
                         ) {
 
                             case error.PERMISSION_DENIED:
@@ -952,3 +952,20 @@ document.addEventListener("DOMContentLoaded", function () {
     cargarUbicacion();
 
 });
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+        const mensajes = document.querySelectorAll(".custom-toast");
+        mensajes.forEach(function (mensaje) {
+            setTimeout(function () {
+                mensaje.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+                mensaje.style.opacity = "0";
+                mensaje.style.transform = "translateY(-10px)";
+                setTimeout(function () {
+                    mensaje.remove();
+                }, 400);
+            }, 4000);
+        });
+    }
+);

@@ -2,9 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Mi historial | Attendix</title>
 
     <!-- FAVICON -->
@@ -34,8 +32,6 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/historial.css') }}"
     />
-
-    
   </head>
 
   <body>
@@ -51,7 +47,6 @@
 
         <div>
           <strong>Attendix</strong>
-
           <span>Control de jornadas</span>
         </div>
       </div>
@@ -62,14 +57,12 @@
 
           <div>
             <strong>{{ session["nombre"] }}</strong>
-
             <small>Colaborador</small>
           </div>
         </div>
 
         <a href="{{ url_for('empleado.dashboard') }}" class="btn-dashboard">
           <i class="bi bi-grid-fill"></i>
-
           Dashboard
         </a>
 
@@ -111,7 +104,6 @@
 
             <p class="confirm-warning">
               <i class="bi bi-shield-check"></i>
-
               Tu sesión se cerrará de forma segura.
             </p>
 
@@ -129,7 +121,6 @@
                 class="btn btn-danger confirm-logout"
               >
                 <i class="bi bi-box-arrow-left"></i>
-
                 Cerrar sesión
               </a>
             </div>
@@ -144,25 +135,24 @@
 
     <main class="page-container">
       <!-- =================================================
-           CABECERA
+            CABECERA
       ================================================== -->
 
       <section class="page-header">
         <div>
           <span class="section-tag">
             <i class="bi bi-calendar3"></i>
-
             REGISTROS
           </span>
 
           <h1>Mi historial</h1>
 
-          <p>Consulta tus jornadas de trabajo y descansos registrados.</p>
+          <p>Consulta tus jornadas de trabajo, descansos y horas extras registradas.</p>
         </div>
       </section>
 
       <!-- =================================================
-           RESUMEN
+            RESUMEN
       ================================================== -->
 
       <section class="summary-grid">
@@ -173,7 +163,6 @@
 
           <div>
             <span> Jornadas registradas </span>
-
             <strong> {{ historial|length }} </strong>
           </div>
         </div>
@@ -185,7 +174,6 @@
 
           <div>
             <span> Jornadas finalizadas </span>
-
             <strong>
               {{ historial | selectattr("jornada.salida") | list | length }}
             </strong>
@@ -199,14 +187,13 @@
 
           <div>
             <span> Control horario </span>
-
             <strong> Activo </strong>
           </div>
         </div>
       </section>
 
       <!-- =================================================
-           HISTORIAL
+            HISTORIAL
       ================================================== -->
 
       <section class="history-section">
@@ -214,7 +201,6 @@
           <div>
             <h2>
               <i class="bi bi-clock-history"></i>
-
               Jornadas
             </h2>
 
@@ -278,23 +264,33 @@
                   </span>
                 </div>
 
-                {% if registro.jornada.salida %}
+                <div class="d-flex align-items-center gap-2">
+                  <!-- BOTÓN PARA VER HORAS EXTRAS (Si existen) -->
+                  {% if registro.hora_extra %}
+                  <button 
+                    type="button" 
+                    class="btn btn-sm btn-outline-warning d-flex align-items-center gap-1"
+                    data-bs-toggle="modal" 
+                    data-bs-target="#modalHoraExtra{{ loop.index }}"
+                    style="border-radius: 8px; font-weight: 600; font-size: 0.85rem;"
+                  >
+                    <i class="bi bi-clock-history"></i>
+                    Horas extras
+                  </button>
+                  {% endif %}
 
-                <span class="status finished">
-                  <i class="bi bi-check-circle-fill"></i>
-
-                  Finalizada
-                </span>
-
-                {% else %}
-
-                <span class="status active">
-                  <i class="bi bi-circle-fill"></i>
-
-                  Activa
-                </span>
-
-                {% endif %}
+                  {% if registro.jornada.salida %}
+                  <span class="status finished">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Finalizada
+                  </span>
+                  {% else %}
+                  <span class="status active">
+                    <i class="bi bi-circle-fill"></i>
+                    Activa
+                  </span>
+                  {% endif %}
+                </div>
               </div>
 
               <!-- =========================================
@@ -365,7 +361,6 @@
 
                   <div class="location-coordinates">
                     <i class="bi bi-crosshair"></i>
-
                     {{ "%.5f"|format( registro.jornada.latitud ) }}, {{
                     "%.5f"|format( registro.jornada.longitud ) }}
                   </div>
@@ -378,8 +373,6 @@
 
                   {% endif %}
                 </div>
-
-                
               </div>
               <div>
                 <br>
@@ -393,7 +386,6 @@
                 <div class="break-header">
                   <div>
                     <i class="bi bi-cup-hot-fill"></i>
-
                     <strong> Descansos </strong>
                   </div>
 
@@ -409,13 +401,9 @@
                     <div class="break-type">
                       <div class="break-icon">
                         {% if descanso.tipo == "lunch" %}
-
                         <i class="bi bi-egg-fried"></i>
-
                         {% else %}
-
                         <i class="bi bi-cup-hot-fill"></i>
-
                         {% endif %}
                       </div>
 
@@ -449,9 +437,7 @@
                         <strong>
                           {% if descanso.fin %} {{ descanso.fin.strftime(
                           "%I:%M:%S %p" ) }} {% else %}
-
                           <em> En curso </em>
-
                           {% endif %}
                         </strong>
                       </div>
@@ -465,7 +451,6 @@
 
                 <div class="no-breaks">
                   <i class="bi bi-cup-hot"></i>
-
                   <span> No hay descansos registrados. </span>
                 </div>
 
@@ -473,6 +458,72 @@
               </div>
             </div>
           </article>
+
+          <!-- =====================================================
+               MODAL DE HORAS EXTRAS (Para cada tarjeta individual)
+          ====================================================== -->
+          {% if registro.hora_extra %}
+          <div class="modal fade" id="modalHoraExtra{{ loop.index }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.1);">
+                <div class="modal-header border-0 pb-0">
+                  <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
+                    <i class="bi bi-clock-history text-warning"></i>
+                    Detalle de Horas Extras
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                  <div class="p-3 mb-3 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                    <div class="d-flex justify-content-between mb-2">
+                      <span class="text-muted small">Estado:</span>
+                      {% if registro.hora_extra.salida %}
+                      <span class="badge bg-success">Completada</span>
+                      {% else %}
+                      <span class="badge bg-warning text-dark">En curso</span>
+                      {% endif %}
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                      <span class="text-muted small">Hora de inicio:</span>
+                      <strong class="text-dark">
+                        {% if registro.hora_extra.hora_inicio %}
+                          {{ registro.hora_extra.hora_inicio.strftime("%I:%M:%S %p") }}
+                        {% elif registro.hora_extra.entrada %}
+                          {{ registro.hora_extra.entrada.strftime("%I:%M:%S %p") }}
+                        {% else %}
+                          --
+                        {% endif %}
+                      </strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <span class="text-muted small">Hora de salida:</span>
+                      <strong class="text-dark">
+                        {% if registro.hora_extra.salida %}
+                          {{ registro.hora_extra.salida.strftime("%I:%M:%S %p") }}
+                        {% else %}
+                          <em>En curso</em>
+                        {% endif %}
+                      </strong>
+                    </div>
+                  </div>
+
+                  {% if registro.hora_extra.direccion %}
+                  <div class="d-flex align-items-start gap-2 text-muted small">
+                    <i class="bi bi-geo-alt-fill text-danger mt-1"></i>
+                    <div>
+                      <strong>Ubicación:</strong>
+                      <p class="mb-0 text-dark">{{ registro.hora_extra.direccion }}</p>
+                    </div>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                  <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-dismiss="modal" style="border-radius: 8px;">Cerrar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
 
           {% endfor %}
         </div>
@@ -494,7 +545,6 @@
 
           <a href="{{ url_for('empleado.dashboard') }}" class="empty-button">
             <i class="bi bi-arrow-left"></i>
-
             Volver al dashboard
           </a>
         </div>
@@ -514,110 +564,9 @@
     ></script>
 
     <!-- =====================================================
-         COMPROBAR SESIÓN
+         SCRIPT DE HISTORIAL
     ====================================================== -->
-
-    <script>
-      setInterval(async function () {
-        try {
-          const response = await fetch("{{ url_for('auth.check_session') }}", {
-            method: "GET",
-            credentials: "same-origin",
-            cache: "no-store",
-          });
-
-          if (!response.ok) {
-            const modal = document.createElement("div");
-
-            modal.innerHTML = `
-
-                <div style="
-                  position: fixed;
-                  inset: 0;
-                  background: rgba(15, 23, 42, .65);
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  z-index: 99999;
-                ">
-
-                  <div style="
-                    background: white;
-                    width: min(420px, 90%);
-                    border-radius: 20px;
-                    padding: 32px;
-                    text-align: center;
-                    box-shadow: 0 20px 50px rgba(0,0,0,.2);
-                  ">
-
-                    <div style="
-                      width: 65px;
-                      height: 65px;
-                      margin: 0 auto 20px;
-                      border-radius: 50%;
-                      background: #fee2e2;
-                      color: #dc2626;
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      font-size: 28px;
-                    ">
-
-                      <i class="bi bi-person-x-fill"></i>
-
-                    </div>
-
-
-                    <h3 style="
-                      margin-bottom: 10px;
-                      color: #1e293b;
-                    ">
-
-                      Cuenta desactivada
-
-                    </h3>
-
-
-                    <p style="
-                      color: #64748b;
-                      margin-bottom: 25px;
-                    ">
-
-                      Tu cuenta ha sido desactivada por un administrador.
-                      Tu sesión se cerrará.
-
-                    </p>
-
-
-                    <button
-                      onclick="window.location.href='{{ url_for('auth.login') }}'"
-                      style="
-                        border: 0;
-                        background: #dc2626;
-                        color: white;
-                        padding: 11px 25px;
-                        border-radius: 10px;
-                        font-weight: 600;
-                        cursor: pointer;
-                      "
-                    >
-
-                      Ir al inicio de sesión
-
-                    </button>
-
-                  </div>
-
-                </div>
-
-              `;
-
-            document.body.appendChild(modal);
-          }
-        } catch (error) {
-          console.error("Error comprobando la sesión:", error);
-        }
-      }, 5000);
-    </script>
+    <script src="{{ url_for('static', filename='js/historial.js') }}"></script>
+    
   </body>
 </html>
