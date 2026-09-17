@@ -117,13 +117,13 @@ def iniciar_hora_extra(
 
 
     # ---------------------------------------------------------
-    # 4. Buscar la jornada de HOY
+    # 4. Buscar la JORNADA de HOY
     # ---------------------------------------------------------
 
-    jornada = obtener_hora_extra_del_dia(
-        usuario_id,
-        fecha
-    )
+    jornada = Jornada.query.filter(
+        Jornada.usuario_id == usuario_id,
+        Jornada.fecha == fecha
+    ).first()
 
 
     # ---------------------------------------------------------
@@ -177,43 +177,6 @@ def iniciar_hora_extra(
         "Hora extra iniciada correctamente."
     )
 
-
-    # ---------------------------------------------------------
-    # 5. Crear hora extra
-    # ---------------------------------------------------------
-
-    hora_extra = HoraExtra(
-        usuario_id=usuario_id,
-
-        jornada_id=jornada.id,
-
-        fecha=fecha,
-
-        inicio=hora,
-
-        latitud=latitud,
-
-        longitud=longitud,
-
-        direccion=direccion
-    )
-
-
-    # ---------------------------------------------------------
-    # 6. Guardar
-    # ---------------------------------------------------------
-
-    db.session.add(
-        hora_extra
-    )
-
-    db.session.commit()
-
-
-    return (
-        hora_extra,
-        "Hora extra iniciada correctamente."
-    )
 
 
 
