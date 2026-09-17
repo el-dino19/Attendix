@@ -252,50 +252,50 @@ def verificar_estado():
     return jsonify({
         "autenticado": True,
         "activo": bool(usuario.activo)
-    })
+    }), 200
 
 
 
-@auth_bp.before_app_request
-def verificar_usuario_activo():
+# @auth_bp.before_app_request
+# def verificar_usuario_activo():
 
-    rutas_publicas = {
-        "auth.inicio",
-        "auth.login",
-        "auth.logout",
-        "auth.health",
-        "auth.verificar_estado"
-    }
+#     rutas_publicas = {
+#         "auth.inicio",
+#         "auth.login",
+#         "auth.logout",
+#         "auth.health",
+#         "auth.verificar_estado"
+#     }
 
-    # Estas rutas no necesitan esta validación
-    if request.endpoint in rutas_publicas:
-        return
+#     # Estas rutas no necesitan esta validación
+#     if request.endpoint in rutas_publicas:
+#         return
 
-    usuario_id = session.get("usuario_id")
+#     usuario_id = session.get("usuario_id")
 
-    # No hay usuario autenticado
-    if not usuario_id:
-        return
+#     # No hay usuario autenticado
+#     if not usuario_id:
+#         return
 
-    usuario = Usuario.query.get(usuario_id)
+#     usuario = Usuario.query.get(usuario_id)
 
-    # Usuario eliminado
-    if usuario is None:
+#     # Usuario eliminado
+#     if usuario is None:
 
-        session.clear()
+#         session.clear()
 
-        return redirect(
-            url_for("auth.login")
-        )
+#         return redirect(
+#             url_for("auth.login")
+#         )
 
-    # Usuario desactivado
-    if not usuario.activo:
+#     # Usuario desactivado
+#     if not usuario.activo:
 
-        session.clear()
+#         session.clear()
 
-        return redirect(
-            url_for(
-                "auth.login",
-                cuenta_desactivada="1"
-            )
-        )
+#         return redirect(
+#             url_for(
+#                 "auth.login",
+#                 cuenta_desactivada="1"
+#             )
+#         )
