@@ -9,38 +9,16 @@ setInterval(async function () {
             }
         });
 
-        let data = {};
+        const data = await response.json();
 
-        try {
-            data = await response.json();
-        } catch (e) {
-            console.error("check_session no devolvió JSON válido.");
-            return;
-        }
+        console.log("Estado de sesión:", data);
 
-        console.log("Estado de sesión:", {
-            status: response.status,
-            activo: data.activo,
-            sesion: data.sesion
-        });
+        // ==========================================
+        // CUENTA DESACTIVADA (activo = 0)
+        // ==========================================
+        if (data.motivo === "cuenta_desactivada") {
 
-        /*
-         * Cuenta desactivada
-         *
-         * Tu Flask devuelve:
-         * {
-         *     "activo": False,
-         *     "sesion": False
-         * }
-         *
-         * con HTTP 401.
-         */
-        if (
-            response.status === 401 &&
-            data.activo === false &&
-            data.sesion === false
-        ) {
-            // Evitar crear el modal varias veces
+            // Evitar que el modal aparezca varias veces
             if (document.getElementById("session-disabled-modal")) {
                 return;
             }
@@ -66,6 +44,7 @@ setInterval(async function () {
                         text-align: center;
                         box-shadow: 0 20px 50px rgba(0,0,0,.2);
                     ">
+
                         <div style="
                             width: 65px;
                             height: 65px;
@@ -110,6 +89,7 @@ setInterval(async function () {
                         >
                             Ir al inicio de sesión
                         </button>
+
                     </div>
                 </div>
             `;
@@ -117,19 +97,41 @@ setInterval(async function () {
             document.body.appendChild(modal);
         }
 
-        /*
-         * Si hay otro error del servidor, NO mostrar
-         * "Cuenta desactivada".
-         */
-        else if (!response.ok) {
-            console.error(
-                "Error comprobando la sesión:",
-                response.status,
-                data
-            );
+        // ==========================================
+        // SESIÓN EXPIRADA
+        // ==========================================
+        else if (data.motivo === "sesion_expirada") {
+
+            window.location.href = "{{ url_for('auth.login') }}";
+        }
+
+        // ==========================================
+        // USUARIO ELIMINADO
+        // ==========================================
+        else if (data.motivo === "usuario_no_existe") {
+
+            window.location.href = "{{ url_for('auth.login') }}";
+        }
+
+        // ==========================================
+        // USUARIO ACTIVO
+        // activo = 1
+        // ==========================================
+        else if (
+            data.activo === true &&
+            data.sesion === true
+        ) {
+
+            // Todo correcto.
+            // No hacemos nada.
         }
 
     } catch (error) {
-        console.error("Error de conexión comprobando la sesión:", error);
+
+        console.error(
+            "Error comprobando la sesión:",
+            error
+        );
     }
+
 }, 5000);

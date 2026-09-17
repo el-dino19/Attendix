@@ -227,12 +227,12 @@ def logout():
     )
     
 
-
 @auth_bp.route("/check-session")
 def check_session():
 
     usuario_id = session.get("usuario_id")
 
+    # No existe sesión
     if not usuario_id:
         return jsonify({
             "activo": False,
@@ -242,24 +242,25 @@ def check_session():
 
     usuario = Usuario.query.get(usuario_id)
 
+    # Usuario ya no existe
     if not usuario:
         session.clear()
 
         return jsonify({
             "activo": False,
             "sesion": False,
-            "motivo": "sesion_expirada"
+            "motivo": "usuario_no_existe"
         }), 401
 
-    if not usuario.activo:
-        session.clear()
-
+    # Usuario existe pero está desactivado (activo = 0)
+    if usuario.activo == 0:
         return jsonify({
             "activo": False,
-            "sesion": False,
+            "sesion": True,
             "motivo": "cuenta_desactivada"
-        }), 401
+        }), 403
 
+    # Usuario activo (activo = 1)
     return jsonify({
         "activo": True,
         "sesion": True,
