@@ -572,8 +572,99 @@
          SCRIPT DE HISTORIAL
     ====================================================== -->
   <script src="{{ url_for('static', filename='js/historial.js') }}"></script>
+  
   <script>
-    console.log("✅ SCRIPT DE CUENTA CARGADO");
+
+console.log("================================");
+console.log("🚀 VERIFICADOR DE CUENTA CARGADO");
+console.log("================================");
+
+async function verificarEstadoCuenta() {
+
+    console.log("🔎 Verificando estado...");
+
+    try {
+
+        const response = await fetch(
+            "{{ url_for('auth.verificar_estado') }}",
+            {
+                method: "GET",
+                credentials: "same-origin",
+                cache: "no-store"
+            }
+        );
+
+        console.log(
+            "📡 Respuesta:",
+            response.status
+        );
+
+        const data = await response.json();
+
+        console.log(
+            "👤 Estado:",
+            data
+        );
+
+        if (data.activo === false) {
+
+            console.log(
+                "🚨 CUENTA DESACTIVADA"
+            );
+
+            const modalElement =
+                document.getElementById(
+                    "modalCuentaDesactivada"
+                );
+
+            console.log(
+                "🪟 Modal:",
+                modalElement
+            );
+
+            if (!modalElement) {
+                console.error(
+                    "❌ NO EXISTE #modalCuentaDesactivada"
+                );
+                return;
+            }
+
+            const modal =
+                new bootstrap.Modal(
+                    modalElement
+                );
+
+            modal.show();
+
+            console.log(
+                "✅ MODAL MOSTRADA"
+            );
+
+            setTimeout(function () {
+
+                window.location.href =
+                    "{{ url_for('auth.logout') }}";
+
+            }, 3000);
+        }
+
+    } catch (error) {
+
+        console.error(
+            "❌ Error:",
+            error
+        );
+    }
+}
+
+
+verificarEstadoCuenta();
+
+setInterval(
+    verificarEstadoCuenta,
+    5000
+);
+
 </script>
 
 
