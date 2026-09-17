@@ -26,16 +26,21 @@ def generar_excel_asistencia(
     mes=None
 ):
     """
-    Genera el Excel de asistencia incluyendo:
+    Genera el Excel de asistencia.
+
+    Incluye:
 
     - Jornada
     - Entrada
+    - Ubicación de inicio de jornada
     - Break mañana
     - Lunch
     - Break tarde
     - Salida
-    - Horas extras
-    - Ubicación de horas extras
+    - Inicio hora extra
+    - Fin hora extra
+    - Estado hora extra
+    - Ubicación de inicio de hora extra
 
     periodo:
 
@@ -53,6 +58,7 @@ def generar_excel_asistencia(
             Todos los registros.
 
     mes:
+
         Formato YYYY-MM.
     """
 
@@ -61,7 +67,9 @@ def generar_excel_asistencia(
     # ==========================================
 
     libro = Workbook()
+
     hoja = libro.active
+
     hoja.title = "Asistencia"
 
     # ==========================================
@@ -107,12 +115,15 @@ def generar_excel_asistencia(
             )
 
             if numero_mes == 12:
+
                 siguiente_mes = date(
                     año + 1,
                     1,
                     1
                 )
+
             else:
+
                 siguiente_mes = date(
                     año,
                     numero_mes + 1,
@@ -125,6 +136,7 @@ def generar_excel_asistencia(
             )
 
         except (ValueError, TypeError):
+
             raise ValueError(
                 "El mes debe tener el formato YYYY-MM."
             )
@@ -165,6 +177,7 @@ def generar_excel_asistencia(
         fecha_fin = None
 
     else:
+
         raise ValueError(
             "Periodo inválido."
         )
@@ -179,6 +192,7 @@ def generar_excel_asistencia(
         "Correo",
         "Fecha",
         "Entrada",
+        "Ubicación inicio jornada",
         "Break mañana",
         "Lunch",
         "Break tarde",
@@ -186,9 +200,7 @@ def generar_excel_asistencia(
         "Inicio hora extra",
         "Fin hora extra",
         "Estado hora extra",
-        "Ubicación hora extra",
-        "Latitud hora extra",
-        "Longitud hora extra"
+        "Ubicación inicio hora extra"
     ]
 
     hoja.append(encabezados)
@@ -222,13 +234,14 @@ def generar_excel_asistencia(
 
         celda.alignment = Alignment(
             horizontal="center",
-            vertical="center"
+            vertical="center",
+            wrap_text=True
         )
 
         celda.border = borde
 
     # ==========================================
-    # FORMATO HORA
+    # FORMATO HORA 12 HORAS
     # ==========================================
 
     def formato_hora(hora):
@@ -237,7 +250,7 @@ def generar_excel_asistencia(
             return ""
 
         return hora.strftime(
-            "%H:%M:%S"
+            "%I:%M:%S %p"
         )
 
     # ==========================================
@@ -254,10 +267,13 @@ def generar_excel_asistencia(
         )
 
         if descanso.fin:
+
             fin = formato_hora(
                 descanso.fin
             )
+
         else:
+
             fin = "En curso"
 
         return f"{inicio} - {fin}"
@@ -304,6 +320,7 @@ def generar_excel_asistencia(
                 fecha_jornada,
                 "date"
             ):
+
                 fecha_jornada = (
                     fecha_jornada.date()
                 )
@@ -328,18 +345,21 @@ def generar_excel_asistencia(
                 descanso.tipo
                 == "break_manana"
             ):
+
                 break_manana = descanso
 
             elif (
                 descanso.tipo
                 == "lunch"
             ):
+
                 lunch = descanso
 
             elif (
                 descanso.tipo
                 == "break_tarde"
             ):
+
                 break_tarde = descanso
 
         # ======================================
@@ -348,17 +368,16 @@ def generar_excel_asistencia(
 
         hora_extra = None
 
-        # La relación jornada.horas_extras
-        # viene del modelo Jornada.
+        if hasattr(
+            jornada,
+            "horas_extras"
+        ):
 
-        if hasattr(jornada, "horas_extras"):
-
-            horas_extras = jornada.horas_extras
+            horas_extras = (
+                jornada.horas_extras
+            )
 
             if horas_extras:
-
-                # Si existen varias, tomamos
-                # la más reciente.
 
                 hora_extra = max(
                     horas_extras,
@@ -395,21 +414,9 @@ def generar_excel_asistencia(
                     "En curso"
                 )
 
-            direccion_hora_extra = (
+            ubicacion_hora_extra = (
                 hora_extra.direccion
                 or ""
-            )
-
-            latitud_hora_extra = (
-                hora_extra.latitud
-                if hora_extra.latitud is not None
-                else ""
-            )
-
-            longitud_hora_extra = (
-                hora_extra.longitud
-                if hora_extra.longitud is not None
-                else ""
             )
 
         else:
@@ -417,9 +424,16 @@ def generar_excel_asistencia(
             inicio_hora_extra = ""
             fin_hora_extra = ""
             estado_hora_extra = ""
-            direccion_hora_extra = ""
-            latitud_hora_extra = ""
-            longitud_hora_extra = ""
+            ubicacion_hora_extra = ""
+
+        # ======================================
+        # UBICACIÓN DE INICIO DE JORNADA
+        # ======================================
+
+        ubicacion_jornada = (
+            jornada.direccion
+            or ""
+        )
 
         # ======================================
         # AGREGAR FILA
@@ -443,6 +457,8 @@ def generar_excel_asistencia(
                 jornada.entrada
             ),
 
+            ubicacion_jornada,
+
             formato_descanso(
                 break_manana
             ),
@@ -465,11 +481,7 @@ def generar_excel_asistencia(
 
             estado_hora_extra,
 
-            direccion_hora_extra,
-
-            latitud_hora_extra,
-
-            longitud_hora_extra
+            ubicacion_hora_extra
 
         ])
 
@@ -483,17 +495,16 @@ def generar_excel_asistencia(
         2: 25,   # Colaborador
         3: 35,   # Correo
         4: 15,   # Fecha
-        5: 15,   # Entrada
-        6: 22,   # Break mañana
-        7: 22,   # Lunch
-        8: 22,   # Break tarde
-        9: 15,   # Salida
-        10: 20,  # Inicio hora extra
-        11: 20,  # Fin hora extra
-        12: 20,  # Estado hora extra
-        13: 45,  # Ubicación hora extra
-        14: 18,  # Latitud
-        15: 18   # Longitud
+        5: 18,   # Entrada
+        6: 45,   # Ubicación jornada
+        7: 22,   # Break mañana
+        8: 22,   # Lunch
+        9: 22,   # Break tarde
+        10: 18,  # Salida
+        11: 22,  # Inicio hora extra
+        12: 22,  # Fin hora extra
+        13: 20,  # Estado hora extra
+        14: 45   # Ubicación hora extra
 
     }
 
@@ -512,18 +523,18 @@ def generar_excel_asistencia(
     # ==========================================
 
     columnas_centradas = [
+
         0,   # ID
         3,   # Fecha
         4,   # Entrada
-        5,   # Break mañana
-        6,   # Lunch
-        7,   # Break tarde
-        8,   # Salida
-        9,   # Inicio extra
-        10,  # Fin extra
-        11,  # Estado extra
-        13,  # Latitud
-        14   # Longitud
+        6,   # Break mañana
+        7,   # Lunch
+        8,   # Break tarde
+        9,   # Salida
+        10,  # Inicio extra
+        11,  # Fin extra
+        12   # Estado extra
+
     ]
 
     for fila in hoja.iter_rows(
@@ -538,16 +549,22 @@ def generar_excel_asistencia(
             )
 
     # ==========================================
-    # AJUSTAR TEXTO DE UBICACIONES
+    # TEXTO DE UBICACIONES
     # ==========================================
 
     for fila in hoja.iter_rows(
-        min_row=2,
-        min_col=13,
-        max_col=13
+        min_row=2
     ):
 
-        fila[0].alignment = Alignment(
+        # Ubicación jornada
+        fila[5].alignment = Alignment(
+            horizontal="left",
+            vertical="top",
+            wrap_text=True
+        )
+
+        # Ubicación hora extra
+        fila[13].alignment = Alignment(
             horizontal="left",
             vertical="top",
             wrap_text=True
@@ -569,7 +586,7 @@ def generar_excel_asistencia(
     # ALTURA ENCABEZADO
     # ==========================================
 
-    hoja.row_dimensions[1].height = 30
+    hoja.row_dimensions[1].height = 35
 
     # ==========================================
     # CREAR ARCHIVO
