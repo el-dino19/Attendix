@@ -236,7 +236,8 @@ def check_session():
     if not usuario_id:
         return jsonify({
             "activo": False,
-            "sesion": False
+            "sesion": False,
+            "motivo": "sesion_expirada"
         }), 401
 
     usuario = Usuario.query.get(usuario_id)
@@ -246,7 +247,8 @@ def check_session():
 
         return jsonify({
             "activo": False,
-            "sesion": False
+            "sesion": False,
+            "motivo": "sesion_expirada"
         }), 401
 
     if not usuario.activo:
@@ -254,10 +256,12 @@ def check_session():
 
         return jsonify({
             "activo": False,
-            "sesion": False
+            "sesion": False,
+            "motivo": "cuenta_desactivada"
         }), 401
 
     return jsonify({
         "activo": True,
-        "sesion": True
-    })
+        "sesion": True,
+        "motivo": None
+    }), 200
