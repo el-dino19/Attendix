@@ -2179,3 +2179,560 @@ body {
     }
 
 }
+
+/* =====================================================
+   BOTÓN HORAS EXTRAS
+===================================================== */
+
+.btn-horas-extra {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px 12px;
+
+    border-radius: 9px;
+
+    border: 1px solid rgba(255, 200, 87, .25);
+
+    background: rgba(255, 200, 87, .07);
+
+    color: #ffc857;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    transition:
+        all .2s ease;
+}
+
+
+.btn-horas-extra:hover {
+
+    background: rgba(255, 200, 87, .15);
+
+    border-color: rgba(255, 200, 87, .45);
+
+    color: #ffd978;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 6px 18px rgba(255, 200, 87, .10);
+}
+
+
+.btn-horas-extra i {
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   MODAL HORAS EXTRAS
+===================================================== */
+
+.hora-extra-modal {
+
+    background:
+        linear-gradient(145deg,
+            #0b2731,
+            #071d26);
+
+    border:
+        1px solid rgba(0, 212, 216, .20);
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    color: white;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, .55);
+}
+
+
+/* =====================================================
+   HEADER MODAL
+===================================================== */
+
+.hora-extra-modal .modal-header {
+
+    padding: 20px 22px;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, .07);
+}
+
+
+.hora-extra-modal-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+
+.hora-extra-modal-icon {
+
+    width: 45px;
+
+    height: 45px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background:
+        rgba(0, 212, 216, .10);
+
+    color:
+        var(--primary);
+
+    font-size: 20px;
+
+    border:
+        1px solid rgba(0, 212, 216, .18);
+}
+
+
+.hora-extra-modal-title span {
+
+    display: block;
+
+    color:
+        var(--text-muted);
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.3px;
+
+    margin-bottom: 2px;
+}
+
+
+.hora-extra-modal-title h5 {
+
+    margin: 0;
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: 800;
+}
+
+
+/* =====================================================
+   BODY
+===================================================== */
+
+.hora-extra-modal .modal-body {
+
+    padding: 22px;
+}
+
+
+/* =====================================================
+   ESTADO
+===================================================== */
+
+.hora-extra-status {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 13px 15px;
+
+    margin-bottom: 18px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(255, 255, 255, .035);
+
+    border:
+        1px solid rgba(255, 255, 255, .06);
+}
+
+
+.hora-extra-label {
+
+    color:
+        var(--text-muted);
+
+    font-size: 12px;
+}
+
+
+.hora-extra-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 6px 9px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.hora-extra-badge.completed {
+
+    color:
+        var(--success);
+
+    background:
+        rgba(34, 211, 166, .10);
+}
+
+
+.hora-extra-badge.active {
+
+    color:
+        var(--warning);
+
+    background:
+        rgba(255, 200, 87, .10);
+}
+
+
+/* =====================================================
+   HORARIOS
+===================================================== */
+
+.hora-extra-times {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 18px;
+
+    margin-bottom: 15px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(0, 212, 216, .045);
+
+    border:
+        1px solid rgba(0, 212, 216, .12);
+}
+
+
+.hora-extra-time {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 0;
+}
+
+
+.hora-extra-time-icon {
+
+    width: 38px;
+
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+}
+
+
+.hora-extra-time-icon.start {
+
+    color:
+        var(--success);
+
+    background:
+        rgba(34, 211, 166, .10);
+}
+
+
+.hora-extra-time-icon.end {
+
+    color:
+        var(--danger);
+
+    background:
+        rgba(255, 92, 112, .10);
+}
+
+
+.hora-extra-time span {
+
+    display: block;
+
+    color:
+        var(--text-muted);
+
+    font-size: 10px;
+
+    margin-bottom: 2px;
+}
+
+
+.hora-extra-time strong {
+
+    display: block;
+
+    color: white;
+
+    font-size: 13px;
+
+    white-space: nowrap;
+}
+
+
+.hora-extra-time strong em {
+
+    color:
+        var(--warning);
+
+    font-style: normal;
+}
+
+
+.hora-extra-arrow {
+
+    color:
+        var(--text-muted);
+
+    font-size: 15px;
+}
+
+
+/* =====================================================
+   UBICACIÓN
+===================================================== */
+
+.hora-extra-location {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    padding: 14px;
+
+    margin-bottom: 12px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(255, 255, 255, .025);
+
+    border:
+        1px solid rgba(255, 255, 255, .06);
+}
+
+
+.hora-extra-location-icon {
+
+    width: 36px;
+
+    height: 36px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    color:
+        #60a5fa;
+
+    background:
+        rgba(59, 130, 246, .10);
+}
+
+
+.hora-extra-location span {
+
+    display: block;
+
+    color:
+        var(--text-muted);
+
+    font-size: 10px;
+
+    margin-bottom: 3px;
+}
+
+
+.hora-extra-location strong {
+
+    display: block;
+
+    color:
+        var(--text-light);
+
+    font-size: 12px;
+
+    line-height: 1.45;
+}
+
+
+/* =====================================================
+   FECHA
+===================================================== */
+
+.hora-extra-date {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color:
+        var(--text-muted);
+
+    font-size: 11px;
+
+    padding-top: 4px;
+}
+
+
+.hora-extra-date i {
+
+    color:
+        var(--primary);
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.hora-extra-modal .modal-footer {
+
+    padding: 0 22px 20px;
+
+    border-top: none;
+}
+
+
+.btn-cerrar-hora-extra {
+
+    width: 100%;
+
+    padding: 11px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid rgba(255, 255, 255, .10);
+
+    background:
+        rgba(255, 255, 255, .05);
+
+    color:
+        var(--text-light);
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    transition:
+        all .2s ease;
+}
+
+
+.btn-cerrar-hora-extra:hover {
+
+    background:
+        rgba(255, 255, 255, .09);
+
+    border-color:
+        rgba(255, 255, 255, .18);
+
+    color: white;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 576px) {
+
+    .hora-extra-times {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+
+    .hora-extra-arrow {
+
+        display: none;
+
+    }
+
+
+    .hora-extra-time {
+
+        width: 100%;
+
+    }
+
+
+    .btn-horas-extra {
+
+        padding: 6px 9px;
+
+        font-size: 11px;
+
+    }
+
+}

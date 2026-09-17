@@ -54,6 +54,12 @@ class HoraExtra(db.Model):
         db.String(500),
         nullable=True
     )
+    
+    # Asociación con jornada
+    jornada = db.relationship(
+        "Jornada",
+        back_populates="horas_extras"
+    )
 
     created_at = db.Column(
         db.DateTime,

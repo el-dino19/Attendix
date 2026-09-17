@@ -235,28 +235,36 @@
               </div>
 
               <div class="d-flex align-items-center gap-2">
-                <!-- BOTÓN PARA VER HORAS EXTRAS (Si existen) -->
+
                 {% if registro.hora_extra %}
-                <button type="button" class="btn btn-sm btn-outline-warning d-flex align-items-center gap-1"
-                  data-bs-toggle="modal" data-bs-target="#modalHoraExtra{{ loop.index }}"
-                  style="border-radius: 8px; font-weight: 600; font-size: 0.85rem;">
+
+                <button type="button" class="btn btn-horas-extra" data-bs-toggle="modal"
+                  data-bs-target="#modalHoraExtra{{ loop.index }}">
                   <i class="bi bi-clock-history"></i>
                   Horas extras
                 </button>
+
                 {% endif %}
 
+
                 {% if registro.jornada.salida %}
+
                 <span class="status finished">
                   <i class="bi bi-check-circle-fill"></i>
                   Finalizada
                 </span>
+
                 {% else %}
+
                 <span class="status active">
                   <i class="bi bi-circle-fill"></i>
                   Activa
                 </span>
+
                 {% endif %}
+
               </div>
+
             </div>
 
             <!-- =========================================
@@ -419,159 +427,229 @@
 
               {% endif %}
             </div>
-          </div>
-        </article>
 
-        <!-- =====================================================
+            <!-- =====================================================
                MODAL DE HORAS EXTRAS (Para cada tarjeta individual)
           ====================================================== -->
-        {% if registro.hora_extra %}
-        <div class="modal fade" id="modalHoraExtra{{ loop.index }}" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content"
-              style="border-radius: 16px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.1);">
-              <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
-                  <i class="bi bi-clock-history text-warning"></i>
-                  Detalle de Horas Extras
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body p-4">
-                <div class="p-3 mb-3 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
-                  <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted small">Estado:</span>
+          </div>
+          {% if registro.hora_extra %}
+
+          <div class="modal fade" id="modalHoraExtra{{ loop.index }}" tabindex="-1"
+            aria-labelledby="modalHoraExtraLabel{{ loop.index }}" aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered">
+
+              <div class="modal-content hora-extra-modal">
+
+                <!-- HEADER -->
+
+                <div class="modal-header">
+
+                  <div class="hora-extra-modal-title">
+
+                    <div class="hora-extra-modal-icon">
+                      <i class="bi bi-clock-history"></i>
+                    </div>
+
+                    <div>
+
+                      <span>
+                        REGISTRO
+                      </span>
+
+                      <h5 id="modalHoraExtraLabel{{ loop.index }}">
+                        Horas extras
+                      </h5>
+
+                    </div>
+
+                  </div>
+
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Cerrar"></button>
+
+                </div>
+
+
+                <!-- BODY -->
+
+                <div class="modal-body">
+
+                  <!-- ESTADO -->
+
+                  <div class="hora-extra-status">
+
+                    <span class="hora-extra-label">
+                      Estado
+                    </span>
+
                     {% if registro.hora_extra.salida %}
-                    <span class="badge bg-success">Completada</span>
+
+                    <span class="hora-extra-badge completed">
+                      <i class="bi bi-check-circle-fill"></i>
+                      Completada
+                    </span>
+
                     {% else %}
-                    <span class="badge bg-warning text-dark">En curso</span>
+
+                    <span class="hora-extra-badge active">
+                      <i class="bi bi-record-circle-fill"></i>
+                      En curso
+                    </span>
+
                     {% endif %}
+
                   </div>
-                  <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted small">Hora de inicio:</span>
-                    <strong class="text-dark">
-                      {% if registro.hora_extra.hora_inicio %}
-                      {{ registro.hora_extra.hora_inicio.strftime("%I:%M:%S %p") }}
-                      {% elif registro.hora_extra.entrada %}
-                      {{ registro.hora_extra.entrada.strftime("%I:%M:%S %p") }}
-                      {% else %}
-                      --
-                      {% endif %}
-                    </strong>
+
+
+                  <!-- HORARIOS -->
+
+                  <div class="hora-extra-times">
+
+                    <div class="hora-extra-time">
+
+                      <div class="hora-extra-time-icon start">
+                        <i class="bi bi-play-fill"></i>
+                      </div>
+
+                      <div>
+
+                        <span>
+                          Inicio
+                        </span>
+
+                        <strong>
+
+                          {% if registro.hora_extra.inicio %}
+
+                          {{ registro.hora_extra.inicio.strftime("%I:%M:%S %p") }}
+
+                          {% elif registro.hora_extra.hora_inicio %}
+
+                          {{ registro.hora_extra.hora_inicio.strftime("%I:%M:%S %p") }}
+
+                          {% elif registro.hora_extra.entrada %}
+
+                          {{ registro.hora_extra.entrada.strftime("%I:%M:%S %p") }}
+
+                          {% else %}
+
+                          --
+
+                          {% endif %}
+
+                        </strong>
+
+                      </div>
+
+                    </div>
+
+
+                    <div class="hora-extra-arrow">
+                      <i class="bi bi-arrow-right"></i>
+                    </div>
+
+
+                    <div class="hora-extra-time">
+
+                      <div class="hora-extra-time-icon end">
+                        <i class="bi bi-stop-fill"></i>
+                      </div>
+
+                      <div>
+
+                        <span>
+                          Salida
+                        </span>
+
+                        <strong>
+
+                          {% if registro.hora_extra.salida %}
+
+                          {{ registro.hora_extra.salida.strftime("%I:%M:%S %p") }}
+
+                          {% else %}
+
+                          <em>
+                            En curso
+                          </em>
+
+                          {% endif %}
+
+                        </strong>
+
+                      </div>
+
+                    </div>
+
                   </div>
-                  <div class="d-flex justify-content-between">
-                    <span class="text-muted small">Hora de salida:</span>
-                    <strong class="text-dark">
-                      {% if registro.hora_extra.salida %}
-                      {{ registro.hora_extra.salida.strftime("%I:%M:%S %p") }}
-                      {% else %}
-                      <em>En curso</em>
-                      {% endif %}
-                    </strong>
+
+
+                  <!-- UBICACIÓN -->
+
+                  {% if registro.hora_extra.direccion %}
+
+                  <div class="hora-extra-location">
+
+                    <div class="hora-extra-location-icon">
+                      <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+
+                    <div>
+
+                      <span>
+                        Ubicación registrada
+                      </span>
+
+                      <strong>
+                        {{ registro.hora_extra.direccion }}
+                      </strong>
+
+                    </div>
+
                   </div>
+
+                  {% endif %}
+
+
+                  <!-- FECHA -->
+
+                  <div class="hora-extra-date">
+
+                    <i class="bi bi-calendar3"></i>
+
+                    <span>
+                      Jornada del
+                      {{ registro.jornada.fecha.strftime("%d/%m/%Y") }}
+                    </span>
+
+                  </div>
+
                 </div>
 
-                {% if registro.hora_extra.direccion %}
-                <div class="d-flex align-items-start gap-2 text-muted small">
-                  <i class="bi bi-geo-alt-fill text-danger mt-1"></i>
-                  <div>
-                    <strong>Ubicación:</strong>
-                    <p class="mb-0 text-dark">{{ registro.hora_extra.direccion }}</p>
-                  </div>
+
+                <!-- FOOTER -->
+
+                <div class="modal-footer">
+
+                  <button type="button" class="btn btn-cerrar-hora-extra" data-bs-dismiss="modal">
+                    Cerrar
+                  </button>
+
                 </div>
-                {% endif %}
+
               </div>
-              <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-dismiss="modal"
-                  style="border-radius: 8px;">Cerrar</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% endif %}
 
-        {% endfor %}
-      </div>
-
-      {% else %}
-
-      <!-- =============================================
-             SIN HISTORIAL
-        ============================================== -->
-
-      <div class="empty-state">
-        <div class="empty-icon">
-          <i class="bi bi-calendar-x"></i>
-        </div>
-
-        <h3>No hay registros todavía</h3>
-
-        <p>Cuando registres una jornada, aparecerá aquí.</p>
-
-        <a href="{{ url_for('empleado.dashboard') }}" class="empty-button">
-          <i class="bi bi-arrow-left"></i>
-          Volver al dashboard
-        </a>
-      </div>
-
-      {% endif %}
-    </section>
-
-    <!-- MODAL CUENTA DESACTIVADA -->
-    <div class="modal fade" id="modalCuentaDesactivada" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-
-        <div class="modal-content modal-cuenta-desactivada">
-
-          <!-- Icono -->
-          <div class="icono-cuenta-desactivada">
-            <div class="icono-circulo">
-              <i class="fas fa-user-slash"></i>
-            </div>
-          </div>
-
-          <!-- Contenido -->
-          <div class="modal-body text-center">
-
-            <h3 class="titulo-cuenta-desactivada">
-              Cuenta desactivada
-            </h3>
-
-            <p class="mensaje-cuenta-desactivada">
-              Tu cuenta ha sido desactivada por un administrador.
-            </p>
-
-            <p class="texto-sesion">
-              Por seguridad, tu sesión se cerrará automáticamente.
-            </p>
-
-            <!-- Contador -->
-            <div class="contador-cuenta">
-              <span id="contadorDesactivacion">10</span>
             </div>
 
-            <p class="texto-redireccion">
-              Serás redirigido al inicio de sesión.
-            </p>
-
           </div>
 
-          <!-- Botón -->
-          <div class="modal-footer justify-content-center">
+          {% endif %}
 
-            <button type="button" class="btn btn-cuenta-desactivada" id="btnCuentaDesactivada">
-              Entendido
-            </button>
+        </article>
 
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-
-
-
+        
+        
   </main>
 
   <!-- =====================================================
@@ -593,98 +671,98 @@
 
     async function verificarEstadoCuenta() {
 
-        if (cuentaDesactivada) {
-            return;
+      if (cuentaDesactivada) {
+        return;
+      }
+
+      try {
+
+        const response = await fetch(
+          "{{ url_for('auth.verificar_estado') }}",
+          {
+            method: "GET",
+            credentials: "same-origin",
+            cache: "no-store"
+          }
+        );
+
+        if (!response.ok) {
+          return;
         }
 
-        try {
+        const data = await response.json();
 
-            const response = await fetch(
-                "{{ url_for('auth.verificar_estado') }}",
-                {
-                    method: "GET",
-                    credentials: "same-origin",
-                    cache: "no-store"
-                }
+        if (data.activo === false) {
+
+          cuentaDesactivada = true;
+
+          const modalElement =
+            document.getElementById(
+              "modalCuentaDesactivada"
             );
 
-            if (!response.ok) {
-                return;
-            }
-
-            const data = await response.json();
-
-            if (data.activo === false) {
-
-                cuentaDesactivada = true;
-
-                const modalElement =
-                    document.getElementById(
-                        "modalCuentaDesactivada"
-                    );
-
-                if (!modalElement) {
-                    console.error(
-                        "No se encontró la modal"
-                    );
-                    return;
-                }
-
-                const modal =
-                    new bootstrap.Modal(
-                        modalElement,
-                        {
-                            backdrop: "static",
-                            keyboard: false
-                        }
-                    );
-
-                modal.show();
-
-
-                // =====================================
-                // CUENTA REGRESIVA DE 10 SEGUNDOS
-                // =====================================
-
-                let segundos = 10;
-
-                const contador =
-                    document.getElementById(
-                        "contadorDesactivacion"
-                    );
-
-                if (contador) {
-                    contador.textContent = segundos;
-                }
-
-                const intervalo =
-                    setInterval(function () {
-
-                        segundos--;
-
-                        if (contador) {
-                            contador.textContent = segundos;
-                        }
-
-                        if (segundos <= 0) {
-
-                            clearInterval(intervalo);
-
-                            window.location.href =
-                                "{{ url_for('auth.logout') }}";
-                        }
-
-                    }, 1000);
-            }
-
-        } catch (error) {
-
+          if (!modalElement) {
             console.error(
-                "Error verificando estado:",
-                error
+              "No se encontró la modal"
+            );
+            return;
+          }
+
+          const modal =
+            new bootstrap.Modal(
+              modalElement,
+              {
+                backdrop: "static",
+                keyboard: false
+              }
             );
 
+          modal.show();
+
+
+          // =====================================
+          // CUENTA REGRESIVA DE 10 SEGUNDOS
+          // =====================================
+
+          let segundos = 10;
+
+          const contador =
+            document.getElementById(
+              "contadorDesactivacion"
+            );
+
+          if (contador) {
+            contador.textContent = segundos;
+          }
+
+          const intervalo =
+            setInterval(function () {
+
+              segundos--;
+
+              if (contador) {
+                contador.textContent = segundos;
+              }
+
+              if (segundos <= 0) {
+
+                clearInterval(intervalo);
+
+                window.location.href =
+                  "{{ url_for('auth.logout') }}";
+              }
+
+            }, 1000);
         }
+
+      } catch (error) {
+
+        console.error(
+          "Error verificando estado:",
+          error
+        );
+
+      }
     }
 
 
@@ -700,8 +778,8 @@
     // =====================================
 
     setInterval(
-        verificarEstadoCuenta,
-        5000
+      verificarEstadoCuenta,
+      5000
     );
 
 
@@ -710,25 +788,25 @@
     // =====================================
 
     const boton =
-        document.getElementById(
-            "btnCuentaDesactivada"
-        );
+      document.getElementById(
+        "btnCuentaDesactivada"
+      );
 
     if (boton) {
 
-        boton.addEventListener(
-            "click",
-            function () {
+      boton.addEventListener(
+        "click",
+        function () {
 
-                window.location.href =
-                    "{{ url_for('auth.logout') }}";
+          window.location.href =
+            "{{ url_for('auth.logout') }}";
 
-            }
-        );
+        }
+      );
     }
   </script>
 
- 
+
 
 
 </body>
