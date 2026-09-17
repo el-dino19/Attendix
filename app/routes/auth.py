@@ -232,7 +232,6 @@ def check_session():
 
     usuario_id = session.get("usuario_id")
 
-    # No hay sesión
     if not usuario_id:
         return jsonify({
             "activo": False,
@@ -242,8 +241,8 @@ def check_session():
 
     usuario = Usuario.query.get(usuario_id)
 
-    # El usuario ya no existe
     if usuario is None:
+
         session.clear()
 
         return jsonify({
@@ -252,21 +251,16 @@ def check_session():
             "motivo": "usuario_no_existe"
         }), 401
 
-    # ==========================================
-    # USUARIO DESACTIVADO
-    # BD: activo = 0
-    # ==========================================
+    # activo = 0 → cuenta desactivada
     if usuario.activo == 0:
+
         return jsonify({
             "activo": False,
             "sesion": True,
             "motivo": "cuenta_desactivada"
         }), 403
 
-    # ==========================================
-    # USUARIO ACTIVO
-    # BD: activo = 1
-    # ==========================================
+    # activo = 1 → cuenta activa
     return jsonify({
         "activo": True,
         "sesion": True,

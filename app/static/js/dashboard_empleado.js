@@ -970,6 +970,10 @@ document.addEventListener(
     }
 );
 
+// =====================================================
+// COMPROBAR ESTADO DE LA CUENTA 
+// =====================================================
+
 setInterval(async function () {
 
     try {
@@ -985,28 +989,39 @@ setInterval(async function () {
 
         const data = await response.json();
 
-        console.log("CHECK SESSION:", data);
+        console.log("Estado de sesión:", data);
 
-        // ==========================================
+
+        // =================================================
         // CUENTA DESACTIVADA
         // activo = 0
-        // ==========================================
-        if (data.motivo === "cuenta_desactivada") {
+        // =================================================
 
-            // Evita crear varias modales
-            if (document.getElementById("cuenta-desactivada-modal")) {
+        if (
+            data.motivo === "cuenta_desactivada"
+        ) {
+
+            // Evitar que la modal se cree varias veces
+            if (
+                document.getElementById(
+                    "cuenta-desactivada-modal"
+                )
+            ) {
                 return;
             }
 
+
+            // Crear modal
             const modal = document.createElement("div");
 
             modal.id = "cuenta-desactivada-modal";
+
 
             modal.innerHTML = `
                 <div style="
                     position: fixed;
                     inset: 0;
-                    background: rgba(15, 23, 42, 0.70);
+                    background: rgba(15, 23, 42, 0.75);
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -1034,8 +1049,11 @@ setInterval(async function () {
                             justify-content: center;
                             font-size: 28px;
                         ">
+
                             <i class="bi bi-person-x-fill"></i>
+
                         </div>
+
 
                         <h3 style="
                             margin: 0 0 10px;
@@ -1044,21 +1062,20 @@ setInterval(async function () {
                             Cuenta desactivada
                         </h3>
 
+
                         <p style="
                             color: #64748b;
                             margin: 0 0 25px;
                             line-height: 1.5;
                         ">
-                            Tu cuenta ha sido desactivada por un administrador.
-                            Ya no puedes continuar utilizando la aplicación.
+                            Tu cuenta ha sido desactivada por un
+                            administrador. Tu sesión se cerrará.
                         </p>
 
+
                         <button
+                            id="btn-cerrar-sesion-desactivado"
                             type="button"
-                            onclick="
-                                window.location.href =
-                                '{{ url_for('auth.login') }}';
-                            "
                             style="
                                 border: 0;
                                 background: #dc2626;
@@ -1077,16 +1094,45 @@ setInterval(async function () {
                 </div>
             `;
 
+
             document.body.appendChild(modal);
+
+
+            // =================================================
+            // BOTÓN PARA CERRAR SESIÓN
+            // =================================================
+
+            document
+                .getElementById(
+                    "btn-cerrar-sesion-desactivado"
+                )
+                .addEventListener(
+                    "click",
+                    function () {
+
+                        // Ir a la ruta de logout
+                        window.location.href =
+                            "{{ url_for('auth.logout') }}";
+
+                    }
+                );
+
+
+            // =================================================
+            // BLOQUEAR SCROLL
+            // =================================================
+
+            document.body.style.overflow = "hidden";
         }
+
 
     } catch (error) {
 
         console.error(
-            "Error comprobando el estado de la cuenta:",
+            "Error comprobando la sesión:",
             error
         );
 
     }
 
-}, 5000);
+}, 10000);
