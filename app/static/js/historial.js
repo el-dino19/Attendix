@@ -17,9 +17,11 @@
                 }
             );
 
-            const data = await response.json();
+            if (!response.ok) {
+                return;
+            }
 
-            console.log("Estado de cuenta:", data);
+            const data = await response.json();
 
             if (data.activo === false) {
 
@@ -32,7 +34,7 @@
 
                 if (!modalElement) {
                     console.error(
-                        "No se encontró la modal #modalCuentaDesactivada"
+                        "No se encontró la modal"
                     );
                     return;
                 }
@@ -48,19 +50,46 @@
 
                 modal.show();
 
-                // Después de 3 segundos cerrar sesión
-                setTimeout(function () {
 
-                    window.location.href =
-                        "{{ url_for('auth.logout') }}";
+                // =====================================
+                // CUENTA REGRESIVA DE 10 SEGUNDOS
+                // =====================================
 
-                }, 3000);
+                let segundos = 10;
+
+                const contador =
+                    document.getElementById(
+                        "contadorDesactivacion"
+                    );
+
+                if (contador) {
+                    contador.textContent = segundos;
+                }
+
+                const intervalo =
+                    setInterval(function () {
+
+                        segundos--;
+
+                        if (contador) {
+                            contador.textContent = segundos;
+                        }
+
+                        if (segundos <= 0) {
+
+                            clearInterval(intervalo);
+
+                            window.location.href =
+                                "{{ url_for('auth.logout') }}";
+                        }
+
+                    }, 1000);
             }
 
         } catch (error) {
 
             console.error(
-                "Error verificando estado de cuenta:",
+                "Error verificando estado:",
                 error
             );
 
@@ -68,18 +97,27 @@
     }
 
 
-    // Revisar cada 5 segundos
+    // =====================================
+    // VERIFICAR AL CARGAR
+    // =====================================
+
+    verificarEstadoCuenta();
+
+
+    // =====================================
+    // VERIFICAR CADA 5 SEGUNDOS
+    // =====================================
+
     setInterval(
         verificarEstadoCuenta,
         5000
     );
 
 
-    // Revisar inmediatamente
-    verificarEstadoCuenta();
+    // =====================================
+    // BOTÓN "ENTENDIDO"
+    // =====================================
 
-
-    // Botón aceptar
     const boton =
         document.getElementById(
             "btnCuentaDesactivada"

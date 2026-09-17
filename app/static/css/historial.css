@@ -1640,3 +1640,157 @@ body {
         font-size: 11px;
     }
 }
+
+/* ==========================================
+   MODAL CUENTA DESACTIVADA
+   ========================================== */
+
+.modal-cuenta-desactivada {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+    background: #ffffff;
+}
+
+/* Icono */
+
+.icono-cuenta-desactivada {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+}
+
+.icono-circulo {
+    width: 80px;
+    height: 80px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #fff1f2;
+    color: #dc3545;
+
+    font-size: 34px;
+
+    animation: aparecerIcono 0.5s ease;
+}
+
+
+/* Título */
+
+.titulo-cuenta-desactivada {
+    margin-top: 20px;
+    margin-bottom: 12px;
+
+    color: #212529;
+
+    font-size: 25px;
+    font-weight: 700;
+}
+
+
+/* Mensaje */
+
+.mensaje-cuenta-desactivada {
+    margin: 0 auto 8px;
+
+    max-width: 400px;
+
+    color: #495057;
+
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+
+/* Texto secundario */
+
+.texto-sesion {
+    margin-bottom: 20px;
+
+    color: #6c757d;
+
+    font-size: 14px;
+}
+
+
+/* Contador */
+
+.contador-cuenta {
+    width: 55px;
+    height: 55px;
+
+    margin: 0 auto 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #dc3545;
+    color: white;
+
+    font-size: 22px;
+    font-weight: 700;
+
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+}
+
+
+/* Texto redirección */
+
+.texto-redireccion {
+    margin-bottom: 0;
+
+    color: #6c757d;
+
+    font-size: 13px;
+}
+
+
+/* Botón */
+
+.btn-cuenta-desactivada {
+    min-width: 130px;
+
+    padding: 10px 25px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #dc3545;
+    color: white;
+
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.btn-cuenta-desactivada:hover {
+    background: #bb2d3b;
+    color: white;
+
+    transform: translateY(-1px);
+}
+
+
+/* Animación */
+
+@keyframes aparecerIcono {
+
+    from {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+}

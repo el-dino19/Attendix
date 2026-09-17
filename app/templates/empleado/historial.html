@@ -520,39 +520,56 @@
     <!-- MODAL CUENTA DESACTIVADA -->
     <div class="modal fade" id="modalCuentaDesactivada" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
 
-          <div class="modal-header">
-            <h5 class="modal-title">
-              Cuenta desactivada
-            </h5>
+        <div class="modal-content modal-cuenta-desactivada">
+
+          <!-- Icono -->
+          <div class="icono-cuenta-desactivada">
+            <div class="icono-circulo">
+              <i class="fas fa-user-slash"></i>
+            </div>
           </div>
 
+          <!-- Contenido -->
           <div class="modal-body text-center">
 
-            <div style="font-size: 50px; color: #dc3545;">
-              ⚠️
-            </div>
+            <h3 class="titulo-cuenta-desactivada">
+              Cuenta desactivada
+            </h3>
 
-            <p class="mt-3 mb-1">
-              Tu cuenta ha sido desactivada.
+            <p class="mensaje-cuenta-desactivada">
+              Tu cuenta ha sido desactivada por un administrador.
             </p>
 
-            <p class="text-muted">
-              Tu sesión se cerrará y serás redirigido al inicio de sesión.
+            <p class="texto-sesion">
+              Por seguridad, tu sesión se cerrará automáticamente.
+            </p>
+
+            <!-- Contador -->
+            <div class="contador-cuenta">
+              <span id="contadorDesactivacion">10</span>
+            </div>
+
+            <p class="texto-redireccion">
+              Serás redirigido al inicio de sesión.
             </p>
 
           </div>
 
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" id="btnCuentaDesactivada">
-              Aceptar
+          <!-- Botón -->
+          <div class="modal-footer justify-content-center">
+
+            <button type="button" class="btn btn-cuenta-desactivada" id="btnCuentaDesactivada">
+              Entendido
             </button>
+
           </div>
 
         </div>
+
       </div>
     </div>
+
 
 
   </main>
@@ -565,107 +582,107 @@
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
   <!-- =====================================================
          SCRIPT DE HISTORIAL
     ====================================================== -->
   <script src="{{ url_for('static', filename='js/historial.js') }}"></script>
-  
+
   <script>
 
-console.log("================================");
-console.log("🚀 VERIFICADOR DE CUENTA CARGADO");
-console.log("================================");
+    console.log("================================");
+    console.log("🚀 VERIFICADOR DE CUENTA CARGADO");
+    console.log("================================");
 
-async function verificarEstadoCuenta() {
+    async function verificarEstadoCuenta() {
 
-    console.log("🔎 Verificando estado...");
+      console.log("🔎 Verificando estado...");
 
-    try {
+      try {
 
         const response = await fetch(
-            "{{ url_for('auth.verificar_estado') }}",
-            {
-                method: "GET",
-                credentials: "same-origin",
-                cache: "no-store"
-            }
+          "{{ url_for('auth.verificar_estado') }}",
+          {
+            method: "GET",
+            credentials: "same-origin",
+            cache: "no-store"
+          }
         );
 
         console.log(
-            "📡 Respuesta:",
-            response.status
+          "📡 Respuesta:",
+          response.status
         );
 
         const data = await response.json();
 
         console.log(
-            "👤 Estado:",
-            data
+          "👤 Estado:",
+          data
         );
 
         if (data.activo === false) {
 
-            console.log(
-                "🚨 CUENTA DESACTIVADA"
+          console.log(
+            "🚨 CUENTA DESACTIVADA"
+          );
+
+          const modalElement =
+            document.getElementById(
+              "modalCuentaDesactivada"
             );
 
-            const modalElement =
-                document.getElementById(
-                    "modalCuentaDesactivada"
-                );
+          console.log(
+            "🪟 Modal:",
+            modalElement
+          );
 
-            console.log(
-                "🪟 Modal:",
-                modalElement
+          if (!modalElement) {
+            console.error(
+              "❌ NO EXISTE #modalCuentaDesactivada"
+            );
+            return;
+          }
+
+          const modal =
+            new bootstrap.Modal(
+              modalElement
             );
 
-            if (!modalElement) {
-                console.error(
-                    "❌ NO EXISTE #modalCuentaDesactivada"
-                );
-                return;
-            }
+          modal.show();
 
-            const modal =
-                new bootstrap.Modal(
-                    modalElement
-                );
+          console.log(
+            "✅ MODAL MOSTRADA"
+          );
 
-            modal.show();
+          setTimeout(function () {
 
-            console.log(
-                "✅ MODAL MOSTRADA"
-            );
+            window.location.href =
+              "{{ url_for('auth.logout') }}";
 
-            setTimeout(function () {
-
-                window.location.href =
-                    "{{ url_for('auth.logout') }}";
-
-            }, 3000);
+          }, 3000);
         }
 
-    } catch (error) {
+      } catch (error) {
 
         console.error(
-            "❌ Error:",
-            error
+          "❌ Error:",
+          error
         );
+      }
     }
-}
 
 
-verificarEstadoCuenta();
+    verificarEstadoCuenta();
 
-setInterval(
-    verificarEstadoCuenta,
-    5000
-);
+    setInterval(
+      verificarEstadoCuenta,
+      5000
+    );
 
-</script>
+  </script>
 
 
 </body>
