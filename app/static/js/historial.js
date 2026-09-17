@@ -3,46 +3,50 @@ setInterval(async function () {
         const response = await fetch("{{ url_for('auth.check_session') }}", {
             method: "GET",
             credentials: "same-origin",
-            cache: "no-store",
-            headers: {
-                "X-Requested-With": "XMLHttpRequest"
-            }
+            cache: "no-store"
         });
 
         const data = await response.json();
 
-        console.log("Estado de sesión:", data);
+        // Usuario sigue activo (activo = 1)
+        if (data.activo === true) {
+            return;
+        }
 
-        // ==========================================
-        // CUENTA DESACTIVADA (activo = 0)
-        // ==========================================
-        if (data.motivo === "cuenta_desactivada") {
+        // Usuario fue desactivado (activo = 0)
+        if (
+            data.activo === false &&
+            data.sesion === true &&
+            data.motivo === "cuenta_desactivada"
+        ) {
 
-            // Evitar que el modal aparezca varias veces
-            if (document.getElementById("session-disabled-modal")) {
+            // No mostrar la modal más de una vez
+            if (document.getElementById("cuenta-desactivada-modal")) {
                 return;
             }
 
             const modal = document.createElement("div");
-            modal.id = "session-disabled-modal";
+
+            modal.id = "cuenta-desactivada-modal";
 
             modal.innerHTML = `
                 <div style="
                     position: fixed;
                     inset: 0;
-                    background: rgba(15, 23, 42, .65);
+                    background: rgba(15, 23, 42, 0.65);
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     z-index: 99999;
                 ">
+
                     <div style="
                         background: white;
                         width: min(420px, 90%);
                         border-radius: 20px;
                         padding: 32px;
                         text-align: center;
-                        box-shadow: 0 20px 50px rgba(0,0,0,.2);
+                        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
                     ">
 
                         <div style="
@@ -72,13 +76,13 @@ setInterval(async function () {
                             margin-bottom: 25px;
                         ">
                             Tu cuenta ha sido desactivada por un administrador.
-                            Tu sesión se cerrará.
+                            Ya no puedes continuar utilizando la aplicación.
                         </p>
 
                         <button
                             onclick="window.location.href='{{ url_for('auth.login') }}'"
                             style="
-                                border: 0;
+                                border: none;
                                 background: #dc2626;
                                 color: white;
                                 padding: 11px 25px;
@@ -97,39 +101,9 @@ setInterval(async function () {
             document.body.appendChild(modal);
         }
 
-        // ==========================================
-        // SESIÓN EXPIRADA
-        // ==========================================
-        else if (data.motivo === "sesion_expirada") {
-
-            window.location.href = "{{ url_for('auth.login') }}";
-        }
-
-        // ==========================================
-        // USUARIO ELIMINADO
-        // ==========================================
-        else if (data.motivo === "usuario_no_existe") {
-
-            window.location.href = "{{ url_for('auth.login') }}";
-        }
-
-        // ==========================================
-        // USUARIO ACTIVO
-        // activo = 1
-        // ==========================================
-        else if (
-            data.activo === true &&
-            data.sesion === true
-        ) {
-
-            // Todo correcto.
-            // No hacemos nada.
-        }
-
     } catch (error) {
-
         console.error(
-            "Error comprobando la sesión:",
+            "Error comprobando el estado de la cuenta:",
             error
         );
     }

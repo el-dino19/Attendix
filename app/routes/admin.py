@@ -346,7 +346,6 @@ def cambiar_password_ruta(usuario_id):
 def cambiar_estado(usuario_id):
 
     # El admin no puede desactivarse a sí mismo
-
     if usuario_id == session.get("usuario_id"):
 
         flash(
@@ -358,26 +357,18 @@ def cambiar_estado(usuario_id):
             url_for("admin.usuarios")
         )
 
-
-    exito, mensaje = cambiar_estado_usuario(
-        usuario_id
-    )
-
+    exito, mensaje = cambiar_estado_usuario(usuario_id)
 
     if exito:
-
         flash(
             mensaje,
             "success"
         )
-
     else:
-
         flash(
             mensaje,
             "danger"
         )
-
 
     return redirect(
         url_for("admin.usuarios")

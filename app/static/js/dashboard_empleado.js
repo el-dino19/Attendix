@@ -971,50 +971,55 @@ document.addEventListener(
 );
 
 setInterval(async function () {
+
     try {
-        const response = await fetch("{{ url_for('auth.check_session') }}", {
-            method: "GET",
-            credentials: "same-origin",
-            cache: "no-store",
-            headers: {
-                "X-Requested-With": "XMLHttpRequest"
+
+        const response = await fetch(
+            "{{ url_for('auth.check_session') }}",
+            {
+                method: "GET",
+                credentials: "same-origin",
+                cache: "no-store"
             }
-        });
+        );
 
         const data = await response.json();
 
-        console.log("Estado de sesión:", data);
+        console.log("CHECK SESSION:", data);
 
         // ==========================================
-        // CUENTA DESACTIVADA (activo = 0)
+        // CUENTA DESACTIVADA
+        // activo = 0
         // ==========================================
         if (data.motivo === "cuenta_desactivada") {
 
-            // Evitar que el modal aparezca varias veces
-            if (document.getElementById("session-disabled-modal")) {
+            // Evita crear varias modales
+            if (document.getElementById("cuenta-desactivada-modal")) {
                 return;
             }
 
             const modal = document.createElement("div");
-            modal.id = "session-disabled-modal";
+
+            modal.id = "cuenta-desactivada-modal";
 
             modal.innerHTML = `
                 <div style="
                     position: fixed;
                     inset: 0;
-                    background: rgba(15, 23, 42, .65);
+                    background: rgba(15, 23, 42, 0.70);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    z-index: 99999;
+                    z-index: 999999;
                 ">
+
                     <div style="
-                        background: white;
+                        background: #ffffff;
                         width: min(420px, 90%);
                         border-radius: 20px;
                         padding: 32px;
                         text-align: center;
-                        box-shadow: 0 20px 50px rgba(0,0,0,.2);
+                        box-shadow: 0 20px 50px rgba(0,0,0,.25);
                     ">
 
                         <div style="
@@ -1033,7 +1038,7 @@ setInterval(async function () {
                         </div>
 
                         <h3 style="
-                            margin-bottom: 10px;
+                            margin: 0 0 10px;
                             color: #1e293b;
                         ">
                             Cuenta desactivada
@@ -1041,14 +1046,19 @@ setInterval(async function () {
 
                         <p style="
                             color: #64748b;
-                            margin-bottom: 25px;
+                            margin: 0 0 25px;
+                            line-height: 1.5;
                         ">
                             Tu cuenta ha sido desactivada por un administrador.
-                            Tu sesión se cerrará.
+                            Ya no puedes continuar utilizando la aplicación.
                         </p>
 
                         <button
-                            onclick="window.location.href='{{ url_for('auth.login') }}'"
+                            type="button"
+                            onclick="
+                                window.location.href =
+                                '{{ url_for('auth.login') }}';
+                            "
                             style="
                                 border: 0;
                                 background: #dc2626;
@@ -1063,47 +1073,20 @@ setInterval(async function () {
                         </button>
 
                     </div>
+
                 </div>
             `;
 
             document.body.appendChild(modal);
         }
 
-        // ==========================================
-        // SESIÓN EXPIRADA
-        // ==========================================
-        else if (data.motivo === "sesion_expirada") {
-
-            window.location.href = "{{ url_for('auth.login') }}";
-        }
-
-        // ==========================================
-        // USUARIO ELIMINADO
-        // ==========================================
-        else if (data.motivo === "usuario_no_existe") {
-
-            window.location.href = "{{ url_for('auth.login') }}";
-        }
-
-        // ==========================================
-        // USUARIO ACTIVO
-        // activo = 1
-        // ==========================================
-        else if (
-            data.activo === true &&
-            data.sesion === true
-        ) {
-
-            // Todo correcto.
-            // No hacemos nada.
-        }
-
     } catch (error) {
 
         console.error(
-            "Error comprobando la sesión:",
+            "Error comprobando el estado de la cuenta:",
             error
         );
+
     }
 
 }, 5000);
