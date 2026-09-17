@@ -5,7 +5,8 @@ from flask import (
     redirect,
     url_for,
     flash,
-    abort
+    abort,
+    request
 )
 
 
@@ -266,10 +267,46 @@ def iniciar_hora_extra_ruta():
 
     usuario_id = session["usuario_id"]
 
+    # -----------------------------------------------------
+    # Obtener datos enviados desde el formulario
+    # -----------------------------------------------------
+
+    latitud = request.form.get("latitud")
+    longitud = request.form.get("longitud")
+    direccion = request.form.get("direccion")
+
+    # -----------------------------------------------------
+    # Convertir coordenadas a float
+    # -----------------------------------------------------
+
+    try:
+        latitud = float(latitud) if latitud else None
+    except (TypeError, ValueError):
+        latitud = None
+
+    try:
+        longitud = float(longitud) if longitud else None
+    except (TypeError, ValueError):
+        longitud = None
+
+    # -----------------------------------------------------
+    # Iniciar hora extra
+    # -----------------------------------------------------
+
     hora_extra, mensaje = iniciar_hora_extra(
-        usuario_id,
-        session.get("zona_horaria", "UTC")
+        usuario_id=usuario_id,
+        zona_horaria=session.get(
+            "zona_horaria",
+            "UTC"
+        ),
+        latitud=latitud,
+        longitud=longitud,
+        direccion=direccion
     )
+
+    # -----------------------------------------------------
+    # Mensaje al usuario
+    # -----------------------------------------------------
 
     if hora_extra:
 
@@ -285,6 +322,9 @@ def iniciar_hora_extra_ruta():
             "error"
         )
 
+    # -----------------------------------------------------
+    # Regresar al dashboard
+    # -----------------------------------------------------
 
     return redirect(
         url_for("empleado.dashboard")
@@ -304,8 +344,11 @@ def finalizar_hora_extra_ruta():
     usuario_id = session["usuario_id"]
 
     hora_extra, mensaje = finalizar_hora_extra(
-        usuario_id,
-        session.get("zona_horaria", "UTC")
+        usuario_id=usuario_id,
+        zona_horaria=session.get(
+            "zona_horaria",
+            "UTC"
+        )
     )
 
     if hora_extra:
@@ -321,7 +364,6 @@ def finalizar_hora_extra_ruta():
             mensaje,
             "error"
         )
-
 
     return redirect(
         url_for("empleado.dashboard")

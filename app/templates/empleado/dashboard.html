@@ -1072,11 +1072,11 @@
             <strong>
 
               {% if hora_extra.hora_inicio is defined and hora_extra.hora_inicio %}
-                {{ hora_extra.hora_inicio.strftime("%I:%M:%S %p") }}
+              {{ hora_extra.hora_inicio.strftime("%I:%M:%S %p") }}
               {% elif hora_extra.entrada is defined and hora_extra.entrada %}
-                {{ hora_extra.entrada.strftime("%I:%M:%S %p") }}
+              {{ hora_extra.entrada.strftime("%I:%M:%S %p") }}
               {% else %}
-                --
+              --
               {% endif %}
 
             </strong>
@@ -1166,11 +1166,11 @@
             <strong>
 
               {% if hora_extra.hora_inicio is defined and hora_extra.hora_inicio %}
-                {{ hora_extra.hora_inicio.strftime("%I:%M:%S %p") }}
+              {{ hora_extra.hora_inicio.strftime("%I:%M:%S %p") }}
               {% elif hora_extra.entrada is defined and hora_extra.entrada %}
-                {{ hora_extra.entrada.strftime("%I:%M:%S %p") }}
+              {{ hora_extra.entrada.strftime("%I:%M:%S %p") }}
               {% else %}
-                --
+              --
               {% endif %}
 
             </strong>
@@ -1242,11 +1242,15 @@
           </div>
 
 
-          <form method="POST" action="{{ url_for(
-                                'empleado.iniciar_hora_extra_ruta'
-                            ) }}">
+          <form method="POST" action="{{ url_for('empleado.iniciar_hora_extra_ruta') }}" id="form-iniciar-hora-extra">
 
-            <button type="submit" class="break-option break-yellow">
+            <input type="hidden" name="latitud" id="hora-extra-latitud">
+
+            <input type="hidden" name="longitud" id="hora-extra-longitud">
+
+            <input type="hidden" name="direccion" id="hora-extra-direccion">
+
+            <button type="submit" class="break-option break-yellow" id="btn-iniciar-hora-extra">
 
               <div class="break-option-icon">
 
@@ -1254,20 +1258,17 @@
 
               </div>
 
-
               <div class="break-option-info">
 
                 <strong>
                   Iniciar horas extras
                 </strong>
 
-
                 <small>
                   Registrar inicio
                 </small>
 
               </div>
-
 
               <i class="bi bi-chevron-right"></i>
 

@@ -825,3 +825,171 @@ document.addEventListener("DOMContentLoaded", function () {
     cargarUbicacion();
 
 });
+
+
+
+// ==========================================================
+    // HORAS EXTRAS     
+    // ==========================================================
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById(
+        "form-iniciar-hora-extra"
+    );
+
+    const button = document.getElementById(
+        "btn-iniciar-hora-extra"
+    );
+
+    const latitudInput = document.getElementById(
+        "hora-extra-latitud"
+    );
+
+    const longitudInput = document.getElementById(
+        "hora-extra-longitud"
+    );
+
+    const direccionInput = document.getElementById(
+        "hora-extra-direccion"
+    );
+
+
+    form.addEventListener("submit", function (event) {
+
+        // Evitar que el formulario se envíe inmediatamente
+        event.preventDefault();
+
+
+        // -------------------------------------------------
+        // Verificar soporte de geolocalización
+        // -------------------------------------------------
+
+        if (!navigator.geolocation) {
+
+            alert(
+                "Tu navegador no permite obtener la ubicación."
+            );
+
+            return;
+        }
+
+
+        // -------------------------------------------------
+        // Deshabilitar botón mientras obtenemos ubicación
+        // -------------------------------------------------
+
+        button.disabled = true;
+
+        const textoOriginal = button.innerHTML;
+
+        button.innerHTML = `
+            <div class="break-option-icon">
+                <i class="bi bi-geo-alt-fill"></i>
+            </div>
+
+            <div class="break-option-info">
+                <strong>
+                    Obteniendo ubicación...
+                </strong>
+
+                <small>
+                    Espera un momento
+                </small>
+            </div>
+        `;
+
+
+        // -------------------------------------------------
+        // Obtener ubicación
+        // -------------------------------------------------
+
+        navigator.geolocation.getCurrentPosition(
+
+            function (position) {
+
+                const latitud =
+                    position.coords.latitude;
+
+                const longitud =
+                    position.coords.longitude;
+
+
+                // -----------------------------------------
+                // Guardar coordenadas en el formulario
+                // -----------------------------------------
+
+                latitudInput.value = latitud;
+
+                longitudInput.value = longitud;
+
+
+                // -----------------------------------------
+                // Por ahora no tenemos geocodificación
+                // -----------------------------------------
+
+                direccionInput.value = "";
+
+
+                // -----------------------------------------
+                // Enviar formulario
+                // -----------------------------------------
+
+                form.submit();
+
+            },
+
+
+            function (error) {
+
+                button.disabled = false;
+
+                button.innerHTML = textoOriginal;
+
+
+                let mensaje =
+                    "No fue posible obtener tu ubicación.";
+
+
+                switch (error.code) {
+
+                    case error.PERMISSION_DENIED:
+
+                        mensaje =
+                            "Debes permitir el acceso a tu ubicación para iniciar las horas extras.";
+
+                        break;
+
+
+                    case error.POSITION_UNAVAILABLE:
+
+                        mensaje =
+                            "No se pudo determinar tu ubicación.";
+
+                        break;
+
+
+                    case error.TIMEOUT:
+
+                        mensaje =
+                            "La solicitud de ubicación tardó demasiado.";
+
+                        break;
+                }
+
+
+                alert(mensaje);
+            },
+
+
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+
+        );
+
+    });
+
+});
+

@@ -3,10 +3,13 @@ from zoneinfo import ZoneInfo
 
 from app.extensions import db
 from app.models.hora_extra import HoraExtra
+from app.models.jornada import Jornada
 
 
 def obtener_hora_actual(zona_horaria="UTC"):
-
+    """
+    Obtiene la hora actual según la zona horaria indicada.
+    """
     try:
         zona = ZoneInfo(zona_horaria)
     except Exception:
@@ -16,7 +19,9 @@ def obtener_hora_actual(zona_horaria="UTC"):
 
 
 def obtener_fecha_actual(zona_horaria="UTC"):
-
+    """
+    Obtiene la fecha actual según la zona horaria indicada.
+    """
     try:
         zona = ZoneInfo(zona_horaria)
     except Exception:
@@ -26,12 +31,27 @@ def obtener_fecha_actual(zona_horaria="UTC"):
 
 
 def obtener_hora_extra_abierta(usuario_id):
-
+    """
+    Busca la última hora extra activa del usuario.
+    Una hora extra está activa cuando fin es NULL.
+    """
     return HoraExtra.query.filter(
         HoraExtra.usuario_id == usuario_id,
         HoraExtra.fin.is_(None)
     ).order_by(
         HoraExtra.inicio.desc()
+    ).first()
+
+
+def obtener_jornada_del_dia(usuario_id, fecha):
+    """
+    Busca la jornada correspondiente al usuario y a la fecha indicada.
+    """
+    return Jornada.query.filter(
+        Jornada.usuario_id == usuario_id,
+        Jornada.fecha == fecha
+    ).order_by(
+        Jornada.entrada.desc()
     ).first()
 
 
@@ -42,28 +62,71 @@ def iniciar_hora_extra(
     longitud=None,
     direccion=None
 ):
+    
+
+    # ---------------------------------------------------------
+    # 1. Verificar si el usuario ya tiene una hora extra abierta
+    # ---------------------------------------------------------
 
     hora_extra_abierta = obtener_hora_extra_abierta(
         usuario_id
     )
 
     if hora_extra_abierta:
-
         return (
             None,
             "Ya tienes una hora extra activa."
         )
 
+    # ---------------------------------------------------------
+    # 2. Obtener fecha y hora actuales
+    # ---------------------------------------------------------
+
+    fecha = obtener_fecha_actual(
+        zona_horaria
+    )
+
+    hora = obtener_hora_actual(
+        zona_horaria
+    )
+
+    # ---------------------------------------------------------
+    # 3. Buscar la jornada del usuario para ese día
+    # ---------------------------------------------------------
+
+    jornada = obtener_jornada_del_dia(
+        usuario_id,
+        fecha
+    )
+
+    # ---------------------------------------------------------
+    # 4. Crear la hora extra
+    # ---------------------------------------------------------
+
     hora_extra = HoraExtra(
         usuario_id=usuario_id,
-        fecha=obtener_fecha_actual(zona_horaria),
-        inicio=obtener_hora_actual(zona_horaria),
+
+        jornada_id=jornada.id if jornada else None,
+
+        fecha=fecha,
+
+        inicio=hora,
+
         latitud=latitud,
+
         longitud=longitud,
+
         direccion=direccion
     )
 
-    db.session.add(hora_extra)
+    # ---------------------------------------------------------
+    # 5. Guardar en base de datos
+    # ---------------------------------------------------------
+
+    db.session.add(
+        hora_extra
+    )
+
     db.session.commit()
 
     return (
@@ -76,21 +139,31 @@ def finalizar_hora_extra(
     usuario_id,
     zona_horaria="UTC"
 ):
+    """
+    Finaliza la hora extra activa del usuario.
+    """
 
     hora_extra = obtener_hora_extra_abierta(
         usuario_id
     )
 
     if hora_extra is None:
-
         return (
             None,
             "No tienes una hora extra activa."
         )
 
+    # ---------------------------------------------------------
+    # Obtener hora actual
+    # ---------------------------------------------------------
+
     hora_extra.fin = obtener_hora_actual(
         zona_horaria
     )
+
+    # ---------------------------------------------------------
+    # Guardar cambios
+    # ---------------------------------------------------------
 
     db.session.commit()
 
