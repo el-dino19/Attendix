@@ -15,6 +15,7 @@ from datetime import datetime
 
 from app import db
 from app.services.exportacion import generar_excel_asistencia
+
 from app.models.usuario import Usuario
 from app.models.jornada import Jornada
 from app.models.grupo import Grupo
@@ -32,8 +33,8 @@ from app.services.grupos import (
     crear_grupo as crear_grupo_service,
     agregar_miembro as agregar_miembro_service,
     listar_miembros,
-    cambiar_rol_miembro,
-    quitar_miembro
+    cambiar_rol_miembro as cambiar_rol_miembro_service,
+    quitar_miembro as quitar_miembro_service
 )
 
 
@@ -44,8 +45,13 @@ admin_bp = Blueprint(
 )
 
 
+# =========================================================
+# PROTECCIÓN DEL ADMINISTRADOR GLOBAL
+# =========================================================
+
 @admin_bp.before_request
 def proteger_admin():
+
     if "usuario_id" not in session:
         return redirect(url_for("auth.login"))
 
@@ -53,12 +59,26 @@ def proteger_admin():
         abort(403)
 
 
+# =========================================================
+# DASHBOARD
+# =========================================================
+
 @admin_bp.route("/")
 def dashboard():
+
     cantidad_usuarios = Usuario.query.count()
-    usuarios_activos = Usuario.query.filter_by(activo=True).count()
-    usuarios_inactivos = Usuario.query.filter_by(activo=False).count()
-    cantidad_grupos = Grupo.query.filter_by(activo=True).count()
+
+    usuarios_activos = Usuario.query.filter_by(
+        activo=True
+    ).count()
+
+    usuarios_inactivos = Usuario.query.filter_by(
+        activo=False
+    ).count()
+
+    cantidad_grupos = Grupo.query.filter_by(
+        activo=True
+    ).count()
 
     return render_template(
         "admin/dashboard.html",
@@ -69,9 +89,15 @@ def dashboard():
     )
 
 
+# =========================================================
+# USUARIOS
+# =========================================================
+
 @admin_bp.route("/usuarios")
 def usuarios():
+
     usuarios = obtener_usuarios()
+
     return render_template(
         "admin/usuarios.html",
         usuarios=usuarios
@@ -80,15 +106,35 @@ def usuarios():
 
 @admin_bp.route("/usuarios/crear", methods=["POST"])
 def crear():
-    nombre = request.form.get("nombre", "").strip()
-    correo = request.form.get("correo", "").strip().lower()
-    password = request.form.get("password", "")
-    rol = request.form.get("rol", "empleado")
 
+    nombre = request.form.get(
+        "nombre",
+        ""
+    ).strip()
+
+    correo = request.form.get(
+        "correo",
+        ""
+    ).strip().lower()
+
+    password = request.form.get(
+        "password",
+        ""
+    )
+
+    rol = request.form.get(
+        "rol",
+        "empleado"
+    )
+
+    # Compatibilidad con formularios antiguos
     if rol == "admin":
         rol = "admin_global"
 
-    if rol not in ("empleado", "admin_global"):
+    if rol not in (
+        "empleado",
+        "admin_global"
+    ):
         rol = "empleado"
 
     usuario_existente = Usuario.query.filter_by(
@@ -96,20 +142,48 @@ def crear():
     ).first()
 
     if usuario_existente:
-        flash("Ya existe un usuario registrado con ese correo.", "danger")
-        return redirect(url_for("admin.usuarios"))
+
+        flash(
+            "Ya existe un usuario registrado con ese correo.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("admin.usuarios")
+        )
 
     if not nombre:
-        flash("El nombre es obligatorio.", "danger")
-        return redirect(url_for("admin.usuarios"))
+
+        flash(
+            "El nombre es obligatorio.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("admin.usuarios")
+        )
 
     if not correo:
-        flash("El correo es obligatorio.", "danger")
-        return redirect(url_for("admin.usuarios"))
+
+        flash(
+            "El correo es obligatorio.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("admin.usuarios")
+        )
 
     if not password:
-        flash("La contraseña es obligatoria.", "danger")
-        return redirect(url_for("admin.usuarios"))
+
+        flash(
+            "La contraseña es obligatoria.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("admin.usuarios")
+        )
 
     exito, mensaje, _ = crear_usuario(
         nombre,
@@ -123,28 +197,68 @@ def crear():
         "success" if exito else "danger"
     )
 
-    return redirect(url_for("admin.usuarios"))
+    return redirect(
+        url_for("admin.usuarios")
+    )
 
 
-@admin_bp.route("/usuarios/<int:usuario_id>/editar", methods=["POST"])
+@admin_bp.route(
+    "/usuarios/<int:usuario_id>/editar",
+    methods=["POST"]
+)
 def editar(usuario_id):
-    nombre = request.form.get("nombre", "").strip()
-    correo = request.form.get("correo", "").strip().lower()
-    rol = request.form.get("rol", "empleado")
 
+    nombre = request.form.get(
+        "nombre",
+        ""
+    ).strip()
+
+    correo = request.form.get(
+        "correo",
+        ""
+    ).strip().lower()
+
+    rol = request.form.get(
+        "rol",
+        "empleado"
+    )
+
+    # Compatibilidad con formularios antiguos
     if rol == "admin":
         rol = "admin_global"
 
-    if rol not in ("empleado", "admin_global"):
+    if rol not in (
+        "empleado",
+        "admin_global"
+    ):
         rol = "empleado"
 
     if not nombre or not correo:
-        flash("Nombre y correo son obligatorios.", "danger")
-        return redirect(url_for("admin.usuarios"))
 
-    if usuario_id == session.get("usuario_id") and rol != "admin_global":
-        flash("El administrador global actual no puede quitarse ese rol.", "danger")
-        return redirect(url_for("admin.usuarios"))
+        flash(
+            "Nombre y correo son obligatorios.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("admin.usuarios")
+        )
+
+    # Evita que el administrador global
+    # se quite su propio rol
+    if (
+        usuario_id == session.get("usuario_id")
+        and rol != "admin_global"
+    ):
+
+        flash(
+            "El administrador global actual no puede quitarse ese rol.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("admin.usuarios")
+        )
 
     exito, mensaje, _ = editar_usuario(
         usuario_id,
@@ -158,16 +272,32 @@ def editar(usuario_id):
         "success" if exito else "danger"
     )
 
-    return redirect(url_for("admin.usuarios"))
+    return redirect(
+        url_for("admin.usuarios")
+    )
 
 
-@admin_bp.route("/usuarios/<int:usuario_id>/password", methods=["POST"])
+@admin_bp.route(
+    "/usuarios/<int:usuario_id>/password",
+    methods=["POST"]
+)
 def cambiar_password_ruta(usuario_id):
-    password = request.form.get("password", "")
+
+    password = request.form.get(
+        "password",
+        ""
+    )
 
     if not password:
-        flash("La contraseña no puede estar vacía.", "danger")
-        return redirect(url_for("admin.usuarios"))
+
+        flash(
+            "La contraseña no puede estar vacía.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("admin.usuarios")
+        )
 
     exito, mensaje = cambiar_password(
         usuario_id,
@@ -179,39 +309,78 @@ def cambiar_password_ruta(usuario_id):
         "success" if exito else "danger"
     )
 
-    return redirect(url_for("admin.usuarios"))
+    return redirect(
+        url_for("admin.usuarios")
+    )
 
 
-@admin_bp.route("/usuarios/<int:usuario_id>/estado", methods=["POST"])
+@admin_bp.route(
+    "/usuarios/<int:usuario_id>/estado",
+    methods=["POST"]
+)
 def cambiar_estado(usuario_id):
-    if usuario_id == session.get("usuario_id"):
-        flash("No puedes desactivar tu propio usuario.", "danger")
-        return redirect(url_for("admin.usuarios"))
 
-    exito, mensaje = cambiar_estado_usuario(usuario_id)
+    if usuario_id == session.get("usuario_id"):
+
+        flash(
+            "No puedes desactivar tu propio usuario.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("admin.usuarios")
+        )
+
+    exito, mensaje = cambiar_estado_usuario(
+        usuario_id
+    )
 
     flash(
         mensaje,
         "success" if exito else "danger"
     )
 
-    return redirect(url_for("admin.usuarios"))
+    return redirect(
+        url_for("admin.usuarios")
+    )
 
+
+# =========================================================
+# EXPORTAR ASISTENCIA
+# =========================================================
 
 @admin_bp.route("/exportar")
 def exportar():
-    periodo = request.args.get("periodo", "todos")
-    mes = request.args.get("mes", "").strip()
-    grupo_id = request.args.get("grupo_id", type=int)
+
+    periodo = request.args.get(
+        "periodo",
+        "todos"
+    )
+
+    mes = request.args.get(
+        "mes",
+        ""
+    ).strip()
+
+    grupo_id = request.args.get(
+        "grupo_id",
+        type=int
+    )
 
     query = (
         Jornada.query
         .join(Usuario)
-        .filter(Usuario.rol != "admin_global")
+        .filter(
+            Usuario.rol != "admin_global"
+        )
     )
 
+    # Filtro por grupo
     if grupo_id:
-        query = query.filter(Jornada.grupo_id == grupo_id)
+
+        query = query.filter(
+            Jornada.grupo_id == grupo_id
+        )
 
     registros = query.order_by(
         Jornada.fecha.desc(),
@@ -229,14 +398,28 @@ def exportar():
     )
 
     if periodo == "mes" and mes:
-        nombre_archivo = f"Reporte_Asistencia_{mes}.xlsx"
-    elif periodo == "3_meses":
-        nombre_archivo = "Reporte_Asistencia_Ultimos_3_Meses.xlsx"
-    elif periodo == "6_meses":
-        nombre_archivo = "Reporte_Asistencia_Ultimos_6_Meses.xlsx"
-    else:
+
         nombre_archivo = (
-            f"Reporte_Asistencia_{ahora.strftime('%Y-%m-%d')}.xlsx"
+            f"Reporte_Asistencia_{mes}.xlsx"
+        )
+
+    elif periodo == "3_meses":
+
+        nombre_archivo = (
+            "Reporte_Asistencia_Ultimos_3_Meses.xlsx"
+        )
+
+    elif periodo == "6_meses":
+
+        nombre_archivo = (
+            "Reporte_Asistencia_Ultimos_6_Meses.xlsx"
+        )
+
+    else:
+
+        nombre_archivo = (
+            f"Reporte_Asistencia_"
+            f"{ahora.strftime('%Y-%m-%d')}.xlsx"
         )
 
     return send_file(
@@ -250,30 +433,62 @@ def exportar():
     )
 
 
+# =========================================================
+# ASISTENCIA
+# =========================================================
+
 @admin_bp.route("/asistencia")
 def asistencia():
-    usuario_id = request.args.get("usuario_id", type=int)
-    grupo_id = request.args.get("grupo_id", type=int)
-    fecha_desde = request.args.get("fecha_desde")
-    fecha_hasta = request.args.get("fecha_hasta")
+
+    usuario_id = request.args.get(
+        "usuario_id",
+        type=int
+    )
+
+    grupo_id = request.args.get(
+        "grupo_id",
+        type=int
+    )
+
+    fecha_desde = request.args.get(
+        "fecha_desde"
+    )
+
+    fecha_hasta = request.args.get(
+        "fecha_hasta"
+    )
 
     query = (
         Jornada.query
         .join(Usuario)
-        .filter(Usuario.rol != "admin_global")
+        .filter(
+            Usuario.rol != "admin_global"
+        )
     )
 
     if grupo_id:
-        query = query.filter(Jornada.grupo_id == grupo_id)
+
+        query = query.filter(
+            Jornada.grupo_id == grupo_id
+        )
 
     if usuario_id:
-        query = query.filter(Jornada.usuario_id == usuario_id)
+
+        query = query.filter(
+            Jornada.usuario_id == usuario_id
+        )
 
     if fecha_desde:
-        query = query.filter(Jornada.fecha >= fecha_desde)
+
+        query = query.filter(
+            Jornada.fecha >= fecha_desde
+        )
 
     if fecha_hasta:
-        query = query.filter(Jornada.fecha <= fecha_hasta)
+
+        query = query.filter(
+            Jornada.fecha <= fecha_hasta
+        )
 
     jornadas = query.order_by(
         Jornada.fecha.desc(),
@@ -285,6 +500,7 @@ def asistencia():
     )
 
     if grupo_id:
+
         usuarios_query = (
             usuarios_query
             .join(GrupoMiembro)
@@ -300,8 +516,12 @@ def asistencia():
 
     grupos = (
         Grupo.query
-        .filter_by(activo=True)
-        .order_by(Grupo.nombre.asc())
+        .filter_by(
+            activo=True
+        )
+        .order_by(
+            Grupo.nombre.asc()
+        )
         .all()
     )
 
@@ -320,18 +540,28 @@ def asistencia():
 
 @admin_bp.route("/grupos")
 def grupos():
+
     grupos = (
         Grupo.query
-        .filter_by(activo=True)
-        .order_by(Grupo.nombre.asc())
+        .filter_by(
+            activo=True
+        )
+        .order_by(
+            Grupo.nombre.asc()
+        )
         .all()
     )
 
     for grupo in grupos:
-        grupo.miembros_count = GrupoMiembro.query.filter_by(
-            grupo_id=grupo.id,
-            activo=True
-        ).count()
+
+        grupo.miembros_count = (
+            GrupoMiembro.query
+            .filter_by(
+                grupo_id=grupo.id,
+                activo=True
+            )
+            .count()
+        )
 
     return render_template(
         "admin/grupos.html",
@@ -339,11 +569,25 @@ def grupos():
     )
 
 
-@admin_bp.route("/grupos/crear", methods=["POST"])
+# =========================================================
+# CREAR GRUPO
+# =========================================================
+
+@admin_bp.route(
+    "/grupos/crear",
+    methods=["POST"]
+)
 def crear_grupo():
+
     ok, mensaje, grupo = crear_grupo_service(
-        request.form.get("nombre", ""),
-        request.form.get("descripcion", ""),
+        request.form.get(
+            "nombre",
+            ""
+        ),
+        request.form.get(
+            "descripcion",
+            ""
+        ),
         session["usuario_id"]
     )
 
@@ -353,6 +597,7 @@ def crear_grupo():
     )
 
     if grupo:
+
         return redirect(
             url_for(
                 "admin.grupo_miembros",
@@ -360,14 +605,27 @@ def crear_grupo():
             )
         )
 
-    return redirect(url_for("admin.grupos"))
+    return redirect(
+        url_for("admin.grupos")
+    )
 
 
-@admin_bp.route("/grupos/<int:grupo_id>/miembros")
+# =========================================================
+# ADMINISTRAR MIEMBROS
+# =========================================================
+
+@admin_bp.route(
+    "/grupos/<int:grupo_id>/miembros"
+)
 def grupo_miembros(grupo_id):
-    grupo = Grupo.query.get_or_404(grupo_id)
 
-    miembros = listar_miembros(grupo_id)
+    grupo = Grupo.query.get_or_404(
+        grupo_id
+    )
+
+    miembros = listar_miembros(
+        grupo_id
+    )
 
     ids = {
         miembro.usuario_id
@@ -380,13 +638,19 @@ def grupo_miembros(grupo_id):
             Usuario.activo.is_(True),
             Usuario.rol != "admin_global"
         )
-        .order_by(Usuario.nombre.asc())
+        .order_by(
+            Usuario.nombre.asc()
+        )
         .all()
     )
 
-    # Se pueden mostrar también miembros actuales para permitir reactivarlos.
+    # Indica al HTML cuáles usuarios
+    # ya pertenecen al grupo
     for usuario in usuarios_disponibles:
-        usuario.ya_miembro = usuario.id in ids
+
+        usuario.ya_miembro = (
+            usuario.id in ids
+        )
 
     return render_template(
         "admin/grupo_miembros.html",
@@ -396,32 +660,57 @@ def grupo_miembros(grupo_id):
     )
 
 
+# =========================================================
+# AGREGAR MIEMBRO
+# =========================================================
+
 @admin_bp.route(
     "/grupos/<int:grupo_id>/miembros/agregar",
     methods=["POST"]
 )
 def agregar_miembro(grupo_id):
+
     ok, mensaje, _ = agregar_miembro_service(
         grupo_id,
-        request.form.get("usuario_id", type=int),
-        request.form.get("rol", "colaborador")
+        request.form.get(
+            "usuario_id",
+            type=int
+        ),
+        request.form.get(
+            "rol",
+            "colaborador"
+        )
     )
 
-    flash(mensaje, "success" if ok else "danger")
+    flash(
+        mensaje,
+        "success" if ok else "danger"
+    )
 
     return redirect(
-        url_for("admin.grupo_miembros", grupo_id=grupo_id)
+        url_for(
+            "admin.grupo_miembros",
+            grupo_id=grupo_id
+        )
     )
 
+
+# =========================================================
+# CAMBIAR ROL DE MIEMBRO
+# =========================================================
 
 @admin_bp.route(
     "/grupos/<int:grupo_id>/miembros/<int:usuario_id>/rol",
     methods=["POST"]
 )
-def cambiar_rol_miembro_global(grupo_id, usuario_id):
-    rol = request.form.get("rol", "colaborador")
+def cambiar_rol_miembro(grupo_id, usuario_id):
 
-    ok, mensaje = cambiar_rol_miembro(
+    rol = request.form.get(
+        "rol",
+        "colaborador"
+    )
+
+    ok, mensaje = cambiar_rol_miembro_service(
         grupo_id,
         usuario_id,
         rol
@@ -440,12 +729,17 @@ def cambiar_rol_miembro_global(grupo_id, usuario_id):
     )
 
 
+# =========================================================
+# ELIMINAR MIEMBRO
+# =========================================================
+
 @admin_bp.route(
     "/grupos/<int:grupo_id>/miembros/<int:usuario_id>/eliminar",
     methods=["POST"]
 )
 def eliminar_miembro(grupo_id, usuario_id):
-    ok, mensaje = quitar_miembro(
+
+    ok, mensaje = quitar_miembro_service(
         grupo_id,
         usuario_id
     )
