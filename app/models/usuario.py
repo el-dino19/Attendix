@@ -5,37 +5,25 @@ from datetime import datetime
 class Usuario(db.Model):
     __tablename__ = "usuarios"
 
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
+    id = db.Column(db.Integer, primary_key=True)
 
-    nombre = db.Column(
-        db.String(100),
-        nullable=False
-    )
+    nombre = db.Column(db.String(100), nullable=False)
 
-    correo = db.Column(
-        db.String(50),
-        unique=True,
-        nullable=False
-    )
+    correo = db.Column(db.String(50), unique=True, nullable=False)
 
-    password_hash = db.Column(
-        db.String(255),
-        nullable=False
-    )
+    password_hash = db.Column(db.String(255), nullable=False)
 
+    # Rol global: admin_global o empleado.
     rol = db.Column(
-    db.String(20),
-    nullable=False,
-    default="empleado"
+        db.String(20),
+        nullable=False,
+        default="empleado"
     )
 
     activo = db.Column(
-    db.Boolean,
-    nullable=False,
-    default=True
+        db.Boolean,
+        nullable=False,
+        default=True
     )
 
     created_at = db.Column(
@@ -55,9 +43,16 @@ class Usuario(db.Model):
         "Jornada",
         back_populates="usuario"
     )
-    
+
     horas_extras = db.relationship(
-    "HoraExtra",
-    back_populates="usuario",
-    cascade="all, delete-orphan"
+        "HoraExtra",
+        back_populates="usuario",
+        cascade="all, delete-orphan"
+    )
+
+    grupos_miembro = db.relationship(
+        "GrupoMiembro",
+        back_populates="usuario",
+        cascade="all, delete-orphan",
+        lazy=True
     )

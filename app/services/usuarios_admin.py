@@ -50,6 +50,12 @@ def crear_usuario(
     ).decode("utf-8")
 
 
+    if rol == "admin":
+        rol = "admin_global"
+
+    if rol not in ("empleado", "admin_global"):
+        return (False, "Rol global inválido.", None)
+
     # --------------------------------------
     # CREAR USUARIO
     # --------------------------------------
@@ -118,6 +124,12 @@ def editar_usuario(
             None
         )
 
+
+    if rol == "admin":
+        rol = "admin_global"
+
+    if rol not in ("empleado", "admin_global"):
+        return (False, "Rol global inválido.", None)
 
     usuario.nombre = nombre
     usuario.correo = correo

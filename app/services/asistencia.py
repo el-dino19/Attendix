@@ -6,24 +6,22 @@ from app.models.jornada import Jornada
 
 
 def obtener_hora_actual(zona_horaria="UTC"):
-
     try:
         zona = ZoneInfo(zona_horaria)
     except Exception:
         zona = ZoneInfo("UTC")
+    return datetime.now(zona).time()
 
-    ahora = datetime.now(zona)
 
-    return ahora.time()
+def obtener_fecha_actual(zona_horaria="UTC"):
+    try:
+        zona = ZoneInfo(zona_horaria)
+    except Exception:
+        zona = ZoneInfo("UTC")
+    return datetime.now(zona).date()
+
 
 def formatear_direccion_corta(direccion):
-    """
-    Genera una dirección corta para mostrar en el dashboard.
-
-    No depende de un país o ciudad específica.
-    La dirección original permanece intacta en la base de datos.
-    """
-
     if not direccion:
         return "Ubicación no disponible"
 
@@ -33,19 +31,10 @@ def formatear_direccion_corta(direccion):
         if parte.strip()
     ]
 
-    # Elimina duplicados manteniendo el orden
     resultado = []
-
     for parte in partes:
-
         if parte not in resultado:
             resultado.append(parte)
-
-    # Tomamos solamente las primeras partes relevantes.
-    #
-    # Como la estructura de Nominatim puede variar según el país,
-    # evitamos eliminar nombres específicos como "Barranquilla",
-    # "Riomar", etc.
 
     if len(resultado) > 6:
         resultado = resultado[:6]
@@ -53,30 +42,19 @@ def formatear_direccion_corta(direccion):
     return ", ".join(resultado)
 
 
-
-def obtener_fecha_actual(zona_horaria="UTC"):
-
-    try:
-        zona = ZoneInfo(zona_horaria)
-    except Exception:
-        zona = ZoneInfo("UTC")
-
-    ahora = datetime.now(zona)
-
-    return ahora.date()
-
-
-def obtener_jornada_abierta(usuario_id):
-
-    jornada = Jornada.query.filter(
+def obtener_jornada_abierta(usuario_id, grupo_id=None):
+    query = Jornada.query.filter(
         Jornada.usuario_id == usuario_id,
         Jornada.salida.is_(None)
-    ).order_by(
+    )
+
+    if grupo_id is not None:
+        query = query.filter(Jornada.grupo_id == grupo_id)
+
+    return query.order_by(
         Jornada.fecha.desc(),
         Jornada.entrada.desc()
     ).first()
-
-    return jornada
 
 
 def registrar_entrada(
@@ -84,59 +62,35 @@ def registrar_entrada(
     zona_horaria="UTC",
     latitud=None,
     longitud=None,
-    direccion=None
+    direccion=None,
+    grupo_id=None
 ):
-
-    # =====================================================
-    # ZONA HORARIA
-    # =====================================================
+    if grupo_id is None:
+        raise ValueError("grupo_id es obligatorio para registrar asistencia.")
 
     try:
         zona = ZoneInfo(zona_horaria)
     except Exception:
         zona = ZoneInfo("UTC")
 
-
-    # =====================================================
-    # FECHA Y HORA ACTUAL
-    # =====================================================
-
     ahora = datetime.now(zona)
-
     fecha_hoy = ahora.date()
     hora_actual = ahora.time()
 
-
-    # =====================================================
-    # VERIFICAR SI YA EXISTE JORNADA
-    # =====================================================
-
     jornada_existente = Jornada.query.filter(
         Jornada.usuario_id == usuario_id,
+        Jornada.grupo_id == grupo_id,
         Jornada.fecha == fecha_hoy
     ).first()
 
     if jornada_existente:
         return jornada_existente
 
-
-    # =====================================================
-    # LIMPIAR DIRECCIÓN
-    # =====================================================
-
-    if direccion:
-        direccion = direccion.strip()
-
-    else:
-        direccion = None
-
-
-    # =====================================================
-    # CREAR JORNADA
-    # =====================================================
+    direccion = direccion.strip() if direccion else None
 
     jornada = Jornada(
         usuario_id=usuario_id,
+        grupo_id=grupo_id,
         fecha=fecha_hoy,
         entrada=hora_actual,
         latitud=latitud,
@@ -144,33 +98,22 @@ def registrar_entrada(
         direccion=direccion
     )
 
-
-    # =====================================================
-    # GUARDAR
-    # =====================================================
-
     db.session.add(jornada)
     db.session.commit()
-
 
     return jornada
 
 
-
-
-def registrar_salida(usuario_id, zona_horaria="UTC"):
-
+def registrar_salida(usuario_id, zona_horaria="UTC", grupo_id=None):
     jornada = obtener_jornada_abierta(
-        usuario_id
+        usuario_id,
+        grupo_id
     )
 
     if jornada is None:
         return None
 
-    jornada.salida = obtener_hora_actual(
-        zona_horaria
-    )
-
+    jornada.salida = obtener_hora_actual(zona_horaria)
     db.session.commit()
 
     return jornada

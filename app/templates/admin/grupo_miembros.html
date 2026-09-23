@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Miembros del grupo | Attendix</title>
+
+    <link rel="icon" href="{{ url_for('static', filename='Logo_Asistencia.png') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard_admin.css') }}">
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside class="sidebar">
+
+            <div class="sidebar-brand">
+
+                <div class="brand-logo">
+
+                    <img src="{{ url_for('static', filename='Logo_Asistencia.png') }}" alt="Attendix">
+
+                </div>
+
+                <div>
+
+                    <h5>Attendix</h5>
+
+                    <small>
+                        Control de asistencia
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- USUARIO -->
+
+            <div class="sidebar-user">
+
+                <div class="user-avatar">
+                    {{ session.get("nombre", "A")[0]|upper }}
+                </div>
+
+                <div class="user-info">
+
+                    <strong>
+                        {{ session.get("nombre", "Administrador") }}
+                    </strong>
+
+                    <span>
+                        Administrador global
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- NAVEGACIÓN -->
+
+            <nav class="sidebar-nav">
+
+                <a href="{{ url_for('admin.dashboard') }}" class="nav-link">
+
+                    <i class="bi bi-speedometer2"></i>
+
+                    <span>
+                        Panel principal
+                    </span>
+
+                </a>
+
+
+                <a href="{{ url_for('admin.usuarios') }}" class="nav-link">
+
+                    <i class="bi bi-people"></i>
+
+                    <span>
+                        Usuarios
+                    </span>
+
+                </a>
+
+
+                <a href="{{ url_for('admin.asistencia') }}" class="nav-link">
+
+                    <i class="bi bi-calendar-check"></i>
+
+                    <span>
+                        Asistencias
+                    </span>
+
+                </a>
+
+
+                <a href="{{ url_for('admin.grupos') }}" class="nav-link active">
+
+                    <i class="bi bi-collection"></i>
+
+                    <span>
+                        Grupos
+                    </span>
+
+                </a>
+
+            </nav>
+
+
+            <!-- LOGOUT -->
+
+            <div class="sidebar-footer">
+
+                <button type="button" class="nav-link logout-button" data-bs-toggle="modal"
+                    data-bs-target="#logoutModal">
+
+                    <i class="bi bi-box-arrow-right"></i>
+
+                    <span>
+                        Cerrar sesión
+                    </span>
+
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ================= MAIN ================= -->
+
+        <main class="main-content">
+
+            <!-- TOPBAR -->
+
+            <header class="topbar">
+
+                <div>
+
+                    <h4 class="mb-0">
+                        Miembros del grupo
+                    </h4>
+
+                    <small class="text-muted">
+                        Administración de usuarios
+                    </small>
+
+                </div>
+
+
+                <div class="topbar-user">
+
+                    <div class="text-end me-2">
+
+                        <strong>
+                            {{ session.get("nombre", "Administrador") }}
+                        </strong>
+
+                        <small class="d-block text-muted">
+                            Administrador global
+                        </small>
+
+                    </div>
+
+
+                    <div class="user-avatar">
+
+                        {{ session.get("nombre", "A")[0]|upper }}
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- ================= CONTENT ================= -->
+
+            <section class="content-area">
+
+                <!-- FLASH -->
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+
+                {% if messages %}
+
+                {% for category, message in messages %}
+
+                <div class="alert
+                            {% if category == 'success' %}
+                                alert-success
+                            {% elif category == 'warning' %}
+                                alert-warning
+                            {% elif category == 'danger' %}
+                                alert-danger
+                            {% else %}
+                                alert-info
+                            {% endif %}
+                            alert-dismissible fade show" role="alert">
+
+                    {{ message }}
+
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+
+                </div>
+
+                {% endfor %}
+
+                {% endif %}
+
+                {% endwith %}
+
+
+                <!-- ================= ENCABEZADO ================= -->
+
+                <div class="page-header mb-4">
+
+                    <div>
+
+                        <a href="{{ url_for('admin.grupos') }}" class="text-decoration-none small">
+
+                            <i class="bi bi-arrow-left me-1"></i>
+
+                            Volver a grupos
+
+                        </a>
+
+
+                        <div class="text-muted small mt-3">
+                            Administración global
+                        </div>
+
+
+                        <h2 class="mb-1">
+                            {{ grupo.nombre }}
+                        </h2>
+
+
+                        {% if grupo.descripcion %}
+
+                        <p class="text-muted mb-0">
+                            {{ grupo.descripcion }}
+                        </p>
+
+                        {% else %}
+
+                        <p class="text-muted mb-0">
+                            Administración de los miembros de este grupo.
+                        </p>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= RESUMEN ================= -->
+
+                <div class="row g-4 mb-4">
+
+                    <!-- MIEMBROS -->
+
+                    <div class="col-md-4">
+
+                        <div class="card shadow-sm border-0 h-100">
+
+                            <div class="card-body">
+
+                                <div class="d-flex justify-content-between">
+
+                                    <div>
+
+                                        <small class="text-muted">
+                                            Miembros
+                                        </small>
+
+                                        <h3 class="mt-2 mb-0">
+                                            {{ miembros|length }}
+                                        </h3>
+
+                                    </div>
+
+                                    <div class="fs-2 text-primary">
+
+                                        <i class="bi bi-people"></i>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ADMINISTRADORES -->
+
+                    <div class="col-md-4">
+
+                        <div class="card shadow-sm border-0 h-100">
+
+                            <div class="card-body">
+
+                                <div class="d-flex justify-content-between">
+
+                                    <div>
+
+                                        <small class="text-muted">
+                                            Administradores
+                                        </small>
+
+                                        <h3 class="mt-2 mb-0">
+
+                                            {{
+                                            miembros
+                                            | selectattr("rol", "equalto", "admin")
+                                            | list
+                                            | length
+                                            }}
+
+                                        </h3>
+
+                                    </div>
+
+                                    <div class="fs-2 text-warning">
+
+                                        <i class="bi bi-person-badge"></i>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- COLABORADORES -->
+
+                    <div class="col-md-4">
+
+                        <div class="card shadow-sm border-0 h-100">
+
+                            <div class="card-body">
+
+                                <div class="d-flex justify-content-between">
+
+                                    <div>
+
+                                        <small class="text-muted">
+                                            Colaboradores
+                                        </small>
+
+                                        <h3 class="mt-2 mb-0">
+
+                                            {{
+                                            miembros
+                                            | selectattr("rol", "equalto", "colaborador")
+                                            | list
+                                            | length
+                                            }}
+
+                                        </h3>
+
+                                    </div>
+
+                                    <div class="fs-2 text-success">
+
+                                        <i class="bi bi-person-check"></i>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= AGREGAR MIEMBRO ================= -->
+
+                <div class="card shadow-sm border-0 mb-4">
+
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <div>
+
+                                <h5 class="mb-1">
+                                    Agregar miembro
+                                </h5>
+
+                                <p class="text-muted mb-0">
+                                    Agrega un usuario existente al grupo.
+                                </p>
+
+                            </div>
+
+                            <i class="bi bi-person-plus fs-3 text-primary"></i>
+
+                        </div>
+
+
+                        {% if usuarios_disponibles %}
+
+                        <form method="POST" action="{{ url_for('admin.agregar_miembro', grupo_id=grupo.id) }}">
+
+                            <div class="row g-3 align-items-end">
+
+                                <div class="col-md-6">
+
+                                    <label for="usuario_id" class="form-label">
+                                        Usuario
+                                    </label>
+
+                                    <select class="form-select" id="usuario_id" name="usuario_id" required>
+
+                                        <option value="">
+                                            Selecciona un usuario
+                                        </option>
+
+                                        {% for usuario in usuarios_disponibles %}
+
+                                        <option value="{{ usuario.id }}">
+
+                                            {{ usuario.nombre }}
+                                            — {{ usuario.correo }}
+
+                                        </option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="col-md-3">
+
+                                    <label for="rol" class="form-label">
+                                        Rol dentro del grupo
+                                    </label>
+
+                                    <select class="form-select" id="rol" name="rol" required>
+
+                                        <option value="colaborador">
+                                            Colaborador
+                                        </option>
+
+                                        <option value="admin">
+                                            Administrador
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="col-md-3">
+
+                                    <button type="submit" class="btn btn-primary w-100">
+
+                                        <i class="bi bi-person-plus me-1"></i>
+
+                                        Agregar miembro
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                        {% else %}
+
+                        <div class="alert alert-info mb-0">
+
+                            <i class="bi bi-info-circle me-1"></i>
+
+                            No hay usuarios disponibles para agregar.
+                            Todos los usuarios ya pertenecen a este grupo.
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= MIEMBROS ACTUALES ================= -->
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+
+                            <div>
+
+                                <h5 class="mb-1">
+                                    Miembros actuales
+                                </h5>
+
+                                <p class="text-muted mb-0">
+                                    Usuarios pertenecientes a {{ grupo.nombre }}.
+                                </p>
+
+                            </div>
+
+                            <span class="badge bg-primary">
+                                {{ miembros|length }}
+                            </span>
+
+                        </div>
+
+
+                        {% if miembros %}
+
+                        <div class="table-responsive">
+
+                            <table class="table align-middle">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>
+                                            Usuario
+                                        </th>
+
+                                        <th>
+                                            Correo
+                                        </th>
+
+                                        <th>
+                                            Rol
+                                        </th>
+
+                                        <th>
+                                            Estado
+                                        </th>
+
+                                        <th class="text-end">
+                                            Acciones
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+                                    {% for miembro in miembros %}
+
+                                    <tr>
+
+                                        <!-- USUARIO -->
+
+                                        <td>
+
+                                            <div class="d-flex align-items-center">
+
+                                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 42px; height: 42px;">
+
+                                                    <strong>
+                                                        {{ miembro.usuario.nombre[0]|upper }}
+                                                    </strong>
+
+                                                </div>
+
+
+                                                <div>
+
+                                                    <strong>
+                                                        {{ miembro.usuario.nombre }}
+                                                    </strong>
+
+                                                    <small class="d-block text-muted">
+
+                                                        ID #{{ miembro.usuario.id }}
+
+                                                    </small>
+
+                                                </div>
+
+                                            </div>
+
+                                        </td>
+
+
+                                        <!-- CORREO -->
+
+                                        <td>
+
+                                            <span class="text-muted">
+                                                {{ miembro.usuario.correo }}
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- ROL -->
+
+                                        <td>
+
+                                            {% if miembro.rol == "admin" %}
+
+                                            <span class="badge bg-warning text-dark">
+
+                                                <i class="bi bi-person-badge me-1"></i>
+
+                                                Administrador
+
+                                            </span>
+
+                                            {% else %}
+
+                                            <span class="badge bg-primary">
+
+                                                <i class="bi bi-person me-1"></i>
+
+                                                Colaborador
+
+                                            </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+
+                                        <!-- ESTADO -->
+
+                                        <td>
+
+                                            {% if miembro.activo and miembro.usuario.activo %}
+
+                                            <span class="badge bg-success-subtle text-success">
+
+                                                <i class="bi bi-check-circle-fill me-1"></i>
+
+                                                Activo
+
+                                            </span>
+
+                                            {% else %}
+
+                                            <span class="badge bg-danger-subtle text-danger">
+
+                                                <i class="bi bi-x-circle-fill me-1"></i>
+
+                                                Inactivo
+
+                                            </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+
+                                        <!-- ACCIONES -->
+
+                                        <td class="text-end">
+
+                                            <div class="btn-group">
+
+                                                <!-- CAMBIAR ROL -->
+
+                                                <button type="button" class="btn btn-sm btn-outline-primary"
+                                                    title="Cambiar rol" data-bs-toggle="modal"
+                                                    data-bs-target="#rolModal{{ miembro.usuario.id }}">
+
+                                                    <i class="bi bi-person-gear"></i>
+
+                                                </button>
+
+
+                                                <!-- QUITAR -->
+
+                                                <button type="button" class="btn btn-sm btn-outline-danger"
+                                                    title="Quitar del grupo" data-bs-toggle="modal"
+                                                    data-bs-target="#eliminarModal{{ miembro.usuario.id }}">
+
+                                                    <i class="bi bi-person-dash"></i>
+
+                                                </button>
+
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+
+                                    <!-- ================================================= -->
+                                    <!-- MODAL CAMBIAR ROL -->
+                                    <!-- ================================================= -->
+
+                                    <div class="modal fade" id="rolModal{{ miembro.usuario.id }}" tabindex="-1"
+                                        aria-hidden="true">
+
+                                        <div class="modal-dialog modal-dialog-centered">
+
+                                            <div class="modal-content">
+
+                                                <form method="POST"
+                                                    action="{{ url_for('admin.cambiar_rol_miembro', grupo_id=grupo.id, usuario_id=miembro.usuario.id) }}">
+
+                                                    <div class="modal-header">
+
+                                                        <h5 class="modal-title">
+
+                                                            <i class="bi bi-person-gear me-2"></i>
+
+                                                            Cambiar rol
+
+                                                        </h5>
+
+                                                        <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"></button>
+
+                                                    </div>
+
+
+                                                    <div class="modal-body">
+
+                                                        <p class="mb-3">
+
+                                                            Cambiar el rol de:
+
+                                                            <strong>
+                                                                {{ miembro.usuario.nombre }}
+                                                            </strong>
+
+                                                        </p>
+
+
+                                                        <label for="rol{{ miembro.usuario.id }}" class="form-label">
+                                                            Nuevo rol
+                                                        </label>
+
+
+                                                        <select class="form-select" id="rol{{ miembro.usuario.id }}"
+                                                            name="rol" required>
+
+                                                            <option value="colaborador" {% if miembro.rol=="colaborador"
+                                                                %} selected {% endif %}>
+                                                                Colaborador
+                                                            </option>
+
+
+                                                            <option value="admin" {% if miembro.rol=="admin" %} selected
+                                                                {% endif %}>
+                                                                Administrador
+                                                            </option>
+
+                                                        </select>
+
+
+                                                        <div class="alert alert-warning small mt-3 mb-0">
+
+                                                            <i class="bi bi-exclamation-triangle me-1"></i>
+
+                                                            El rol solamente aplica dentro de este grupo.
+                                                            No cambia el rol global del usuario.
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <div class="modal-footer">
+
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">
+                                                            Cancelar
+                                                        </button>
+
+
+                                                        <button type="submit" class="btn btn-primary">
+
+                                                            Guardar cambios
+
+                                                        </button>
+
+                                                    </div>
+
+                                                </form>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- ================================================= -->
+                                    <!-- MODAL ELIMINAR -->
+                                    <!-- ================================================= -->
+
+                                    <div class="modal fade" id="eliminarModal{{ miembro.usuario.id }}" tabindex="-1"
+                                        aria-hidden="true">
+
+                                        <div class="modal-dialog modal-dialog-centered">
+
+                                            <div class="modal-content">
+
+                                                <form method="POST"
+                                                    action="{{ url_for('admin.eliminar_miembro', grupo_id=grupo.id, usuario_id=miembro.usuario.id) }}">
+
+                                                    <div class="modal-header">
+
+                                                        <h5 class="modal-title text-danger">
+
+                                                            <i class="bi bi-person-dash me-2"></i>
+
+                                                            Quitar miembro
+
+                                                        </h5>
+
+                                                        <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"></button>
+
+                                                    </div>
+
+
+                                                    <div class="modal-body">
+
+                                                        <p>
+                                                            ¿Quieres quitar a
+                                                            <strong>
+                                                                {{ miembro.usuario.nombre }}
+                                                            </strong>
+                                                            de este grupo?
+                                                        </p>
+
+                                                        <div class="alert alert-warning small mb-0">
+
+                                                            <i class="bi bi-info-circle me-1"></i>
+
+                                                            El usuario no será eliminado de Attendix.
+                                                            Solamente dejará de pertenecer a este grupo.
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <div class="modal-footer">
+
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">
+                                                            Cancelar
+                                                        </button>
+
+
+                                                        <button type="submit" class="btn btn-danger">
+
+                                                            <i class="bi bi-person-dash me-1"></i>
+
+                                                            Quitar del grupo
+
+                                                        </button>
+
+                                                    </div>
+
+                                                </form>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        {% else %}
+
+                        <div class="text-center py-5">
+
+                            <div class="fs-1 text-muted mb-3">
+
+                                <i class="bi bi-people"></i>
+
+                            </div>
+
+                            <h5>
+                                Este grupo no tiene miembros
+                            </h5>
+
+                            <p class="text-muted">
+                                Utiliza el formulario superior para agregar usuarios.
+                            </p>
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= INFORMACIÓN ================= -->
+
+                <div class="card shadow-sm border-0 mt-4">
+
+                    <div class="card-body">
+
+                        <div class="d-flex align-items-start">
+
+                            <div class="fs-3 text-primary me-3">
+
+                                <i class="bi bi-shield-check"></i>
+
+                            </div>
+
+                            <div>
+
+                                <h6 class="mb-1">
+                                    Roles dentro del grupo
+                                </h6>
+
+                                <p class="text-muted small mb-2">
+
+                                    Los roles de esta sección son independientes del rol global
+                                    del usuario.
+
+                                </p>
+
+                                <ul class="text-muted small mb-0">
+
+                                    <li>
+                                        <strong>Administrador:</strong>
+                                        puede administrar este grupo.
+                                    </li>
+
+                                    <li>
+                                        <strong>Colaborador:</strong>
+                                        pertenece al grupo y registra su asistencia.
+                                    </li>
+
+                                    <li>
+                                        Un usuario puede pertenecer a varios grupos.
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- MODAL LOGOUT -->
+    <!-- ========================================================= -->
+
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Cerrar sesión
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    ¿Estás seguro de que deseas cerrar sesión?
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">
+                        Cerrar sesión
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

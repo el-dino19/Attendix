@@ -8,242 +8,124 @@ from flask import (
     flash,
     jsonify
 )
-from app.models import Usuario
 
+from app.models import Usuario
 from app.services.autenticacion import autenticar_usuario
 from app.services.asistencia import registrar_entrada
+from app.services.grupos import obtener_grupos_usuario, es_admin_grupo
 
 
-auth_bp = Blueprint(
-    "auth",
-    __name__
-)
-
+auth_bp = Blueprint("auth", __name__)
 
 
 @auth_bp.route("/")
 def inicio():
-    return render_template(
-                    "login.html"
-                )
+    return render_template("login.html")
+
 
 @auth_bp.route("/health")
 def health():
     return "OK", 200
 
+
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
 
-    # ========================================
-    # PETICIÓN POST
-    # ========================================
-
     if request.method == "POST":
-
-        # ========================================
-        # DATOS DEL FORMULARIO
-        # ========================================
-
-        correo = request.form.get(
-            "correo",
-            ""
-        ).strip()
-
-        password = request.form.get(
-            "password",
-            ""
-        )
-
-        # ========================================
-        # ZONA HORARIA DEL NAVEGADOR
-        # ========================================
-
+        correo = request.form.get("correo", "").strip()
+        password = request.form.get("password", "")
         zona_horaria = request.form.get(
-            "zona_horaria",
-            "UTC"
+            "zona_horaria", "UTC"
         ).strip()
 
-        # ========================================
-        # UBICACIÓN DEL NAVEGADOR
-        # ========================================
-
-        latitud = request.form.get(
-            "latitud"
-        )
-
-        longitud = request.form.get(
-            "longitud"
-        )
-
-        direccion = request.form.get(
-            "direccion",
-            ""
-        ).strip()
-
-        # ========================================
-        # CONVERTIR COORDENADAS
-        # ========================================
+        latitud = request.form.get("latitud")
+        longitud = request.form.get("longitud")
+        direccion = request.form.get("direccion", "").strip()
 
         try:
-
-            latitud = (
-                float(latitud)
-                if latitud
-                else None
-            )
-
-            longitud = (
-                float(longitud)
-                if longitud
-                else None
-            )
-
+            latitud = float(latitud) if latitud else None
+            longitud = float(longitud) if longitud else None
         except (ValueError, TypeError):
-
             latitud = None
             longitud = None
 
-        # ========================================
-        # VALIDAR CAMPOS
-        # ========================================
-
         if not correo or not password:
+            flash("Debes ingresar correo y contraseña.", "danger")
+            return render_template("login.html")
 
-            flash(
-                "Debes ingresar correo y contraseña.",
-                "danger"
-            )
-
-            return render_template(
-                "login.html"
-            )
-
-        # ========================================
-        # AUTENTICAR USUARIO
-        # ========================================
-
-        usuario = autenticar_usuario(
-            correo,
-            password
-        )
-
-        # ========================================
-        # USUARIO NO EXISTE /
-        # CONTRASEÑA INCORRECTA
-        # ========================================
+        usuario = autenticar_usuario(correo, password)
 
         if usuario is None:
-
-            flash(
-                "Correo o contraseña incorrectos.",
-                "danger"
-            )
-
-            return render_template(
-                "login.html"
-            )
-
-        # ========================================
-        # VALIDAR ESTADO
-        # ========================================
+            flash("Correo o contraseña incorrectos.", "danger")
+            return render_template("login.html")
 
         if not usuario.activo:
-
             flash(
-                "Tu cuenta está desactivada. "
-                "Contacta con un administrador para recuperar el acceso.",
+                "Tu cuenta está desactivada. Contacta con un administrador para recuperar el acceso.",
                 "warning"
             )
-
-            return render_template(
-                "login.html"
-            )
-
-        # ========================================
-        # CREAR SESIÓN
-        # ========================================
+            return render_template("login.html")
 
         session.clear()
-
         session["usuario_id"] = usuario.id
         session["nombre"] = usuario.nombre
         session["correo"] = usuario.correo
         session["rol"] = usuario.rol
-
-        # Guardar zona horaria para utilizarla
-        # también al registrar la salida.
-
         session["zona_horaria"] = zona_horaria
 
-        # ========================================
-        # REGISTRAR ENTRADA
-        # ========================================
+        if usuario.rol == "admin_global":
+            return redirect(url_for("admin.dashboard"))
 
-        if usuario.rol == "empleado":
+        grupos = obtener_grupos_usuario(usuario.id)
 
-            jornada = registrar_entrada(
+        if not grupos:
+            flash(
+                "Tu usuario no tiene ningún grupo activo asignado. Contacta al administrador.",
+                "warning"
+            )
+            return redirect(url_for("auth.logout"))
+
+        # Guardamos la ubicación del login hasta seleccionar el grupo.
+        session["login_latitud"] = latitud
+        session["login_longitud"] = longitud
+        session["login_direccion"] = direccion
+
+        if len(grupos) == 1:
+            grupo = grupos[0]
+            session["grupo_id"] = grupo.id
+            session["grupo_nombre"] = grupo.nombre
+
+            if es_admin_grupo(grupo.id, usuario.id):
+                return redirect(url_for("grupos.dashboard", grupo_id=grupo.id))
+
+            registrar_entrada(
                 usuario.id,
                 zona_horaria,
                 latitud,
                 longitud,
-                direccion
+                direccion,
+                grupo.id
             )
 
-            print("========================================")
-            print("JORNADA REGISTRADA")
-            print("Usuario:", usuario.id)
-            print("Fecha:", jornada.fecha)
-            print("Entrada:", jornada.entrada)
-            print("Latitud:", jornada.latitud)
-            print("Longitud:", jornada.longitud)
-            print("Dirección:", jornada.direccion)
-            print("========================================")
+            session.pop("login_latitud", None)
+            session.pop("login_longitud", None)
+            session.pop("login_direccion", None)
 
+            return redirect(url_for("empleado.dashboard"))
 
-        # ========================================
-        # REDIRECCIÓN SEGÚN ROL
-        # ========================================
+        return redirect(url_for("grupos.seleccionar"))
 
-        if usuario.rol == "admin":
+    return render_template("login.html")
 
-            return redirect(
-                url_for("admin.dashboard")
-            )
-
-        return redirect(
-            url_for("empleado.dashboard")
-        )
-
-    # ========================================
-    # PETICIÓN GET
-    # ========================================
-
-    return render_template(
-        "login.html"
-    )
-
-
-#===========================
-# CERRAR SESION
-# ==========================
 
 @auth_bp.route("/logout")
 def logout():
-    
-
     session.clear()
+    return redirect(url_for("auth.login"))
 
-    return redirect(
-        url_for("auth.login")
-    )
-    
 
-#===========================
-# VERIFICAR ESTADO
-# ==========================
 @auth_bp.route("/verificar-estado")
 def verificar_estado():
-
     usuario_id = session.get("usuario_id")
 
     if not usuario_id:
@@ -255,6 +137,14 @@ def verificar_estado():
     usuario = Usuario.query.get(usuario_id)
 
     if usuario is None:
+        session.clear()
+        return jsonify({
+            "autenticado": False,
+            "activo": False
+        }), 401
+
+    if not usuario.activo:
+        session.clear()
         return jsonify({
             "autenticado": False,
             "activo": False
@@ -262,6 +152,5 @@ def verificar_estado():
 
     return jsonify({
         "autenticado": True,
-        "activo": bool(usuario.activo)
+        "activo": True
     }), 200
-

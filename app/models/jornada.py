@@ -4,13 +4,9 @@ from app.extensions import db
 
 
 class Jornada(db.Model):
-
     __tablename__ = "jornadas"
 
-    id = db.Column(
-        db.BigInteger,
-        primary_key=True
-    )
+    id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
 
     usuario_id = db.Column(
         db.Integer,
@@ -18,35 +14,23 @@ class Jornada(db.Model):
         nullable=False
     )
 
-    fecha = db.Column(
-        db.Date,
+    grupo_id = db.Column(
+        db.Integer,
+        db.ForeignKey("grupos.id"),
         nullable=False
     )
 
-    entrada = db.Column(
-        db.Time,
-        nullable=False
-    )
+    fecha = db.Column(db.Date, nullable=False)
 
-    latitud = db.Column(
-        db.Float,
-        nullable=True
-    )
+    entrada = db.Column(db.Time, nullable=False)
 
-    longitud = db.Column(
-        db.Float,
-        nullable=True
-    )
+    latitud = db.Column(db.Float, nullable=True)
 
-    direccion = db.Column(
-        db.String(500),
-        nullable=True
-    )
+    longitud = db.Column(db.Float, nullable=True)
 
-    salida = db.Column(
-        db.Time,
-        nullable=True
-    )
+    direccion = db.Column(db.String(500), nullable=True)
+
+    salida = db.Column(db.Time, nullable=True)
 
     horas_extras = db.relationship(
         "HoraExtra",
@@ -54,8 +38,6 @@ class Jornada(db.Model):
         cascade="all, delete-orphan",
         lazy=True
     )
-
-
 
     created_at = db.Column(
         db.DateTime,
@@ -70,14 +52,15 @@ class Jornada(db.Model):
         onupdate=datetime.utcnow
     )
 
-
-
     usuario = db.relationship(
         "Usuario",
         back_populates="jornadas"
     )
 
-    
+    grupo = db.relationship(
+        "Grupo",
+        back_populates="jornadas"
+    )
 
     descansos = db.relationship(
         "Descanso",

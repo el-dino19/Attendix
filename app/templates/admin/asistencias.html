@@ -1,594 +1,832 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Asistencia | Attendix</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- FAVICON -->
-    <link rel="icon" type="image/png" sizes="512x512"
-        href="{{ url_for('static', filename='img/Logo_Asistencia.png') }}">
+    <title>Asistencias | Attendix</title>
 
-    <!-- BOOTSTRAP -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/Logo_Asistencia.png') }}">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- ICONOS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard_admin.css') }}">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_asistencias.css') }}">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/historial.css') }}">
 </head>
 
 <body>
-    <div class="admin-layout">
-        <!-- =====================================================
-             SIDEBAR
-        ====================================================== -->
-        <aside class="admin-sidebar">
+
+    <div class="app-container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
             <div class="sidebar-brand">
-                <div class="sidebar-logo">
+                <div class="brand-logo">
                     <i class="bi bi-clock-history"></i>
                 </div>
+
                 <div>
-                    <strong>Asistencia</strong>
-                    <small>Panel administrativo</small>
+                    <h5>Attendix</h5>
+                    <span>Control de asistencia</span>
                 </div>
             </div>
 
-            <div class="sidebar-section-title">
-                ADMINISTRACIÓN
-            </div>
+            <nav class="sidebar-nav">
 
-            <nav class="sidebar-menu">
-                <a href="{{ url_for('admin.dashboard') }}" class="sidebar-link">
+                <a href="{{ url_for('admin.dashboard') }}" class="nav-item">
                     <i class="bi bi-grid-1x2-fill"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ url_for('admin.usuarios') }}" class="sidebar-link">
+
+                <a href="{{ url_for('admin.usuarios') }}" class="nav-item">
                     <i class="bi bi-people-fill"></i>
-                    <span>Colaboradores</span>
+                    <span>Usuarios</span>
                 </a>
-                <a href="{{ url_for('admin.asistencia') }}" class="sidebar-link active">
+
+                <a href="{{ url_for('admin.asistencia') }}" class="nav-item active">
                     <i class="bi bi-calendar-check-fill"></i>
-                    <span>Asistencia</span>
+                    <span>Asistencias</span>
                 </a>
+
+                {% if session.get('rol') == 'admin_global' %}
+
+                <a href="{{ url_for('admin.grupos') }}" class="nav-item">
+                    <i class="bi bi-diagram-3-fill"></i>
+                    <span>Grupos</span>
+                </a>
+
+                {% endif %}
+
             </nav>
 
-            <!-- USUARIO -->
-            <div class="sidebar-bottom">
-                <div class="sidebar-user">
-                    <div class="user-avatar">
-                        {{ session["nombre"][0] | upper }}
-                    </div>
-                    <div class="sidebar-user-info">
-                        <strong>{{ session["nombre"] }}</strong>
-                        <small>Administrador</small>
-                    </div>
-                </div>
-                <a href="#" class="logout-link" data-bs-toggle="modal" data-bs-target="#confirmarLogoutModal">
-                    <i class="bi bi-box-arrow-left"></i>
-                    Cerrar sesión
-                </a>
+            <div class="sidebar-footer">
+
+                <button type="button" class="logout-sidebar-btn" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Cerrar sesión</span>
+                </button>
+
             </div>
+
         </aside>
 
-        <!-- =====================================================
-             MODAL LOGOUT
-        ====================================================== -->
-        <div class="modal fade" id="confirmarLogoutModal" tabindex="-1" aria-labelledby="confirmarLogoutModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content confirm-modal">
-                    <div class="modal-body text-center p-4">
-                        <div class="confirm-icon logout-icon">
-                            <i class="bi bi-box-arrow-left"></i>
-                        </div>
-                        <h3 class="confirm-title" id="confirmarLogoutModalLabel">
-                            Cerrar sesión
-                        </h3>
-                        <p class="confirm-text">
-                            ¿Deseas cerrar tu sesión?
-                        </p>
-                        <p class="confirm-warning">
-                            <i class="bi bi-shield-check"></i>
-                            Tu sesión se cerrará de forma segura.
-                        </p>
-                        <div class="confirm-buttons">
-                            <button type="button" class="btn confirm-cancel" data-bs-dismiss="modal">
-                                Cancelar
-                            </button>
-                            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger confirm-logout">
-                                <i class="bi bi-box-arrow-left"></i>
-                                Cerrar sesión
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- =====================================================
-             CONTENIDO
-        ====================================================== -->
-        <main class="admin-main">
-            <!-- =================================================
-                 TOPBAR
-            ================================================== -->
-            <header class="admin-topbar">
-                <div>
-                    <div class="page-breadcrumb">
-                        Administración
-                        <span>/</span>
-                        Asistencia
-                    </div>
-                    <h1>Control de asistencia</h1>
-                    <p>Consulta las jornadas, descansos y horas extras de los colaboradores.</p>
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="main-content">
+
+            <!-- TOPBAR -->
+            <header class="topbar">
+
+                <div class="topbar-title">
+                    <h4>Control de asistencia</h4>
+
+                    {% if session.get('grupo_nombre') %}
+                    <span class="topbar-group">
+                        <i class="bi bi-diagram-3"></i>
+                        {{ session.get('grupo_nombre') }}
+                    </span>
+                    {% endif %}
                 </div>
+
                 <div class="topbar-user">
-                    <div class="topbar-avatar">
-                        {{ session["nombre"][0] | upper }}
+
+                    <div class="user-avatar">
+                        {{ session.get('nombre', 'A')[0]|upper }}
                     </div>
-                    <div>
-                        <strong>{{ session["nombre"] }}</strong>
-                        <small>{{ session["correo"] }}</small>
+
+                    <div class="user-info">
+                        <strong>
+                            {{ session.get('nombre', 'Administrador') }}
+                        </strong>
+
+                        <span>
+                            {% if session.get('rol') == 'admin_global' %}
+                            Administrador global
+                            {% else %}
+                            Administrador de grupo
+                            {% endif %}
+                        </span>
                     </div>
+
                 </div>
+
             </header>
 
-            <!-- =================================================
-                 FILTROS
-            ================================================== -->
-            <section class="attendance-filter-card">
-                <div class="filter-header">
+
+            <!-- CONTENIDO -->
+            <section class="content-section">
+
+                <div class="page-header">
+
                     <div>
-                        <span class="panel-label">
-                            <i class="bi bi-funnel-fill"></i>
-                            CONSULTA
-                        </span>
-                        <h2>Filtrar asistencia</h2>
-                        <p>Selecciona un colaborador o un rango de fechas.</p>
-                    </div>
-                    <div class="filter-icon">
-                        <i class="bi bi-funnel-fill"></i>
-                    </div>
-                </div>
-
-                <form method="GET" action="{{ url_for('admin.asistencia') }}" class="row g-3">
-                    <!-- COLABORADOR -->
-                    <div class="col-12 col-md-4">
-                        <label for="usuario_id" class="form-label">Colaborador</label>
-                        <select id="usuario_id" name="usuario_id" class="form-select">
-                            <option value="">Todos los colaboradores</option>
-                            {% for usuario in usuarios %}
-                            <option value="{{ usuario.id }}" {% if request.args.get('usuario_id')==usuario.id|string
-                                %}selected{% endif %}>
-                                {{ usuario.nombre }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <!-- DESDE -->
-                    <div class="col-12 col-md-3">
-                        <label for="fecha_desde" class="form-label">Desde</label>
-                        <input id="fecha_desde" type="date" name="fecha_desde" class="form-control"
-                            value="{{ request.args.get('fecha_desde', '') }}">
-                    </div>
-
-                    <!-- HASTA -->
-                    <div class="col-12 col-md-3">
-                        <label for="fecha_hasta" class="form-label">Hasta</label>
-                        <input id="fecha_hasta" type="date" name="fecha_hasta" class="form-control"
-                            value="{{ request.args.get('fecha_hasta', '') }}">
-                    </div>
-
-                    <!-- BOTONES -->
-                    <div class="col-12 col-md-2 d-flex align-items-end gap-2">
-                        <button type="submit" class="btn btn-primary flex-grow-1">
-                            <i class="bi bi-search"></i> Filtrar
-                        </button>
-                        <a href="{{ url_for('admin.asistencia') }}" class="btn btn-outline-secondary"
-                            title="Limpiar filtros">
-                            <i class="bi bi-x-lg"></i>
-                        </a>
-                    </div>
-                </form>
-            </section>
-
-            <!-- =================================================
-                 RESUMEN
-            ================================================== -->
-            <section class="summary-grid">
-                <!-- TOTAL -->
-                <div class="summary-card">
-                    <div class="summary-icon blue">
-                        <i class="bi bi-calendar-check-fill"></i>
-                    </div>
-                    <div>
-                        <span>Jornadas encontradas</span>
-                        <strong>{{ jornadas | length }}</strong>
-                    </div>
-                </div>
-
-                <!-- FINALIZADAS -->
-                <div class="summary-card">
-                    <div class="summary-icon green">
-                        <i class="bi bi-check-circle-fill"></i>
-                    </div>
-                    <div>
-                        <span>Jornadas finalizadas</span>
-                        <strong>{{ jornadas | selectattr("salida") | list | length }}</strong>
-                    </div>
-                </div>
-
-                <!-- ACTIVAS -->
-                <div class="summary-card">
-                    <div class="summary-icon cyan">
-                        <i class="bi bi-clock-fill"></i>
-                    </div>
-                    <div>
-                        <span>Jornadas activas</span>
-                        <strong>{{ jornadas | rejectattr("salida") | list | length }}</strong>
-                    </div>
-                </div>
-            </section>
-
-            <!-- =================================================
-                 HISTORIAL
-            ================================================== -->
-            <section class="history-section">
-                <div class="section-title">
-                    <div>
-                        <span class="section-tag">
-                            <i class="bi bi-calendar3"></i>
-                            REGISTROS
-                        </span>
-                    </div>
-                    <div class="record-count">
-                        <h4>
-                            <i class="bi bi-clock-history"></i>
-                            Jornadas de los colaboradores
-                        </h4>
-                    </div>
-                </div>
-
-                <!-- =================================================
-                     JORNADAS
-                ================================================== -->
-                {% if jornadas %}
-                <div class="timeline">
-                    {% for jornada in jornadas %}
-                    <article class="history-card">
-                        <!-- =========================================
-                             FECHA
-                        ========================================== -->
-                        <div class="date-column">
-                            <span class="date-day">
-                                {{ jornada.fecha.strftime("%d") }}
-                            </span>
-                            <span class="date-month">
-                                {% set meses = { 'Jan': 'ENE', 'Feb': 'FEB', 'Mar': 'MAR', 'Apr': 'ABR', 'May': 'MAY',
-                                'Jun': 'JUN', 'Jul': 'JUL', 'Aug': 'AGO', 'Sep': 'SEP', 'Oct': 'OCT', 'Nov': 'NOV',
-                                'Dec': 'DIC' } %}
-                                {{ meses[jornada.fecha.strftime("%b")] }}
-                            </span>
-                            <span class="date-year">
-                                {{ jornada.fecha.strftime("%Y") }}
-                            </span>
+                        <div class="page-kicker">
+                            {% if session.get('rol') == 'admin_global' %}
+                            Administración global
+                            {% else %}
+                            Administración de grupo
+                            {% endif %}
                         </div>
 
-                        <!-- =========================================
-                             CONTENIDO
-                        ========================================== -->
-                        <div class="history-content">
-                            <!-- CABECERA -->
-                            <div class="history-header">
-                                <div>
-                                    <div class="employee-heading">
-                                        <div class="employee-avatar">
-                                            {{ jornada.usuario.nombre[0] | upper }}
-                                        </div>
-                                        <div>
-                                            <h3>{{ jornada.usuario.nombre }}</h3>
-                                            <small><i class="bi bi-envelope"></i> {{ jornada.usuario.correo }}</small>
-                                        </div>
-                                    </div>
+                        <h1>Asistencias</h1>
 
-                                    <!-- FECHA COMPLETA -->
-                                    <span class="history-date">
-                                        <i class="bi bi-calendar3"></i>
-                                        {% set dias = { 'Monday': 'lunes', 'Tuesday': 'martes', 'Wednesday':
-                                        'miércoles', 'Thursday': 'jueves', 'Friday': 'viernes', 'Saturday': 'sábado',
-                                        'Sunday': 'domingo' } %}
-                                        {% set meses_largos = { 'January': 'enero', 'February': 'febrero', 'March':
-                                        'marzo', 'April': 'abril', 'May': 'mayo', 'June': 'junio', 'July': 'julio',
-                                        'August': 'agosto', 'September': 'septiembre', 'October': 'octubre', 'November':
-                                        'noviembre', 'December': 'diciembre' } %}
-                                        {{ dias[jornada.fecha.strftime('%A')] }}, {{ jornada.fecha.strftime('%d') }} de
-                                        {{ meses_largos[jornada.fecha.strftime('%B')] }} de {{
-                                        jornada.fecha.strftime('%Y') }}
-                                    </span>
+                        <p>
+                            Consulta y controla las jornadas, descansos y horas
+                            extras de los colaboradores.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- FILTROS -->
+                <div class="card filter-card">
+
+                    <div class="card-body">
+
+                        <form method="GET" action="{{ url_for('admin.asistencia') }}">
+
+                            <div class="row g-3 align-items-end">
+
+                                {% if session.get('rol') == 'admin_global' and grupos is defined %}
+
+                                <div class="col-md-4">
+
+                                    <label for="grupo_id" class="form-label">
+                                        Grupo
+                                    </label>
+
+                                    <select class="form-select" id="grupo_id" name="grupo_id">
+
+                                        <option value="">
+                                            Todos los grupos
+                                        </option>
+
+                                        {% for grupo in grupos %}
+
+                                        <option value="{{ grupo.id }}" {% if
+                                            request.args.get('grupo_id')|string==grupo.id|string %} selected {% endif
+                                            %}>
+                                            {{ grupo.nombre }}
+                                        </option>
+
+                                        {% endfor %}
+
+                                    </select>
+
                                 </div>
 
-                                <!-- ACCIONES -->
-                                <div class="d-flex align-items-center gap-2 flex-wrap">
-                                    <!-- BOTÓN HORAS EXTRAS -->
-                                    {% if jornada.horas_extras %}
-                                    <button type="button" class="btn btn-horas-extra" data-bs-toggle="modal"
-                                        data-bs-target="#modalHoraExtra{{ jornada.id }}">
-                                        <i class="bi bi-clock-history"></i>
-                                        Horas extras
-                                    </button>
-                                    {% endif %}
-
-                                    <!-- ESTADO JORNADA -->
-                                    {% if jornada.salida %}
-                                    <span class="status finished">
-                                        <i class="bi bi-check-circle-fill"></i>
-                                        Finalizada
-                                    </span>
-                                    {% else %}
-                                    <span class="status active">
-                                        <i class="bi bi-circle-fill"></i>
-                                        En jornada
-                                    </span>
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            <!-- =========================================
-                                 ENTRADA / SALIDA
-                            ========================================== -->
-                            <div class="time-row">
-                                <div class="time-box">
-                                    <div class="time-icon entry">
-                                        <i class="bi bi-box-arrow-in-right"></i>
-                                    </div>
-                                    <div>
-                                        <span>Entrada</span>
-                                        <strong>
-                                            {% if jornada.entrada %}
-                                            {{ jornada.entrada.strftime("%I:%M:%S %p") }}
-                                            {% else %}
-                                            --
-                                            {% endif %}
-                                        </strong>
-                                    </div>
-                                </div>
-
-                                <div class="time-line">
-                                    <span></span>
-                                </div>
-
-                                <div class="time-box">
-                                    <div class="time-icon exit">
-                                        <i class="bi bi-box-arrow-right"></i>
-                                    </div>
-                                    <div>
-                                        <span>Salida</span>
-                                        <strong>
-                                            {% if jornada.salida %}
-                                            {{ jornada.salida.strftime("%I:%M:%S %p") }}
-                                            {% else %}
-                                            <em>En curso</em>
-                                            {% endif %}
-                                        </strong>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- =========================================
-                                 UBICACIÓN
-                            ========================================== -->
-                            <div class="location-card">
-                                <div class="location-icon">
-                                    <i class="bi bi-geo-alt-fill"></i>
-                                </div>
-                                <div class="location-content">
-                                    <span class="location-label">Ubicación del registro</span>
-                                    {% if jornada.direccion %}
-                                    <span class="location-address" title="{{ jornada.direccion }}">
-                                        {{ jornada.direccion }}
-                                    </span>
-                                    {% else %}
-                                    <span class="location-address empty">
-                                        Ubicación no registrada
-                                    </span>
-                                    {% endif %}
-                                </div>
-                                <i class="bi bi-pin-map-fill location-pin"></i>
-                            </div>
-
-                            <div><br></div>
-
-                            <!-- =========================================
-                                 DESCANSOS
-                            ========================================== -->
-                            <div class="break-section">
-                                <div class="break-header">
-                                    <div>
-                                        <i class="bi bi-cup-hot-fill"></i>
-                                        <strong>Descansos</strong>
-                                    </div>
-                                    <span>{{ jornada.descansos | length }}</span>
-                                </div>
-
-                                {% if jornada.descansos %}
-                                <div class="break-list">
-                                    {% for descanso in jornada.descansos %}
-                                    <div class="break-item">
-                                        <div class="break-type">
-                                            <div class="break-icon">
-                                                {% if descanso.tipo == "lunch" %}
-                                                <i class="bi bi-egg-fried"></i>
-                                                {% else %}
-                                                <i class="bi bi-cup-hot-fill"></i>
-                                                {% endif %}
-                                            </div>
-                                            <div>
-                                                <strong>
-                                                    {% if descanso.tipo == "break_manana" %} Break mañana
-                                                    {% elif descanso.tipo == "lunch" %} Lunch
-                                                    {% elif descanso.tipo == "break_tarde" %} Break tarde
-                                                    {% else %} {{ descanso.tipo }}
-                                                    {% endif %}
-                                                </strong>
-                                                <small>Descanso registrado</small>
-                                            </div>
-                                        </div>
-
-                                        <div class="break-time">
-                                            <div>
-                                                <span>Inicio</span>
-                                                <strong>
-                                                    {% if descanso.inicio %}
-                                                    {{ descanso.inicio.strftime("%I:%M:%S %p") }}
-                                                    {% else %}
-                                                    --
-                                                    {% endif %}
-                                                </strong>
-                                            </div>
-                                            <i class="bi bi-arrow-right"></i>
-                                            <div>
-                                                <span>Fin</span>
-                                                <strong>
-                                                    {% if descanso.fin %}
-                                                    {{ descanso.fin.strftime("%I:%M:%S %p") }}
-                                                    {% else %}
-                                                    <em>En curso</em>
-                                                    {% endif %}
-                                                </strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                                {% else %}
-                                <div class="no-breaks">
-                                    <i class="bi bi-cup-hot"></i>
-                                    <span>No hay descansos registrados.</span>
-                                </div>
                                 {% endif %}
-                            </div>
-                        </div>
-                    </article>
 
-                    <!-- =================================================
-                         MODAL HORAS EXTRAS
-                    ================================================== -->
-                    {% if jornada.horas_extras %}
-                    {% set hora_extra = jornada.horas_extras | first %}
-                    <div class="modal fade" id="modalHoraExtra{{ jornada.id }}" tabindex="-1"
-                        aria-labelledby="modalHoraExtraLabel{{ jornada.id }}" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content hora-extra-modal">
-                                <div class="modal-header">
-                                    <div class="hora-extra-modal-title">
-                                        <div class="hora-extra-modal-icon">
-                                            <i class="bi bi-clock-history"></i>
-                                        </div>
-                                        <div>
-                                            <span>REGISTRO</span>
-                                            <h5 id="modalHoraExtraLabel{{ jornada.id }}">Horas extras</h5>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                                        aria-label="Cerrar"></button>
+
+                                <div class="col-md-4">
+
+                                    <label for="usuario_id" class="form-label">
+                                        Colaborador
+                                    </label>
+
+                                    <select class="form-select" id="usuario_id" name="usuario_id">
+
+                                        <option value="">
+                                            Todos los colaboradores
+                                        </option>
+
+                                        {% for usuario in usuarios %}
+
+                                        <option value="{{ usuario.id }}" {% if
+                                            request.args.get('usuario_id')|string==usuario.id|string %} selected {%
+                                            endif %}>
+                                            {{ usuario.nombre }}
+                                        </option>
+
+                                        {% endfor %}
+
+                                    </select>
+
                                 </div>
 
-                                <div class="modal-body">
-                                    <div class="hora-extra-status">
-                                        <span class="hora-extra-label">Colaborador</span>
-                                        <strong>{{ jornada.usuario.nombre }}</strong>
-                                    </div>
 
-                                    <div class="hora-extra-status">
-                                        <span class="hora-extra-label">Estado</span>
-                                        {% if hora_extra.fin %}
-                                        <span class="hora-extra-badge completed">
-                                            <i class="bi bi-check-circle-fill"></i> Completada
-                                        </span>
-                                        {% else %}
-                                        <span class="hora-extra-badge active">
-                                            <i class="bi bi-record-circle-fill"></i> En curso
-                                        </span>
-                                        {% endif %}
-                                    </div>
+                                <div class="col-md-2">
 
-                                    <div class="hora-extra-times">
-                                        <div class="hora-extra-time">
-                                            <div class="hora-extra-time-icon start">
-                                                <i class="bi bi-play-fill"></i>
-                                            </div>
-                                            <div>
-                                                <span>Inicio</span>
-                                                <strong>
-                                                    {% if hora_extra.inicio %}
-                                                    {{ hora_extra.inicio.strftime("%I:%M:%S %p") }}
-                                                    {% else %}
-                                                    --
-                                                    {% endif %}
-                                                </strong>
-                                            </div>
-                                        </div>
+                                    <label for="fecha_inicio" class="form-label">
+                                        Desde
+                                    </label>
 
-                                        <div class="hora-extra-arrow">
-                                            <i class="bi bi-arrow-right"></i>
-                                        </div>
+                                    <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio"
+                                        value="{{ request.args.get('fecha_inicio', '') }}">
 
-                                        <div class="hora-extra-time">
-                                            <div class="hora-extra-time-icon end">
-                                                <i class="bi bi-stop-fill"></i>
-                                            </div>
-                                            <div>
-                                                <span>Fin</span>
-                                                <strong>
-                                                    {% if hora_extra.fin %}
-                                                    {{ hora_extra.fin.strftime("%I:%M:%S %p") }}
-                                                    {% else %}
-                                                    <em>En curso</em>
-                                                    {% endif %}
-                                                </strong>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {% if hora_extra.direccion %}
-                                    <div class="hora-extra-location mt-3">
-                                        <div class="hora-extra-location-icon">
-                                            <i class="bi bi-geo-alt-fill"></i>
-                                        </div>
-                                        <div>
-                                            <span>Ubicación registrada</span>
-                                            <strong>{{ hora_extra.direccion }}</strong>
-                                        </div>
-                                    </div>
-                                    {% endif %}
                                 </div>
+
+
+                                <div class="col-md-2">
+
+                                    <label for="fecha_fin" class="form-label">
+                                        Hasta
+                                    </label>
+
+                                    <input type="date" class="form-control" id="fecha_fin" name="fecha_fin"
+                                        value="{{ request.args.get('fecha_fin', '') }}">
+
+                                </div>
+
+
+                                <div class="col-12 d-flex justify-content-end gap-2">
+
+                                    <a href="{{ url_for('admin.asistencia') }}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-arrow-counterclockwise"></i>
+                                        Limpiar
+                                    </a>
+
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-funnel-fill"></i>
+                                        Filtrar
+                                    </button>
+
+                                </div>
+
                             </div>
-                        </div>
+
+                        </form>
+
                     </div>
-                    {% endif %}
 
-                    {% endfor %}
                 </div>
-                {% else %}
-                <div class="empty-state text-center py-5">
-                    <i class="bi bi-calendar-x fs-1 text-muted"></i>
-                    <h3 class="mt-3">No hay registros de asistencia</h3>
-                    <p class="text-muted">Intenta cambiar los filtros de búsqueda.</p>
+
+
+                <!-- LISTADO DE ASISTENCIAS -->
+                <div class="card attendance-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h5 class="mb-1">
+                                Registro de jornadas
+                            </h5>
+
+                            <span class="text-muted">
+                                {{ jornadas|length }}
+                                registro{% if jornadas|length != 1 %}s{% endif %}
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body p-0">
+
+                        {% if jornadas %}
+
+                        <div class="table-responsive">
+
+                            <table class="table attendance-table mb-0">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>Colaborador</th>
+
+                                        {% if session.get('rol') == 'admin_global' %}
+                                        <th>Grupo</th>
+                                        {% endif %}
+
+                                        <th>Fecha</th>
+                                        <th>Entrada</th>
+                                        <th>Salida</th>
+                                        <th>Ubicación</th>
+                                        <th>Descansos</th>
+                                        <th>Horas extras</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    {% for jornada in jornadas %}
+
+                                    <tr>
+
+                                        <!-- COLABORADOR -->
+                                        <td>
+
+                                            <div class="employee-cell">
+
+                                                <div class="employee-avatar">
+                                                    {{ jornada.usuario.nombre[0]|upper }}
+                                                </div>
+
+                                                <div>
+
+                                                    <strong>
+                                                        {{ jornada.usuario.nombre }}
+                                                    </strong>
+
+                                                    <small>
+                                                        {{ jornada.usuario.correo }}
+                                                    </small>
+
+                                                </div>
+
+                                            </div>
+
+                                        </td>
+
+
+                                        <!-- GRUPO -->
+                                        {% if session.get('rol') == 'admin_global' %}
+
+                                        <td>
+
+                                            {% if jornada.grupo %}
+
+                                            <span class="badge bg-light text-dark">
+                                                <i class="bi bi-diagram-3"></i>
+                                                {{ jornada.grupo.nombre }}
+                                            </span>
+
+                                            {% else %}
+
+                                            <span class="text-muted">
+                                                Sin grupo
+                                            </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+                                        {% endif %}
+
+
+                                        <!-- FECHA -->
+                                        <td>
+
+                                            {% set dias = {
+                                            0: 'Lun',
+                                            1: 'Mar',
+                                            2: 'Mié',
+                                            3: 'Jue',
+                                            4: 'Vie',
+                                            5: 'Sáb',
+                                            6: 'Dom'
+                                            } %}
+
+                                            {% set meses = {
+                                            1: 'Ene',
+                                            2: 'Feb',
+                                            3: 'Mar',
+                                            4: 'Abr',
+                                            5: 'May',
+                                            6: 'Jun',
+                                            7: 'Jul',
+                                            8: 'Ago',
+                                            9: 'Sep',
+                                            10: 'Oct',
+                                            11: 'Nov',
+                                            12: 'Dic'
+                                            } %}
+
+                                            <div class="date-cell">
+
+                                                <strong>
+                                                    {{ dias[jornada.fecha.weekday()] }}
+                                                </strong>
+
+                                                <span>
+                                                    {{ jornada.fecha.day }}
+                                                    {{ meses[jornada.fecha.month] }}
+                                                    {{ jornada.fecha.year }}
+                                                </span>
+
+                                            </div>
+
+                                        </td>
+
+
+                                        <!-- ENTRADA -->
+                                        <td>
+
+                                            {% if jornada.entrada %}
+
+                                            <span class="time-value">
+                                                <i class="bi bi-box-arrow-in-right"></i>
+                                                {{ jornada.entrada.strftime('%H:%M') }}
+                                            </span>
+
+                                            {% else %}
+
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+
+                                        <!-- SALIDA -->
+                                        <td>
+
+                                            {% if jornada.salida %}
+
+                                            <span class="time-value">
+                                                <i class="bi bi-box-arrow-right"></i>
+                                                {{ jornada.salida.strftime('%H:%M') }}
+                                            </span>
+
+                                            {% else %}
+
+                                            <span class="badge bg-success-subtle text-success">
+                                                Jornada activa
+                                            </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+
+                                        <!-- UBICACIÓN -->
+                                        <td>
+
+                                            {% if jornada.direccion %}
+
+                                            <div class="location-cell">
+
+                                                <i class="bi bi-geo-alt-fill"></i>
+
+                                                <div>
+
+                                                    <span>
+                                                        {{ jornada.direccion }}
+                                                    </span>
+
+                                                    {% if jornada.latitud is not none
+                                                    and jornada.longitud is not none %}
+
+                                                    <small>
+                                                        {{ "%.6f"|format(jornada.latitud) }},
+                                                        {{ "%.6f"|format(jornada.longitud) }}
+                                                    </small>
+
+                                                    {% endif %}
+
+                                                </div>
+
+                                            </div>
+
+                                            {% else %}
+
+                                            <span class="text-muted">
+                                                Sin ubicación
+                                            </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+
+                                        <!-- DESCANSOS -->
+                                        <td>
+
+                                            {% if jornada.descansos %}
+
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal" data-bs-target="#descansosModal{{ jornada.id }}">
+                                                <i class="bi bi-cup-hot"></i>
+                                                {{ jornada.descansos|length }}
+                                            </button>
+
+                                            {% else %}
+
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+
+                                        <!-- HORAS EXTRAS -->
+                                        <td>
+
+                                            {% if jornada.horas_extras %}
+
+                                            <button type="button" class="btn btn-sm btn-outline-warning"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#horasExtrasModal{{ jornada.id }}">
+                                                <i class="bi bi-clock-history"></i>
+                                                {{ jornada.horas_extras|length }}
+                                            </button>
+
+                                            {% else %}
+
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+                                    </tr>
+
+
+                                    <!-- MODAL DESCANSOS -->
+                                    {% if jornada.descansos %}
+
+                                    <div class="modal fade" id="descansosModal{{ jornada.id }}" tabindex="-1"
+                                        aria-hidden="true">
+
+                                        <div class="modal-dialog modal-dialog-centered">
+
+                                            <div class="modal-content">
+
+                                                <div class="modal-header">
+
+                                                    <div>
+                                                        <h5 class="modal-title">
+                                                            Descansos
+                                                        </h5>
+
+                                                        <small class="text-muted">
+                                                            {{ jornada.usuario.nombre }}
+                                                        </small>
+                                                    </div>
+
+                                                    <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
+
+                                                </div>
+
+
+                                                <div class="modal-body">
+
+                                                    {% for descanso in jornada.descansos %}
+
+                                                    <div class="history-item mb-3">
+
+                                                        <div class="d-flex justify-content-between">
+
+                                                            <strong>
+
+                                                                {% if descanso.tipo == 'break_manana' %}
+                                                                Break de mañana
+                                                                {% elif descanso.tipo == 'lunch' %}
+                                                                Almuerzo
+                                                                {% elif descanso.tipo == 'break_tarde' %}
+                                                                Break de tarde
+                                                                {% else %}
+                                                                Descanso
+                                                                {% endif %}
+
+                                                            </strong>
+
+                                                            {% if descanso.fin %}
+
+                                                            <span class="badge bg-success-subtle text-success">
+                                                                Finalizado
+                                                            </span>
+
+                                                            {% else %}
+
+                                                            <span class="badge bg-warning-subtle text-warning">
+                                                                Activo
+                                                            </span>
+
+                                                            {% endif %}
+
+                                                        </div>
+
+
+                                                        <div class="mt-2 text-muted">
+
+                                                            <i class="bi bi-clock"></i>
+
+                                                            {{ descanso.inicio.strftime('%H:%M') }}
+
+                                                            →
+
+                                                            {% if descanso.fin %}
+                                                            {{ descanso.fin.strftime('%H:%M') }}
+                                                            {% else %}
+                                                            En curso
+                                                            {% endif %}
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    {% endfor %}
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    {% endif %}
+
+
+                                    <!-- MODAL HORAS EXTRAS -->
+                                    {% if jornada.horas_extras %}
+
+                                    <div class="modal fade" id="horasExtrasModal{{ jornada.id }}" tabindex="-1"
+                                        aria-hidden="true">
+
+                                        <div class="modal-dialog modal-dialog-centered">
+
+                                            <div class="modal-content">
+
+                                                <div class="modal-header">
+
+                                                    <div>
+                                                        <h5 class="modal-title">
+                                                            Horas extras
+                                                        </h5>
+
+                                                        <small class="text-muted">
+                                                            {{ jornada.usuario.nombre }}
+                                                        </small>
+                                                    </div>
+
+                                                    <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
+
+                                                </div>
+
+
+                                                <div class="modal-body">
+
+                                                    {% for extra in jornada.horas_extras %}
+
+                                                    <div class="history-item mb-3">
+
+                                                        <div class="d-flex justify-content-between">
+
+                                                            <strong>
+                                                                Registro de hora extra
+                                                            </strong>
+
+                                                            {% if extra.fin %}
+
+                                                            <span class="badge bg-success-subtle text-success">
+                                                                Finalizada
+                                                            </span>
+
+                                                            {% else %}
+
+                                                            <span class="badge bg-warning-subtle text-warning">
+                                                                Activa
+                                                            </span>
+
+                                                            {% endif %}
+
+                                                        </div>
+
+
+                                                        <div class="mt-2">
+
+                                                            <div class="text-muted">
+
+                                                                <i class="bi bi-clock"></i>
+
+                                                                {{ extra.inicio.strftime('%H:%M') }}
+
+                                                                →
+
+                                                                {% if extra.fin %}
+                                                                {{ extra.fin.strftime('%H:%M') }}
+                                                                {% else %}
+                                                                En curso
+                                                                {% endif %}
+
+                                                            </div>
+
+
+                                                            {% if extra.direccion %}
+
+                                                            <div class="text-muted mt-1">
+
+                                                                <i class="bi bi-geo-alt"></i>
+
+                                                                {{ extra.direccion }}
+
+                                                            </div>
+
+                                                            {% endif %}
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    {% endfor %}
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    {% endif %}
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        {% else %}
+
+                        <!-- ESTADO VACÍO -->
+
+                        <div class="empty-state">
+
+                            <div class="empty-state-icon">
+                                <i class="bi bi-calendar-x"></i>
+                            </div>
+
+                            <h5>No hay registros de asistencia</h5>
+
+                            <p>
+                                No se encontraron jornadas con los filtros
+                                seleccionados.
+                            </p>
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
                 </div>
-                {% endif %}
+
             </section>
+
         </main>
+
     </div>
 
-    <!-- BOOTSTRAP JS -->
+
+    <!-- MODAL CERRAR SESIÓN -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Cerrar sesión
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <p class="mb-0">
+                        ¿Estás seguro de que deseas cerrar tu sesión?
+                    </p>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">
+                        <i class="bi bi-box-arrow-right"></i>
+                        Cerrar sesión
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

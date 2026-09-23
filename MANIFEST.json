@@ -1,0 +1,40 @@
+{
+  "new_or_modified": [
+    "app/models/grupo.py",
+    "app/models/grupo_miembro.py",
+    "app/models/usuario.py",
+    "app/models/jornada.py",
+    "app/models/hora_extra.py",
+    "app/models/__init__.py",
+    "app/services/grupos.py",
+    "app/services/asistencia.py",
+    "app/services/horas_extras.py",
+    "app/routes/auth.py",
+    "app/routes/grupos.py",
+    "app/routes/empleado.py",
+    "app/services/historial.py",
+    "app/services/usuarios_admin.py",
+    "app/routes/admin.py",
+    "migrations/migrar_multigrupo.py",
+    "PLANTILLAS_NUEVAS.md",
+    "README_MULTI_GRUPO.md",
+    "app/services/descansos.py"
+  ],
+  "originals": [
+    "descanso.py",
+    "hora_extra.py",
+    "jornada.py",
+    "usuario.py",
+    "admin.py",
+    "auth.py",
+    "empleado.py",
+    "test.py",
+    "asistencia.py",
+    "autenticacion.py",
+    "descansos.py",
+    "exportacion.py",
+    "historial.py",
+    "horas_extras.py",
+    "usuarios_admin.py"
+  ]
+}

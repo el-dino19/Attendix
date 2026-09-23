@@ -4,7 +4,6 @@ from app.extensions import db
 
 
 class HoraExtra(db.Model):
-
     __tablename__ = "horas_extras"
 
     id = db.Column(
@@ -19,41 +18,29 @@ class HoraExtra(db.Model):
         nullable=False
     )
 
+    grupo_id = db.Column(
+        db.Integer,
+        db.ForeignKey("grupos.id"),
+        nullable=False
+    )
+
     jornada_id = db.Column(
         db.BigInteger,
         db.ForeignKey("jornadas.id"),
-        nullable=False
-    )
-
-    fecha = db.Column(
-        db.Date,
-        nullable=False
-    )
-
-    inicio = db.Column(
-        db.Time,
-        nullable=False
-    )
-
-    fin = db.Column(
-        db.Time,
         nullable=True
     )
 
-    latitud = db.Column(
-        db.Float,
-        nullable=True
-    )
+    fecha = db.Column(db.Date, nullable=False)
 
-    longitud = db.Column(
-        db.Float,
-        nullable=True
-    )
+    inicio = db.Column(db.Time, nullable=False)
 
-    direccion = db.Column(
-        db.String(500),
-        nullable=True
-    )
+    fin = db.Column(db.Time, nullable=True)
+
+    latitud = db.Column(db.Float, nullable=True)
+
+    longitud = db.Column(db.Float, nullable=True)
+
+    direccion = db.Column(db.String(500), nullable=True)
 
     jornada = db.relationship(
         "Jornada",
@@ -62,6 +49,11 @@ class HoraExtra(db.Model):
 
     usuario = db.relationship(
         "Usuario",
+        back_populates="horas_extras"
+    )
+
+    grupo = db.relationship(
+        "Grupo",
         back_populates="horas_extras"
     )
 

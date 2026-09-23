@@ -9,24 +9,16 @@ from flask import (
     request
 )
 
-
-
 from app.services.horas_extras import (
     obtener_hora_extra_abierta,
     iniciar_hora_extra,
     finalizar_hora_extra
 )
-
-
-from app.services.historial import (
-    obtener_historial_usuario
-)
-
+from app.services.historial import obtener_historial_usuario
 from app.services.asistencia import (
     obtener_jornada_abierta,
     registrar_salida
 )
-
 from app.services.descansos import (
     iniciar_descanso,
     finalizar_descanso,
@@ -41,109 +33,43 @@ empleado_bp = Blueprint(
 )
 
 
-# =========================================================
-# PROTECCION DE TODAS LAS RUTAS DE EMPLEADO
-# =========================================================
-
 @empleado_bp.before_request
 def proteger_empleado():
-
-    # ==========================================
-    # VERIFICAR QUE HAYA INICIADO SESION
-    # ==========================================
-
     if "usuario_id" not in session:
-
-        return redirect(
-            url_for("auth.login")
-        )
-
-
-    # ==========================================
-    # VERIFICAR QUE SEA EMPLEADO
-    # ==========================================
+        return redirect(url_for("auth.login"))
 
     if session.get("rol") != "empleado":
-
         abort(403)
 
+    if not session.get("grupo_id"):
+        return redirect(url_for("grupos.seleccionar"))
 
-# =========================================================
-# DASHBOARD
-# =========================================================
+
 @empleado_bp.route("/dashboard")
 def dashboard():
-
-    # =====================================================
-    # USUARIO
-    # =====================================================
-
     usuario_id = session["usuario_id"]
+    grupo_id = session["grupo_id"]
 
-
-    # =====================================================
-    # JORNADA ABIERTA
-    # =====================================================
-
-    jornada = obtener_jornada_abierta(usuario_id)
-
-
-    # =====================================================
-    # DESCANSO ACTIVO
-    # =====================================================
+    jornada = obtener_jornada_abierta(
+        usuario_id,
+        grupo_id
+    )
 
     descanso_activo = None
-
     if jornada:
         descanso_activo = obtener_descanso_activo(jornada.id)
 
-
-    # =====================================================
-    # HORA EXTRA ACTIVA
-    # =====================================================
-
-    hora_extra = obtener_hora_extra_abierta(usuario_id)
-
-
-    # =====================================================
-    # DIRECCIÓN
-    # =====================================================
+    hora_extra = obtener_hora_extra_abierta(
+        usuario_id,
+        grupo_id
+    )
 
     direccion_corta = None
 
     if jornada and jornada.direccion:
         direccion_corta = jornada.direccion
-
     elif hora_extra and hora_extra.direccion:
         direccion_corta = hora_extra.direccion
-
-
-    # =====================================================
-    # DEBUG
-    # =====================================================
-
-    print("========================================")
-    print("DASHBOARD")
-    print("Usuario:", usuario_id)
-
-    if jornada:
-        print("Jornada ID:", jornada.id)
-        print("Fecha:", jornada.fecha)
-        print("Entrada:", jornada.entrada)
-        print("Salida:", jornada.salida)
-        print("Latitud:", jornada.latitud)
-        print("Longitud:", jornada.longitud)
-        print("Dirección:", jornada.direccion)
-    else:
-        print("NO HAY JORNADA ABIERTA")
-
-    print("Dirección dashboard:", direccion_corta)
-    print("========================================")
-
-
-    # =====================================================
-    # RENDER
-    # =====================================================
 
     return render_template(
         "empleado/dashboard.html",
@@ -154,123 +80,59 @@ def dashboard():
     )
 
 
-
-
-# =========================================================
-# SALIDA
-# =========================================================
-
 @empleado_bp.route("/salida", methods=["POST"])
 def salida():
-
     jornada = registrar_salida(
         session["usuario_id"],
-        session.get("zona_horaria", "UTC")
+        session.get("zona_horaria", "UTC"),
+        session["grupo_id"]
     )
 
     if jornada is None:
+        flash("No tienes una jornada abierta.", "error")
+        return redirect(url_for("empleado.dashboard"))
 
-        flash(
-            "No tienes una jornada abierta.",
-            "error"
-        )
+    flash("Jornada finalizada correctamente.", "success")
+    return redirect(url_for("empleado.dashboard"))
 
-        return redirect(
-            url_for("empleado.dashboard")
-        )
+
+@empleado_bp.route("/descanso/<tipo>/iniciar", methods=["POST"])
+def iniciar_descanso_ruta(tipo):
+    exitoso, mensaje, _ = iniciar_descanso(
+        session["usuario_id"],
+        tipo,
+        session["grupo_id"]
+    )
 
     flash(
-        "Jornada finalizada correctamente.",
-        "success"
+        mensaje,
+        "success" if exitoso else "error"
     )
 
-    return redirect(
-        url_for("empleado.dashboard")
-    )
+    return redirect(url_for("empleado.dashboard"))
 
 
-# =========================================================
-# INICIAR DESCANSO
-# =========================================================
-
-@empleado_bp.route(
-    "/descanso/<tipo>/iniciar",
-    methods=["POST"]
-)
-def iniciar_descanso_ruta(tipo):
-
-    exitoso, mensaje, descanso = iniciar_descanso(
-        session["usuario_id"],
-        tipo
-    )
-
-
-    if exitoso:
-
-        flash(
-            mensaje,
-            "success"
-        )
-
-    else:
-
-        flash(
-            mensaje,
-            "error"
-        )
-
-
-    return redirect(
-        url_for("empleado.dashboard")
-    )
-
-
-# =========================================================
-# FINALIZAR DESCANSO
-# =========================================================
-
-@empleado_bp.route(
-    "/descanso/finalizar",
-    methods=["POST"]
-)
+@empleado_bp.route("/descanso/finalizar", methods=["POST"])
 def finalizar_descanso_ruta():
-
-    exitoso, mensaje, descanso = finalizar_descanso(
-        session["usuario_id"]
+    exitoso, mensaje, _ = finalizar_descanso(
+        session["usuario_id"],
+        session["grupo_id"]
     )
 
-
-    if exitoso:
-
-        flash(
-            mensaje,
-            "success"
-        )
-
-    else:
-
-        flash(
-            mensaje,
-            "error"
-        )
-
-
-    return redirect(
-        url_for("empleado.dashboard")
+    flash(
+        mensaje,
+        "success" if exitoso else "error"
     )
 
+    return redirect(url_for("empleado.dashboard"))
 
-# =========================================================
-# HISTORIAL
-# =========================================================
 
 @empleado_bp.route("/historial")
 def historial():
-
     historial = obtener_historial_usuario(
-        session["usuario_id"]
+        session["usuario_id"],
+        session["grupo_id"]
     )
-
 
     return render_template(
         "empleado/historial.html",
@@ -278,29 +140,13 @@ def historial():
     )
 
 
-# =========================================================
-# INICIAR HORA EXTRA
-# =========================================================
-
-@empleado_bp.route(
-    "/hora-extra/iniciar",
-    methods=["POST"]
-)
+@empleado_bp.route("/hora-extra/iniciar", methods=["POST"])
 def iniciar_hora_extra_ruta():
-
     usuario_id = session["usuario_id"]
-
-    # -----------------------------------------------------
-    # Obtener datos enviados desde el formulario
-    # -----------------------------------------------------
 
     latitud = request.form.get("latitud")
     longitud = request.form.get("longitud")
     direccion = request.form.get("direccion")
-
-    # -----------------------------------------------------
-    # Convertir coordenadas a float
-    # -----------------------------------------------------
 
     try:
         latitud = float(latitud) if latitud else None
@@ -312,82 +158,34 @@ def iniciar_hora_extra_ruta():
     except (TypeError, ValueError):
         longitud = None
 
-    # -----------------------------------------------------
-    # Iniciar hora extra
-    # -----------------------------------------------------
-
     hora_extra, mensaje = iniciar_hora_extra(
         usuario_id=usuario_id,
-        zona_horaria=session.get(
-            "zona_horaria",
-            "UTC"
-        ),
+        zona_horaria=session.get("zona_horaria", "UTC"),
         latitud=latitud,
         longitud=longitud,
-        direccion=direccion
+        direccion=direccion,
+        grupo_id=session["grupo_id"]
     )
 
-    # -----------------------------------------------------
-    # Mensaje al usuario
-    # -----------------------------------------------------
-
-    if hora_extra:
-
-        flash(
-            mensaje,
-            "success"
-        )
-
-    else:
-
-        flash(
-            mensaje,
-            "error"
-        )
-
-    # -----------------------------------------------------
-    # Regresar al dashboard
-    # -----------------------------------------------------
-
-    return redirect(
-        url_for("empleado.dashboard")
+    flash(
+        mensaje,
+        "success" if hora_extra else "error"
     )
 
+    return redirect(url_for("empleado.dashboard"))
 
-# =========================================================
-# FINALIZAR HORA EXTRA
-# =========================================================
 
-@empleado_bp.route(
-    "/hora-extra/finalizar",
-    methods=["POST"]
-)
+@empleado_bp.route("/hora-extra/finalizar", methods=["POST"])
 def finalizar_hora_extra_ruta():
-
-    usuario_id = session["usuario_id"]
-
     hora_extra, mensaje = finalizar_hora_extra(
-        usuario_id=usuario_id,
-        zona_horaria=session.get(
-            "zona_horaria",
-            "UTC"
-        )
+        session["usuario_id"],
+        session.get("zona_horaria", "UTC"),
+        session["grupo_id"]
     )
 
-    if hora_extra:
-
-        flash(
-            mensaje,
-            "success"
-        )
-
-    else:
-
-        flash(
-            mensaje,
-            "error"
-        )
-
-    return redirect(
-        url_for("empleado.dashboard")
+    flash(
+        mensaje,
+        "success" if hora_extra else "error"
     )
+
+    return redirect(url_for("empleado.dashboard"))
