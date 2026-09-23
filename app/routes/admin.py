@@ -400,23 +400,17 @@ def grupo_miembros(grupo_id):
     "/grupos/<int:grupo_id>/miembros/agregar",
     methods=["POST"]
 )
-def agregar_miembro_global(grupo_id):
+def agregar_miembro(grupo_id):
     ok, mensaje, _ = agregar_miembro_service(
         grupo_id,
         request.form.get("usuario_id", type=int),
         request.form.get("rol", "colaborador")
     )
 
-    flash(
-        mensaje,
-        "success" if ok else "danger"
-    )
+    flash(mensaje, "success" if ok else "danger")
 
     return redirect(
-        url_for(
-            "admin.grupo_miembros",
-            grupo_id=grupo_id
-        )
+        url_for("admin.grupo_miembros", grupo_id=grupo_id)
     )
 
 
