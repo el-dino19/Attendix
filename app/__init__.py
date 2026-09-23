@@ -26,5 +26,6 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(empleado_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(grupos_bp)
 
     return app

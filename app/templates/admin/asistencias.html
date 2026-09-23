@@ -29,55 +29,119 @@
         <!-- SIDEBAR -->
         <aside class="sidebar">
 
+            <!-- LOGO / MARCA -->
             <div class="sidebar-brand">
+
                 <div class="brand-logo">
                     <i class="bi bi-clock-history"></i>
                 </div>
 
-                <div>
-                    <h5>Attendix</h5>
-                    <span>Control de asistencia</span>
+                <div class="brand-info">
+                    <h5>Asistencia</h5>
+                    <span>Panel administrativo</span>
                 </div>
+
             </div>
 
+
+            <!-- NAVEGACIÓN -->
             <nav class="sidebar-nav">
 
+                <div class="sidebar-section-title">
+                    ADMINISTRACIÓN
+                </div>
+
+
+                <!-- DASHBOARD -->
                 <a href="{{ url_for('admin.dashboard') }}" class="nav-item">
+
                     <i class="bi bi-grid-1x2-fill"></i>
+
                     <span>Dashboard</span>
+
                 </a>
 
+
+                <!-- COLABORADORES -->
                 <a href="{{ url_for('admin.usuarios') }}" class="nav-item">
+
                     <i class="bi bi-people-fill"></i>
-                    <span>Usuarios</span>
+
+                    <span>Colaboradores</span>
+
                 </a>
 
+
+                <!-- ASISTENCIAS -->
                 <a href="{{ url_for('admin.asistencia') }}" class="nav-item active">
+
                     <i class="bi bi-calendar-check-fill"></i>
+
                     <span>Asistencias</span>
+
                 </a>
 
+
+                <!-- GRUPOS -->
                 {% if session.get('rol') == 'admin_global' %}
 
                 <a href="{{ url_for('admin.grupos') }}" class="nav-item">
+
                     <i class="bi bi-diagram-3-fill"></i>
+
                     <span>Grupos</span>
+
                 </a>
 
                 {% endif %}
 
             </nav>
 
+
+            <!-- FOOTER SIDEBAR -->
             <div class="sidebar-footer">
 
+                <!-- USUARIO -->
+                <div class="sidebar-user">
+
+                    <div class="sidebar-user-avatar">
+                        {{ session.get('nombre', 'A')[0]|upper }}
+                    </div>
+
+                    <div class="sidebar-user-info">
+
+                        <strong>
+                            {{ session.get('nombre', 'Administrador') }}
+                        </strong>
+
+                        <span>
+
+                            {% if session.get('rol') == 'admin_global' %}
+                            Administrador global
+                            {% else %}
+                            Administrador
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CERRAR SESIÓN -->
                 <button type="button" class="logout-sidebar-btn" data-bs-toggle="modal" data-bs-target="#logoutModal">
+
                     <i class="bi bi-box-arrow-right"></i>
+
                     <span>Cerrar sesión</span>
+
                 </button>
 
             </div>
 
         </aside>
+
 
 
         <!-- CONTENIDO PRINCIPAL -->

@@ -890,3 +890,628 @@ RESPONSIVE
 
 
 }
+
+/* =====================================================
+   ATTENDIX - SIDEBAR ADMINISTRATIVA
+   
+===================================================== */
+
+:root {
+    --sidebar-width: 255px;
+
+    --sidebar-bg: #061b23;
+    --sidebar-bg-light: #08232c;
+
+    --sidebar-border: rgba(255, 255, 255, 0.09);
+
+    --sidebar-text: #8ea3aa;
+    --sidebar-text-hover: #dcecef;
+
+    --sidebar-primary: #00d4d8;
+    --sidebar-primary-dark: #08bfc7;
+
+    --sidebar-active-bg: rgba(0, 212, 216, 0.10);
+    --sidebar-active-border: rgba(0, 212, 216, 0.28);
+}
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    bottom: 0;
+
+    width: var(--sidebar-width);
+
+    display: flex;
+    flex-direction: column;
+
+    background:
+        linear-gradient(180deg,
+            #061b23 0%,
+            #061a22 100%);
+
+    border-right: 1px solid var(--sidebar-border);
+
+    z-index: 1000;
+
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   MARCA
+===================================================== */
+
+.sidebar-brand {
+    min-height: 77px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 14px 20px;
+
+    border-bottom: 1px solid var(--sidebar-border);
+
+    flex-shrink: 0;
+}
+
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.brand-logo {
+    width: 43px;
+    height: 43px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(135deg,
+            #0bd0d8,
+            #0aaabd);
+
+    color: #03171d;
+
+    box-shadow:
+        0 8px 20px rgba(0, 212, 216, 0.14);
+}
+
+
+.brand-logo i {
+    font-size: 22px;
+}
+
+
+/* =====================================================
+   TEXTO DE MARCA
+===================================================== */
+
+.brand-info {
+    min-width: 0;
+}
+
+.sidebar-brand h5 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 800;
+
+    line-height: 1.2;
+
+    letter-spacing: -0.2px;
+}
+
+
+.sidebar-brand span {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #71878e;
+
+    font-size: 11px;
+
+    line-height: 1.2;
+}
+
+
+/* =====================================================
+   NAVEGACIÓN
+===================================================== */
+
+.sidebar-nav {
+    flex: 1;
+
+    padding: 28px 9px 20px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+/* scrollbar */
+
+.sidebar-nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: #123943;
+    border-radius: 10px;
+}
+
+
+/* =====================================================
+   TÍTULO DE SECCIÓN
+===================================================== */
+
+.sidebar-section-title {
+    padding: 0 12px;
+
+    margin-bottom: 14px;
+
+    color: #71878e;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.1px;
+
+    text-transform: uppercase;
+}
+
+
+/* =====================================================
+   ITEMS
+===================================================== */
+
+.sidebar .nav-item {
+    position: relative;
+
+    width: 100%;
+    min-height: 50px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 5px;
+
+    padding: 0 15px;
+
+    border: 1px solid transparent;
+    border-radius: 11px;
+
+    background: transparent;
+
+    color: var(--sidebar-text);
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+
+/* =====================================================
+   ICONOS
+===================================================== */
+
+.sidebar .nav-item i {
+    width: 19px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    color: #849aa1;
+
+    font-size: 17px;
+
+    transition:
+        color .2s ease,
+        transform .2s ease;
+}
+
+
+/* =====================================================
+   HOVER
+===================================================== */
+
+.sidebar .nav-item:hover {
+    color: var(--sidebar-text-hover);
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    border-color:
+        rgba(255, 255, 255, 0.04);
+}
+
+
+.sidebar .nav-item:hover i {
+    color: var(--sidebar-primary);
+
+    transform: translateX(1px);
+}
+
+
+/* =====================================================
+   ITEM ACTIVO
+===================================================== */
+
+.sidebar .nav-item.active {
+    color: var(--sidebar-primary);
+
+    background:
+        linear-gradient(90deg,
+            rgba(0, 212, 216, 0.13),
+            rgba(0, 212, 216, 0.07));
+
+    border-color:
+        var(--sidebar-active-border);
+
+    box-shadow:
+        0 8px 22px rgba(0, 212, 216, 0.04);
+}
+
+
+.sidebar .nav-item.active i {
+    color: var(--sidebar-primary);
+}
+
+
+/* pequeña línea lateral del activo */
+
+.sidebar .nav-item.active::before {
+    content: "";
+
+    position: absolute;
+
+    left: -1px;
+    top: 10px;
+    bottom: 10px;
+
+    width: 3px;
+
+    border-radius: 0 4px 4px 0;
+
+    background:
+        linear-gradient(180deg,
+            #00d4d8,
+            #0aaabd);
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.sidebar-footer {
+    flex-shrink: 0;
+
+    padding: 18px 14px;
+
+    border-top: 1px solid var(--sidebar-border);
+
+    background:
+        rgba(3, 16, 21, 0.35);
+}
+
+
+/* =====================================================
+   USUARIO
+===================================================== */
+
+.sidebar-user {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    margin-bottom: 17px;
+
+    padding: 0;
+}
+
+
+/* avatar */
+
+.sidebar-user-avatar {
+    width: 40px;
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(135deg,
+            #0bd0d8,
+            #08b3c1);
+
+    color: #03171d;
+
+    font-size: 15px;
+
+    font-weight: 800;
+}
+
+
+/* información */
+
+.sidebar-user-info {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+.sidebar-user-info strong {
+    overflow: hidden;
+
+    color: #ffffff;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.sidebar-user-info span {
+    margin-top: 4px;
+
+    color: #71878e;
+
+    font-size: 11px;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   BOTÓN LOGOUT
+===================================================== */
+
+.logout-sidebar-btn {
+    width: 100%;
+    height: 41px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    border: 1px solid rgba(255, 75, 99, 0.25);
+
+    border-radius: 8px;
+
+    background:
+        rgba(255, 75, 99, 0.035);
+
+    color: #ff5369;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .2s ease;
+}
+
+
+.logout-sidebar-btn i {
+    font-size: 14px;
+}
+
+
+.logout-sidebar-btn:hover {
+    background:
+        rgba(255, 75, 99, 0.09);
+
+    border-color:
+        rgba(255, 75, 99, 0.40);
+
+    color: #ff6b7d;
+
+    transform: translateY(-1px);
+}
+
+
+/* =====================================================
+   CONTENIDO PRINCIPAL
+===================================================== */
+
+.main-content {
+    margin-left: var(--sidebar-width);
+
+    min-height: 100vh;
+
+    width: calc(100% - var(--sidebar-width));
+}
+
+
+/* =====================================================
+   TOPBAR
+===================================================== */
+
+.topbar {
+    min-height: 76px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 32px;
+
+    border-bottom: 1px solid var(--sidebar-border);
+
+    background:
+        rgba(4, 22, 29, 0.94);
+
+    backdrop-filter: blur(12px);
+
+    position: sticky;
+    top: 0;
+
+    z-index: 900;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 992px) {
+
+    :root {
+        --sidebar-width: 225px;
+    }
+
+    .sidebar-brand {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .sidebar .nav-item {
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+
+    .topbar {
+        padding: 0 22px;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    :root {
+        --sidebar-width: 72px;
+    }
+
+    .sidebar-brand {
+        justify-content: center;
+
+        padding: 14px 10px;
+    }
+
+    .brand-info,
+    .sidebar-section-title,
+    .sidebar .nav-item span,
+    .sidebar-user-info,
+    .logout-sidebar-btn span {
+        display: none;
+    }
+
+    .sidebar-brand {
+        border-bottom: 1px solid var(--sidebar-border);
+    }
+
+    .sidebar .nav-item {
+        justify-content: center;
+
+        padding: 0;
+
+        gap: 0;
+    }
+
+    .sidebar .nav-item i {
+        font-size: 19px;
+    }
+
+    .sidebar-footer {
+        padding: 14px 10px;
+    }
+
+    .sidebar-user {
+        justify-content: center;
+    }
+
+    .sidebar-user-avatar {
+        width: 38px;
+        height: 38px;
+    }
+
+    .logout-sidebar-btn {
+        width: 100%;
+        padding: 0;
+    }
+
+    .logout-sidebar-btn i {
+        font-size: 16px;
+    }
+
+    .main-content {
+        width: calc(100% - var(--sidebar-width));
+    }
+
+    .topbar {
+        padding: 0 18px;
+    }
+}
+
+
+@media (max-width: 576px) {
+
+    :root {
+        --sidebar-width: 0px;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .main-content {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .topbar {
+        min-height: 65px;
+    }
+}
