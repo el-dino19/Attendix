@@ -21,6 +21,7 @@ def create_app():
     from app.routes.auth import auth_bp
     from app.routes.empleado import empleado_bp
     from app.routes.admin import admin_bp
+    from app.routes.grupos import grupos_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(empleado_bp)
